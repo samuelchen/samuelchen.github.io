@@ -1,6 +1,6 @@
 title: 改变使用方式，重定义一个行业
 tags:
-  - Articles
+  - Article
   - IT
 id: 125
 categories:

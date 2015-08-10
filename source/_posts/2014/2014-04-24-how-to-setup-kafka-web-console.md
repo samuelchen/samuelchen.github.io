@@ -13,8 +13,6 @@ date: 2014-04-24 15:15:11
 This project is hosted at [https://github.com/claudemamo/kafka-web-console](https://github.com/claudemamo/kafka-web-console)
 
 It's a very simple console that only suit for learning Kafka purpose.
-<div></div>
-<div>
 
 *   Install Play Framework.
 
@@ -37,10 +35,14 @@ It's a very simple console that only suit for learning Kafka purpose.
 *   Configuration
 
     *   register zookeeper
-[![kafka-web-console2](http://blog.samuelchen.net/wp-content/uploads/2014/04/Image.png)](http://blog.samuelchen.net/wp-content/uploads/2014/04/Image.png)
-    *   Check status to see if connected[![kafka-web-console2](http://blog.samuelchen.net/wp-content/uploads/2014/04/Image1-1024x127.png)](http://blog.samuelchen.net/wp-content/uploads/2014/04/Image1.png)
+    ![](img1.png)
+
+    *   Check status to see if connected
+    ![](img2.png)
+
 
 *   "Database xxx needs evolution!" - Solution for database is not initialized.
-Done.
+    *  use “play -DapplyEvolutions.default=true” to start. 
+    *  Or add “applyEvolutions.default=true” in conf/application.conf 
 
-</div>
+-- DONE
