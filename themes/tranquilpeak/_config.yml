@@ -100,6 +100,15 @@ author:
     email: me@samuelchen.net
     # Your biography (Markdown and HTML supported)
     bio:
+      I am living in Wuhan with my wife and daughter.
+
+      Before 2010, I was living in Beijing for a long time.
+
+      My interesings are cloud technology, distributed system, data mining and mobile technologies.
+
+      In my spare time, I like to play football and swiming.
+
+      “Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.
     job:
     location: Wuhan, China
     # Your profile picture located in folder `source/_images/` (development)
