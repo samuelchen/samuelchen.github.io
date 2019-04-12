@@ -46,14 +46,18 @@ sidebar:
             url: /#about
             icon: question
     author_links:
+         site:
+            title: Website
+            url: http://www.samuelchen.net
+            icon: user-secret
          github:
              title: GitHub
              url: https://github.com/samuelchen
              icon: github
-        # stack_overflow:
-        #     title: Stack Overflow
-        #     url: http://stackoverflow.com/users/
-        #     icon: stack-overflow
+         stack_overflow:
+             title: Stack Overflow
+             url: https://stackoverflow.com/users/687197/samuel-chen
+             icon: stack-overflow
          twitter:
              title: Twitter
              url: https://twitter.com/samuelchen
@@ -79,10 +83,14 @@ sidebar:
             title: RSS
             url: /atom.xml
             icon: rss
-    legacy:
+    other_links:
+        mirror:
+            title: Mirror on Github
+            url: https://samuelchen.github.io/
+            icon: github
         legacies:
             title: Legacies
-            url: /legacy
+            url: https://samuelchen.github.io/legacy/
             icon: archive
 
 # Header configuration
