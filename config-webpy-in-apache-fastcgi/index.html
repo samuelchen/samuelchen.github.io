@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Explorer. Dream. Discover.">
+    <title>web.py 在 Apache + Fastcgi 配置 Tips - Explorer. Dream. Discover.</title>
+    <meta name="author" content="Samuel Chen">
+    <meta name="description" content="Explorer. Dream. Discover.">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="根据web.py官网的说明，配置使其运行在apache + fastcgi 上，碰到了许多问题，耗了两天时间才整明白。一方面是apache的配置不熟悉，另外一方面是其官方文档也有些疏漏，问题及解决办法如下(ubuntu 10.04)：  调试日志web.py 应用挂在服务器上以后，stdout/stderr，都好像转了（查网上的，未验证），另外apache的用户是www-data，用户当前目录也是">
+<meta name="keywords" content="configuration,Python,programming,Linux,Ubuntu,web.py">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="web.py 在 Apache + Fastcgi 配置 Tips">
+<meta property="og:url" content="http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/index.html">
+<meta property="og:site_name" content="Explorer. Dream. Discover.">
+<meta property="og:description" content="根据web.py官网的说明，配置使其运行在apache + fastcgi 上，碰到了许多问题，耗了两天时间才整明白。一方面是apache的配置不熟悉，另外一方面是其官方文档也有些疏漏，问题及解决办法如下(ubuntu 10.04)：  调试日志web.py 应用挂在服务器上以后，stdout/stderr，都好像转了（查网上的，未验证），另外apache的用户是www-data，用户当前目录也是">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-16T16:17:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="web.py 在 Apache + Fastcgi 配置 Tips">
+<meta name="twitter:description" content="根据web.py官网的说明，配置使其运行在apache + fastcgi 上，碰到了许多问题，耗了两天时间才整明白。一方面是apache的配置不熟悉，另外一方面是其官方文档也有些疏漏，问题及解决办法如下(ubuntu 10.04)：  调试日志web.py 应用挂在服务器上以后，stdout/stderr，都好像转了（查网上的，未验证），另外apache的用户是www-data，用户当前目录也是">
+<meta name="twitter:creator" content="@samuelchen">
+    
+    
+    
+        <meta property="og:image" content="/assets/images/avatar.gif"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Explorer. Dream. Discover.</a>
+    </h1>
+    
+        <a class="header-right-picture" href="/#about">
+            <img class="header-picture" src="/assets/images/avatar.gif">
+        </a>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    <div class="sidebar-profile">
+        <a href="/#about">
+            
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif">
+            
+        </a>
+        <span class="sidebar-profile-name">Samuel Chen</span>
+    </div>
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link st-search-show-outputs" href="#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
+                    <span class="sidebar-button-desc">Website</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">Mirror on Github</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Legacies</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">web.py 在 Apache + Fastcgi 配置 Tips</h1>
+    
+    <div class="post-meta">
+    <time itemprop="datePublished" content="Sat Apr 02 2011 21:56:00 GMT+0800">
+        Apr 02, 2011
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Programming/">Programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+            <p>根据web.py官网的说明，配置使其运行在apache + fastcgi 上，碰到了许多问题，耗了两天时间才整明白。一方面是apache的配置不熟悉，另外一方面是其官方文档也有些疏漏，问题及解决办法如下(ubuntu 10.04)：</p>
+<ul>
+<li>调试日志<br>web.py 应用挂在服务器上以后，stdout/stderr，都好像转了（查网上的，未验证），另外apache的用户是www-data，用户当前目录也是没有权限，所以logging要记录在/tmp下，或者单独建一个/log目录给写权限才行，这个一般规划好了没什么问题。<br>另外，也可以做个ApacheLogHandler来将日志记到apache的日志文件中，这个网上可以搜到。<br>然后就是，apache的日志文件在/var/log/apache2/ 。如果你的网站配置文件修改了日志位置，要注意这个地方只记录了一部分，还有一些仍然会记录在default位置。<br>最后，可以使用traceback包来记录未处理的异常，代码如下：<br><pre><br>try:<h1 id="web-py-code"><a href="#web-py-code" class="headerlink" title="web.py code"></a>web.py code</h1><h1 id="urls-…"><a href="#urls-…" class="headerlink" title="urls = …"></a>urls = …</h1><h1 id="…"><a href="#…" class="headerlink" title="…"></a>…</h1><h1 id="app-run"><a href="#app-run" class="headerlink" title="app.run()"></a>app.run()</h1></pre></li>
+</ul>
+<p>except Exception, e:<br>    f = None<br>    if os.name == ‘posix’:<br>        f = open(‘/tmp/yule_unhandled_error.log’, ‘w’)<br>    else:<br>        f = open(‘%s/yule_unhandled_error.log’ % os.environ[‘temp’], ‘w’)<br>    traceback.print_exc( file=f )<br>    traceback.print_exc( file=f )<br>    f.close()<br></p>
+<ul>
+<li>python 库路径 (PYTHONPATH)<br>在 apache + fastcgi 中运行 python cgi，如果你使用了 PYTHONPATH 来引用库，你会发行看到的永远是 500 Internal Error。这是因为apache没有复制shell中的环境变量。<br>注意，不要使用envvar文件，或者在网站配置文件中用setEnv，passEnv 等方法，这些方法我试过完全没有用。<br>你要做的是，用代码将所有的路径全部都加到sys.path中。代码如下：<br><pre><br>import os, sys<br>python_path = “/you/python/lib/path:/you/python/lib/path2”.split(‘:’)<br>for path in python_path:<pre><code>sys.path.insert(0, path)
+</code></pre></pre><br>当然你可以检查path是否已经加入了，注意路径访问权限，牢记现在的用户是www-data。</li>
+<li>静态文件<br>好了，现在都配好了，再访问网站 … OK 出来了！<br>等等！ 怎么搞的，样式表，图像怎么都显示不出来了？<br>原来是web.py <a href="http://webpy.org/cookbook/fastcgi-apache" target="_blank" rel="noopener">官网的配置文件</a>有少许疏漏，静态文件的转发不对！<br>假设静态目录是网站根下的 /static/ （这也是web.py的推荐位置），那么我们要做的是修改网站配置文件的mod_rewrite 规则为:<br><pre><h1 id="修改-ifmodule-这一节，注意蓝色行"><a href="#修改-ifmodule-这一节，注意蓝色行" class="headerlink" title="修改 ifmodule 这一节，注意蓝色行"></a>修改 ifmodule 这一节，注意蓝色行</h1>   RewriteEngine on<br>   RewriteBase /<br>   RewriteCond %{REQUEST_URI} !^/icons<br>   RewriteCond %{REQUEST_URI} !^/favicon.ico$<br>   <span style="color: blue;">RewriteCond %{REQUEST_URI} !^/static/  ### 注意这一行 </span><br>   RewriteCond %{REQUEST_URI} !^(/.<em>)+code.py/<br>   RewriteRule ^(.</em>)$ code.py/$1 [PT]<br></pre><br>好了，现在再试试，是不是已经好了 :)</li>
+</ul>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Linux/">Linux</a> <a class="tag tag--primary tag--small t-link" href="/tags/Python/">Python</a> <a class="tag tag--primary tag--small t-link" href="/tags/Ubuntu/">Ubuntu</a> <a class="tag tag--primary tag--small t-link" href="/tags/configuration/">configuration</a> <a class="tag tag--primary tag--small t-link" href="/tags/programming/">programming</a> <a class="tag tag--primary tag--small t-link" href="/tags/web-py/">web.py</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/simple-principle-for-encode-decode-in-python/" data-tooltip="Python 的编码，关于 Encode, Decode 的简单原则">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/using-predefined-var-in-django-template/" data-tooltip="Django 如何在模板(Template)中使用settings中预定义的变量">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=web.py 在 Apache + Fastcgi 配置 Tips&amp;url=http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 Samuel Chen. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/simple-principle-for-encode-decode-in-python/" data-tooltip="Python 的编码，关于 Encode, Decode 的简单原则">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/using-predefined-var-in-django-template/" data-tooltip="Django 如何在模板(Template)中使用settings中预定义的变量">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=web.py 在 Apache + Fastcgi 配置 Tips&amp;url=http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=web.py 在 Apache + Fastcgi 配置 Tips&amp;url=http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/">
+                <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/avatar.gif">
+        
+            <h4 id="about-card-name">Samuel Chen</h4>
+        
+            <h5 id="about-card-bio"><p>I am living in Wuhan with my wife and daughter.<br>Before 2010, I was living in Beijing for a long time.<br>My interesings are cloud technology, distributed system, data mining and mobile technologies.<br>In my spare time, I like to play football and swiming.<br>“Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.</p>
+</h5>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br>
+                Wuhan, China
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'samuelchen';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','78osZec8utGs_7B3JCab','2.0.0');
+    </script>
+
+
+</html>

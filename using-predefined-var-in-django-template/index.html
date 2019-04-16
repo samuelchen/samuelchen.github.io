@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Explorer. Dream. Discover.">
+    <title>Django 如何在模板(Template)中使用settings中预定义的变量 - Explorer. Dream. Discover.</title>
+    <meta name="author" content="Samuel Chen">
+    <meta name="description" content="Explorer. Dream. Discover.">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="在Django中编写模板(template)的时候， 有时候可能会用到settings中设定的变量， 比如说STATIC_URL。 此时， 如果你直接使用  是取不到值的。 那么怎么才能在模板中使用呢？ 难道非得在每个view中添加到context中吗？ 答案是否定的。 根据Django文档中所描述， 我们至少有两种方法可以直接使用。 http://docs.djangoproject.com/e">
+<meta name="keywords" content="Django,Python,static,template,programming">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Django 如何在模板(Template)中使用settings中预定义的变量">
+<meta property="og:url" content="http://blog.samuelchen.net/using-predefined-var-in-django-template/index.html">
+<meta property="og:site_name" content="Explorer. Dream. Discover.">
+<meta property="og:description" content="在Django中编写模板(template)的时候， 有时候可能会用到settings中设定的变量， 比如说STATIC_URL。 此时， 如果你直接使用  是取不到值的。 那么怎么才能在模板中使用呢？ 难道非得在每个view中添加到context中吗？ 答案是否定的。 根据Django文档中所描述， 我们至少有两种方法可以直接使用。 http://docs.djangoproject.com/e">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-16T16:17:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Django 如何在模板(Template)中使用settings中预定义的变量">
+<meta name="twitter:description" content="在Django中编写模板(template)的时候， 有时候可能会用到settings中设定的变量， 比如说STATIC_URL。 此时， 如果你直接使用  是取不到值的。 那么怎么才能在模板中使用呢？ 难道非得在每个view中添加到context中吗？ 答案是否定的。 根据Django文档中所描述， 我们至少有两种方法可以直接使用。 http://docs.djangoproject.com/e">
+<meta name="twitter:creator" content="@samuelchen">
+    
+    
+    
+        <meta property="og:image" content="/assets/images/avatar.gif"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Explorer. Dream. Discover.</a>
+    </h1>
+    
+        <a class="header-right-picture" href="/#about">
+            <img class="header-picture" src="/assets/images/avatar.gif">
+        </a>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    <div class="sidebar-profile">
+        <a href="/#about">
+            
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif">
+            
+        </a>
+        <span class="sidebar-profile-name">Samuel Chen</span>
+    </div>
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link st-search-show-outputs" href="#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
+                    <span class="sidebar-button-desc">Website</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">Mirror on Github</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Legacies</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Django 如何在模板(Template)中使用settings中预定义的变量</h1>
+    
+    <div class="post-meta">
+    <time itemprop="datePublished" content="Sat Mar 05 2011 00:26:00 GMT+0800">
+        Mar 05, 2011
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Programming/">Programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+            <p>在Django中编写模板(template)的时候， 有时候可能会用到settings中设定的变量， 比如说STATIC_URL。 此时， 如果你直接使用 <code></code> 是取不到值的。 那么怎么才能在模板中使用呢？ 难道非得在每个view中添加到context中吗？</p>
+<p>答案是否定的。 根据Django文档中所描述， 我们至少有两种方法可以直接使用。 <a href="http://docs.djangoproject.com/en/dev/howto/static-files/#referring-to-static-files-in-templates" target="_blank" rel="noopener">http://docs.djangoproject.com/en/dev/howto/static-files/#referring-to-static-files-in-templates</a></p>
+<a id="more"></a>
+<p>方法1：</p>
+<p>使用 <code>{ % load static %}</code> 载入 static 模块，然后使用 <code>{ % get_static_prefix %}</code> 就可以了。</p>
+<p><pre>{ % load static %}</pre></p>
+<p>&lt;img src=”{ % get_static_prefix %}images/hi.jpg” /&gt;<br>当然也可以将其定义为变量以多次使用</p>
+<p><pre>{ % load static %}<br>{ % get_static_prefix as STATIC_PREFIX %}<br>&lt;img src=”images/hi.jpg” /&gt;<br>&lt;img src=”images/hi2.jpg” /&gt;</pre><br>方法2：</p>
+<p>这个方法是推荐的方法， 直接使用 RequestContext 来传递。 其原因就是因为settings中定义的变量都会在request中传递， 但是response的时候是没有这些context的， 所以Django专门定义了RequestContext来帮你组合 （其实你自己也可以做这件事）。</p>
+<p><pre>#注意这里是django.template，由此可见是专门为template设计的<br>from django.template import RequestContext</pre></p>
+<p>def some_view(request):</p>
+<pre><code># ...    
+return render_to_response(&apos;my_template.html&apos;,
+                          my_data_dictionary,
+                          context_instance=RequestContext(request))&lt;/pre&gt;
+</code></pre><p>这个实际作用就是将request中的context全部都加到response的context中去。</p>
+<p>这样，你就可以直接在模板中使用<code></code> 来使用了，当然其他的变量也是可以的，不需要每个都单独去load了。</p>
+<div></div>
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Django/">Django</a> <a class="tag tag--primary tag--small t-link" href="/tags/Python/">Python</a> <a class="tag tag--primary tag--small t-link" href="/tags/programming/">programming</a> <a class="tag tag--primary tag--small t-link" href="/tags/static/">static</a> <a class="tag tag--primary tag--small t-link" href="/tags/template/">template</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/config-webpy-in-apache-fastcgi/" data-tooltip="web.py 在 Apache + Fastcgi 配置 Tips">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/config-django-static-files/" data-tooltip="Django 静态文件配置">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 如何在模板(Template)中使用settings中预定义的变量&amp;url=http://blog.samuelchen.net/using-predefined-var-in-django-template/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/using-predefined-var-in-django-template/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/using-predefined-var-in-django-template/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 Samuel Chen. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/config-webpy-in-apache-fastcgi/" data-tooltip="web.py 在 Apache + Fastcgi 配置 Tips">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/config-django-static-files/" data-tooltip="Django 静态文件配置">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 如何在模板(Template)中使用settings中预定义的变量&amp;url=http://blog.samuelchen.net/using-predefined-var-in-django-template/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/using-predefined-var-in-django-template/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/using-predefined-var-in-django-template/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 如何在模板(Template)中使用settings中预定义的变量&amp;url=http://blog.samuelchen.net/using-predefined-var-in-django-template/">
+                <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/using-predefined-var-in-django-template/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/using-predefined-var-in-django-template/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/avatar.gif">
+        
+            <h4 id="about-card-name">Samuel Chen</h4>
+        
+            <h5 id="about-card-bio"><p>I am living in Wuhan with my wife and daughter.<br>Before 2010, I was living in Beijing for a long time.<br>My interesings are cloud technology, distributed system, data mining and mobile technologies.<br>In my spare time, I like to play football and swiming.<br>“Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.</p>
+</h5>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br>
+                Wuhan, China
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'samuelchen';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','78osZec8utGs_7B3JCab','2.0.0');
+    </script>
+
+
+</html>

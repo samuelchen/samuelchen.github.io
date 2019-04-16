@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Explorer. Dream. Discover.</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://blog.samuelchen.net/"/>
+  <updated>2019-04-16T16:36:11.000Z</updated>
+  <id>http://blog.samuelchen.net/</id>
+  
+  <author>
+    <name>Samuel Chen</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>在 Azure Blob 存储上部署 Hexo 静态网站</title>
+    <link href="http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/"/>
+    <id>http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/</id>
+    <published>2019-04-16T16:10:39.000Z</published>
+    <updated>2019-04-16T16:36:11.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前，<a href="http://blog.samuelchen.net">个人博客</a>一直都是用 <code>Hexo</code> 生成并部署为<br><code>GitHub Pages</code>。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub<br>上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。</p><p>手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTP<br>Server 防火墙，FTP/Rsync/SSH 等等挺麻烦，就寻思着是不是能用对象存储来做。于是翻看了 Azure<br>Blob 到文档，发现真还行，而且还挺简单，内置支持。</p><p>首先新建<strong>全局唯一</strong>的存储账号，比如我选则了 <code>chen</code>，这个会作为你 Azure 存储的一个 End<br>Point，比如 chen.blob.core.windows.net，可以直接通过这个域名来访问你的存储对象。这个时候<br>要注意一点，一定要选择 <code>StorageV2 (通用版 v2)</code> 类型，只有这个类型才支持直接部署静态网站。<br>我之前就是选择了 <code>v1</code> 类型，导致无法自动识别 <code>index.html</code> 而无法访问。建好后，选择<br><code>静态网站</code> 菜单并 <strong>启用</strong>，系统会自动生成名为 <code>$web</code> 的 <code>容器(Container)</code>，作为存储网站的根目录。</p><p>以上配置完成后，就用 <code>hexo generate</code> 命令生成你的网站，网站生成后都在 <code>public</code> 目录<br>下，这些不细说。然后需要做的是把生成的网站传到刚建立到容器 <code>blog</code> 中，有几种方法可以做到：</p><ol><li>直接使用浏览器在 Azure 门户页面 <code>存储资源管理器</code> 中上传</li><li>下载 <code>存储资源管理器</code> 桌面版，上传</li><li>使用 <code>AzCopy</code> 上传 （需要.net）</li><li>使用 Azure Client 命令行工具 <code>az</code></li></ol><p>前面2种方法都很简单，找到相应位置或者下载软件就行了，第3个需要.net，不足够通用，我使用到是第4种<br>方法，简单写了个脚本，每次自动上传，主要是下面这句，其他都省略了:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env sh</span></span><br><span class="line"></span><br><span class="line">BLOB_ACCOUNT=<span class="string">"chen"</span>     <span class="comment"># blob 账号</span></span><br><span class="line">BLOB_CONTAINER=<span class="string">'$web'</span>   <span class="comment"># blob 容器</span></span><br><span class="line"></span><br><span class="line">hexo clean &amp;&amp; hexo generate &amp;&amp; az storage blob upload-batch -d <span class="variable">$BLOB_CONTAINER</span> --account-name <span class="variable">$BLOB_ACCOUNT</span> -s ./public</span><br></pre></td></tr></table></figure><p>然后就可以用 <code>https://chen.z?.web.core.windows.net</code> (？是某个数字，z? 代表一个地区)<br>访问你的网站了。</p><p>安装 Azure Client 的步骤就不写了，直接看文档。安装好后，记得运行 <code>az login</code> 登录。</p><p>最后，如果你有自己都域名，可以选择 <code>自定义域</code> 来配置，同时要配置 DNS.</p><p>这种方法非常简单，费用也很低，基础 1G 才大概几美分。不过有一点不好的是，<code>v2</code> 类型的 blob<br>存储还有访问计费，每万次也有几～几十美分，而 Hexo 生成的静态网站文件很多，一次上传就得几百上千<br>个文件，而且只要改配置或者模版，文件就都大多数都修改了，得全部上传。</p><p>Azure Blob 部署的静态网站，如果用 <code>windows.net</code> 访问，是自带 <code>https</code> 的，如果你需要给<br>自定义域名也用上https，需要配置 <code>CDN</code>。而且，<code>CDN</code> 会自动选择不同的地区访问，blob 是固定<br>地区的（比如 blob 账号、容器是在 美国东部 US-EAST，那么亚洲访问就稍慢）。</p><p>– END –</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;之前，&lt;a href=&quot;http://blog.samuelchen.net&quot;&gt;个人博客&lt;/a&gt;一直都是用 &lt;code&gt;Hexo&lt;/code&gt; 生成并部署为&lt;br&gt;&lt;code&gt;GitHub Pages&lt;/code&gt;。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，
+      
+    
+    </summary>
+    
+      <category term="Cloud2End" scheme="http://blog.samuelchen.net/categories/Cloud2End/"/>
+    
+    
+      <category term="deployment" scheme="http://blog.samuelchen.net/tags/deployment/"/>
+    
+      <category term="static" scheme="http://blog.samuelchen.net/tags/static/"/>
+    
+      <category term="Azure" scheme="http://blog.samuelchen.net/tags/Azure/"/>
+    
+      <category term="Hexo" scheme="http://blog.samuelchen.net/tags/Hexo/"/>
+    
+      <category term="blob" scheme="http://blog.samuelchen.net/tags/blob/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存</title>
+    <link href="http://blog.samuelchen.net/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/"/>
+    <id>http://blog.samuelchen.net/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/</id>
+    <published>2018-11-14T16:55:37.000Z</published>
+    <updated>2019-04-16T16:52:29.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>刚刚给2012年中的13寸MacBook Pro更换了SSD固态硬盘，并且添加了内存，记录一下。</p><p><strong>注意请先断电</strong></p><h3 id="工具和配件"><a href="#工具和配件" class="headerlink" title="工具和配件"></a>工具和配件</h3><ul><li>十字起子</li></ul><p>钟表手机维修用的十字起子 锥头型号 PH000 用来开外壳以及绝大部分螺丝.<br>网上有些文章说PH00，PH0甚至一般十字起子，这些都不对，大了容易伤螺丝。</p><ul><li>内6角起子</li></ul><p>另外如果要把SSD固态硬盘放到HDD机械硬盘位，那么需要拆掉机械硬盘，这个时候会用到。<br>网上说的一般是T5，这个应该可以，但我用的是T6，也合适。</p><ul><li>光驱位硬盘托架</li></ul><p>市面上一般有两种厚度，9.5mm 和 12.5mm (也有相差零点几个毫米的)，要选择薄的9.5mm这种。<br>接口要选择SATA 3.0，这款2012年中13寸的MacBook Pro支持SATA 3.0。<br>最好选择专门为MacBook Pro设计的，我在挑选的时候发现这种好像比普通的在外延多两个螺丝孔，<br>后面安装的时候会发现这个是必须的固定位。<br>商家有些会送螺丝，或者固定胶条和胶钉，视情况选择，我感觉胶条和胶钉比较好。</p><h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><p>该款机型内置的是2条1600海士力DDR3内存，电压为标准压1.5v，所以不能买1.25v低电压内存。<br>因此我选购了金士顿的标准压8G-1600单条，毋需买同品牌同大小的内存，频率相同即可，可以节省一条。<br>频率选择不同的应该也可以，但应就高不就低，也就是说高于1600应该是可以的。<br>装好后配置为10G，使用中没发现什么问题。</p><p>安装也很简单，两边的卡子轻推就会自动弹出，插好新的后下压可卡住，网上很多教程。</p><h3 id="SSD固态硬盘"><a href="#SSD固态硬盘" class="headerlink" title="SSD固态硬盘"></a>SSD固态硬盘</h3><p>选择很多，比如三星Samsung EVO860等等，我选择了东芝Toshiba TR200。<br>无他，因为之前用过，还便宜。几个月之前买是380RMB，前两天双11买是236.<br>支持SATA3，SSD固态硬盘可以达到6G速度。</p><p>安装之前要想好是装在光驱位还是机械硬盘位。我建议放到光驱位，原因如下：</p><ul><li>机械硬盘位有自动探测震动的功能，而光驱位靠近喇叭，震动频繁，这样机械硬盘很容易坏</li><li>不必拆卸机械硬盘，少准备一个6角螺丝刀</li><li>原系统可保留（其他方式应也可以保留，但这个几乎无变动，还可以从原系统中安给SSD全新安装新系统）</li><li>最重要的，硬盘托架+机械硬盘 厚度很有可能超过，会造成很大麻烦。</li></ul><p>具体安装过程网上很多教程，我发现有两篇英文的最准确，每个步骤都有，而其他的教程基本上都省略了很多步骤，<br>拆喇叭，摄像头等线的基本都没介绍，这几个步骤很关键。具体步骤不细说，<strong>先拆电源接线</strong>，小心即可。</p><h3 id="系统安装"><a href="#系统安装" class="headerlink" title="系统安装"></a>系统安装</h3><p><strong>首先做好备份</strong>， 方法很多，time machine， 移动硬盘复制，网盘，等等。需要转移整个系统的就用time machine，<br>全新安装系统的就备份自己需要的文档和数据。</p><p>系统安装有几种方式：</p><ul><li>Time Machine 全系统恢复</li><li>从Recover恢复当前系统使用MacOS版本 （开机 command + R + xxx 网上介绍很多）</li><li>从网络安装当前机型支持的最高版本MacOS （同样组合键开机安装，有点旧型号不支持）</li><li>下载安装文件，从原系统中安装</li></ul><p>我使用的是最后这种，比较保险，而且可以选择需要等版本。</p><p>当时准备了3个版本：Sierra，High Sierra，Mojave。很快就放弃了Sierra，因为High Sierra是其升级且更稳定版本，<br>估计性能差不多，High Sierra应该更好。Mojave考虑不太敢装，6年前的机器，怕跑不动。<br>另外还有一个就是Recover的EI Captain，这个还是用的 Macos 文件系统，而上面准备的三种，都升级到了APFS文件系统。<br>APFS是Apple专门为SSD打造的系统，比较新，只经历了2个版本，不知道稳定性如何。<br>最终选择的是Mojave，因为全新安装，打算试试，如果性能太差就抹掉再安装High Sierra。</p><p>后面使用发现这个选择是正确的，虽然Mojave还是第一个版本，但稳定行还不错，而且经过内存升级和更换SSD后，性能也还能接受。</p><p>系统安装好后，自动会使用SSD启动（即使在光驱位），几天运行良好，因此我决定抹掉机械银盘<br>（HDD使用macos 不区分大小写日志文件系统），将其作为数据盘。<br>但恢复分区没有抹掉，里面有EI Captain的恢复镜像，保留以备将来有用。</p><h3 id="系统优化"><a href="#系统优化" class="headerlink" title="系统优化"></a>系统优化</h3><p>因为使用SSD固态硬盘，系统安装好之后，需要配置一下更适合固态硬盘。</p><p>固态硬盘特性是寿命有限制，那么我们需要做这么几件事情来优化</p><ul><li><p>关闭rootless</p><p>  Rootless 具体是什么网上很多，简单说就是限制root的权限来确保系统目录或文件的安全。<br>  有些文章说开启TRIM可能需要关闭rootless，我在开启TRIM时发现不需要，这个因系统而异。<br>  如果后面要移动一些系统目录（比如HOME），或者做开发，也最好关闭。</p><p>  步骤 ：</p><pre><code>* 重启并按住command+r 进入恢复模式* 选择命令行工具，输入`sudo csrutil disable`* 需要重启。</code></pre></li><li><p>开启Trim。</p><p>  Trim是一种均衡固态硬盘读写的技术，使得写入不会总在一个地方。非Apple内置SSD不会自动开启Trim，需要自行开启。<br>  使用命令 <code>sudo trimforce enable</code>, 然后确认即可，可能重启。早期版本比如Yosimate可能需要重置 NVRAM/PRAM，<br>  我是用Mojave没有重置。</p></li><li><p>移动User Home</p><p>  为了减少SSD的使用量以及读写消耗，我将个人用户home目录移动到了机械硬盘。<br>  这个目录移动可以在 <code>设置-&gt;用户与组-&gt;解锁-&gt;右键自己用户-&gt;高级功能</code> 中修改，然后系统自动移动并重启。</p><p>  也可以使用命令完成移动整个User目录</p><pre><code>$sudo ditto /Users /Volumes/Macintosh\ HD/Users$sudo mv /Users /Users.backup $sudo ln -s /Volumes/Macintosh\ HD/Users Users$sudo rm -rf /Users.backup</code></pre></li><li><p>移动其他目录</p><p>  移动临时目录/tmp，因为/tmp是链接到/private/tmp，所以如下： </p><pre><code>$ sudo ditto /private/tmp /Volumes/Macintosh\ HD/private/tmp$ sudo rm -rf /private/tmp$ sudo ln -s /Volumes/Macintosh\ HD/private/tmp /private/tmp</code></pre></li><li><p>修改休眠文件位置 或 关闭休眠</p><ul><li><p>查看休眠配置</p><pre><code>$ pmset -g|grep hibernatehibernatefile        /var/vm/sleepimagehibernatemode        3</code></pre></li><li><p>修改休眠文件位置</p><pre><code>$ sudo pmset -a hibernatefile /Volumes/Macintosh\ HD/var/vm/sleepimage</code></pre></li><li><p>关闭休眠</p><p>Suspend to RAM ——&gt; 对应的hibernatemode：0；<br>Suspend to RAM+Disk ——&gt; 对应的hibernatemode：3<br>Suspend to Disk ——&gt; 对应的hibernatemode：5；</p><pre><code>$ sudo pmset -a hibernatemode 0</code></pre></li></ul></li></ul><ul><li><p>关闭文件最后访问时间</p><p>  <a href="http://junqiu.lofter.com/post/1d084679_5ef95d0" target="_blank" rel="noopener">http://junqiu.lofter.com/post/1d084679_5ef95d0</a></p><pre><code>$ sudo vi /Library/LaunchDaemons/com.nullvision.noatime.plist</code></pre><p>  编辑为如下内容</p><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;&lt;plist version=&quot;1.0&quot;&gt;    &lt;dict&gt;        &lt;key&gt;Label&lt;/key&gt;        &lt;string&gt;com.noatime&lt;/string&gt;        &lt;key&gt;ProgramArguments&lt;/key&gt;        &lt;array&gt;            &lt;string&gt;mount&lt;/string&gt;            &lt;string&gt;-vuwo&lt;/string&gt;            &lt;string&gt;noatime&lt;/string&gt;            &lt;string&gt;/&lt;/string&gt;        &lt;/array&gt;        &lt;key&gt;RunAtLoad&lt;/key&gt;&lt;true/&gt;    &lt;/dict&gt;&lt;/plist&gt;</code></pre><p>  然后设置权限</p><pre><code>$ sudo chown root:wheel /Library/LaunchDaemons/com.noatime.plist$ sudo chmod 644 /Library/LaunchDaemons/com.noatime.plist</code></pre><p>  重启后，使用命令 <code>mount | grep /</code> 查看，可以看到多了一个<code>noatime</code>属性</p><p>  使用前</p><pre><code>/dev/disk2s1 on / (apfs, local, journaled)</code></pre><p>  使用后</p><pre><code>/dev/disk2s1 on / (apfs, local, journaled, noatime)</code></pre></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;刚刚给2012年中的13寸MacBook Pro更换了SSD固态硬盘，并且添加了内存，记录一下。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意请先断电&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&quot;工具和配件&quot;&gt;&lt;a href=&quot;#工具和配件&quot; class=&quot;headerlink&quot; ti
+      
+    
+    </summary>
+    
+      <category term="Life" scheme="http://blog.samuelchen.net/categories/Life/"/>
+    
+    
+      <category term="MacBook" scheme="http://blog.samuelchen.net/tags/MacBook/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Machine Learning Memo 1</title>
+    <link href="http://blog.samuelchen.net/Machine-Learning-Memo-1/"/>
+    <id>http://blog.samuelchen.net/Machine-Learning-Memo-1/</id>
+    <published>2017-12-12T07:19:20.000Z</published>
+    <updated>2019-04-16T16:14:51.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近开始看Andrew Ng 的 <a href="https://www.coursera.org/learn/machine-learning" target="_blank" rel="noopener">Machine Learning 系列课程</a>，记录一下体会。</p><h3 id="Machine-Learning-学习笔记-第一周"><a href="#Machine-Learning-学习笔记-第一周" class="headerlink" title="Machine Learning 学习笔记 - 第一周"></a>Machine Learning 学习笔记 - 第一周</h3><p>重要关键词：Supervised, Unsupervised, Regression, Classfication, Features</p><p>机器学习主要分为有监管的(supervised)和无监管(两类).<br>有监管的基本上分为回归的(regression)和聚类(classfication)两种。<br>无监管的主要是用来分类。</p><p>假如有一件事情来了，如何来区分它适用哪一种方式？我总结了一点。</p><ul><li>Supervised (由人来<strong>监管或者指导</strong>已知答案的对错，从而判度未知答案或者预测）<ul><li>Regression. 根据已有的历史数据来<strong>预测(predict)</strong>将来某个点的数据。例如，天气预测，股票预测。</li><li>Classfication. 根据已有的历史数据来判断将来具有某些<strong>特征(feature)</strong>的某个数据，<strong>是否(weather or not)</strong> 某种状态。例如，某个年龄、某种肿瘤大小的患者是否(yes/no)是恶性的。再如，垃圾邮件标注及判断。</li></ul></li><li>Unsupervised<ul><li>从给定的历史数据来<strong>判断哪些数据是聚集在一起(在坐标轴上)</strong>，将这一部分数据归为一类，从而将所有数据归纳为几个分类(在之前，人并不知道结果）。例如，文章的分类，声音的剥离。</li></ul></li></ul><p>Feature 是指特征，表现为坐标轴，例如 判断肿瘤一例中的年龄和肿瘤大小就是两个特征。特征数量足够以及合适（并不是多）才能更准确的学习。</p><p>– END</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近开始看Andrew Ng 的 &lt;a href=&quot;https://www.coursera.org/learn/machine-learning&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Machine Learning 系列课程&lt;/a&gt;，记录一下体
+      
+    
+    </summary>
+    
+      <category term="Machine Learning" scheme="http://blog.samuelchen.net/categories/Machine-Learning/"/>
+    
+    
+      <category term="ML" scheme="http://blog.samuelchen.net/tags/ML/"/>
+    
+      <category term="supervised" scheme="http://blog.samuelchen.net/tags/supervised/"/>
+    
+      <category term="unsupervised" scheme="http://blog.samuelchen.net/tags/unsupervised/"/>
+    
+      <category term="classfication" scheme="http://blog.samuelchen.net/tags/classfication/"/>
+    
+      <category term="regression" scheme="http://blog.samuelchen.net/tags/regression/"/>
+    
+      <category term="feature" scheme="http://blog.samuelchen.net/tags/feature/"/>
+    
+      <category term="course" scheme="http://blog.samuelchen.net/tags/course/"/>
+    
+      <category term="memo" scheme="http://blog.samuelchen.net/tags/memo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>How to Setup Kafka Web Console</title>
+    <link href="http://blog.samuelchen.net/how-to-setup-kafka-web-console/"/>
+    <id>http://blog.samuelchen.net/how-to-setup-kafka-web-console/</id>
+    <published>2014-04-24T07:15:11.000Z</published>
+    <updated>2019-04-16T16:15:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>This project is hosted at <a href="https://github.com/claudemamo/kafka-web-console" target="_blank" rel="noopener">https://github.com/claudemamo/kafka-web-console</a></p><p>It’s a very simple console that only suit for learning Kafka purpose.</p><ul><li><p>Install Play Framework.</p><ul><li>Download here <a href="http://www.playframework.com/download" target="_blank" rel="noopener">http://www.playframework.com/download</a></li><li>Unzip to /path/to/play</li><li>Build Play. /path/to/play/framework/build</li></ul></li><li><p>Install Kafka-web-console.</p><ul><li>git clone <a href="https://github.com/claudemamo/kafka-web-console.git" target="_blank" rel="noopener">https://github.com/claudemamo/kafka-web-console.git</a>  /path/to/kafka-web-console</li><li>(or download the stable zip from <a href="https://github.com/claudemamo/kafka-web-console/releases" target="_blank" rel="noopener">https://github.com/claudemamo/kafka-web-console/releases</a>)</li></ul></li><li><p>Run the server</p><ul><li>Enable port 9000 for the server.</li><li>cd /path/to/kafka-web-console</li><li>/path/to/play/play start</li><li>Then the web console is servicing on port 9000.</li></ul></li><li><p>Configuration</p><ul><li><p>register zookeeper<br><img src="img1.png" alt=""></p></li><li><p>Check status to see if connected<br><img src="img2.png" alt=""></p></li></ul></li></ul><ul><li>“Database xxx needs evolution!” - Solution for database is not initialized.<ul><li>use “play -DapplyEvolutions.default=true” to start. </li><li>Or add “applyEvolutions.default=true” in conf/application.conf </li></ul></li></ul><p>– DONE</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;This project is hosted at &lt;a href=&quot;https://github.com/claudemamo/kafka-web-console&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://github.com/cla
+      
+    
+    </summary>
+    
+      <category term="Cloud2End" scheme="http://blog.samuelchen.net/categories/Cloud2End/"/>
+    
+    
+      <category term="configuration" scheme="http://blog.samuelchen.net/tags/configuration/"/>
+    
+      <category term="MQ" scheme="http://blog.samuelchen.net/tags/MQ/"/>
+    
+      <category term="monitor" scheme="http://blog.samuelchen.net/tags/monitor/"/>
+    
+      <category term="Kafka" scheme="http://blog.samuelchen.net/tags/Kafka/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Ubuntu12 虚拟机网络配置</title>
+    <link href="http://blog.samuelchen.net/ubuntu12-vm-network-config/"/>
+    <id>http://blog.samuelchen.net/ubuntu12-vm-network-config/</id>
+    <published>2012-06-21T11:09:05.000Z</published>
+    <updated>2019-04-16T16:18:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>用VM Player 4.0装了Ubuntu 12 server，然后复制了几个组成局域网来使用，发现了一些问题，网上基本上找不到完整的解决方法，这里记录下来。</p><a id="more"></a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在后来的实际应用中，了解了更多的方法，这种方法并不是一个比较好的方法，但仍不失为一个简单有效的方法。</span><br></pre></td></tr></table></figure><h2 id="Mac-地址"><a href="#Mac-地址" class="headerlink" title="Mac 地址"></a>Mac 地址</h2><p>复制的虚机Mac 地址都是相同的，组网会有问题，所以需要改过来。</p><p>首先是修改VM Setting，可以生成一个新的Mac地址，把它记录下来，假设是<br><code>00:AA:BB:CC:DD:EE</code> 。<br>网上的方法主要是</p><p><pre class="lang:default decode:true">sudo ifconfig eth0 down  #停掉网卡<br>sudo ifconfig eth0 hw ether 00:AA:BB:CC:DD:EE   #改mac<br>sudo ifconfig eth0 up     #起网卡<br>sudo /etc/init.d/networking restart  #重启网络</pre><br>但是，这样是不成的（至少在这次），重启以后会失效，又变回原来的。网上给出的方案是在 <code>/etc/network/if-pre-up.d/</code> 中添加<br><code>ifconfig eth0 hw ether 00:AA:BB:CC:DD:EE</code>，但我试过了是不行的。<br>另外有一种方法就是修改 <code>/etc/rc.local</code> 每次启动修改，但这种方法不太爽。<br>所以，最终的方案是：在 VM Setting 中删除掉 Network Adpater，然后再重启重新添加一个。<br>就这么简单，思路别被局限了。</p><!--more--><h2 id="机器名"><a href="#机器名" class="headerlink" title="机器名"></a>机器名</h2><p>复制以后的机器，名字都是一样，打算取名为vm-ubuntu1, vm-ubuntu2, vm-ubuntu3… 所以得逐个修改。</p><p>首先 <code>hostname vm-ubuntu2</code> 是不能保存的，重启后又还原，所以得修改<code>/etc/hostname</code>，内容就一行，<code>vm-ubuntu2</code></p><p>其次，光改了名字，从其他的机器是ping不到的，所以我们需要修改 <code>/etc/hosts</code> 来把所有的机器都列出来。</p><p><pre class="lang:default decode:true" title="hosts">127.0.0.1   localhost<br>192.168.48.142  vm-ubuntu1<br>192.168.48.156  vm-ubuntu2<br>192.168.48.148  vm-ubuntu3</pre><br>将 hosts 文件复制到所有的虚拟机（你也可以使用rsync同步），这样就可以通过名字互通了。</p><h2 id="静态IP"><a href="#静态IP" class="headerlink" title="静态IP"></a>静态IP</h2><p>上面这样做了之后，会有一个问题，就是DHCP重启之后IP会变，名字就失效了，所以需要改成静态IP。<br>很简单，先 ifconfig 查看一下 当前的 网关和掩码，</p><p><pre class="lang:default decode:true">Link encap:Ethernet  HWaddr 00:0c:29:1f:2a:fc<br>          inet addr:192.168.48.142  Bcast:192.168.48.255  Mask:255.255.255.0</pre><br>网关是 <code>192.168.48.255</code>， 掩码是 <code>255.255.255.0</code>，同时可以看到Mac已经变了(HWaddr就是）</p><p>然后修改 <code>/etc/network/interfaces</code> 就可以了，</p><p><pre class="lang:default decode:true">auto eth0<br>iface eth0 inet dhcp</pre><br>改为</p><p><pre class="lang:default decode:true">auto eth0<br>iface eth0 inet static<br>address 192.168.48.100<br>netmask 255.255.255.0<br>gateway 192.168.48.255</pre><br>这儿有个陷阱，就是 VM 的 网关实际上并不是 192.168.xx.255，而是window下看到的 VMware Network Adapter VMnet8 的 IP，一般是 192.168.xx.2，可以尝试 192.168.xx.1 或者 192.168.xx.2，所以真实的应该是</p><p><pre class="lang:default decode:true">auto eth0<br>iface eth0 inet static<br>address 192.168.48.101<br>netmask 255.255.255.0<br>gateway 192.168.48.2</pre><br>注意：我们不要使用192.168.xx.1 或者 2 来作为虚机的IP，这些都保留了，安全起见，用100之后的。<br>最后 sudo reboot，重启之后就可以联网了。</p><h2 id="DNS-域名解析"><a href="#DNS-域名解析" class="headerlink" title="DNS 域名解析"></a>DNS 域名解析</h2><p>上面设好了后，内网基本没问题，但是连外网可能会碰到问题，域名解析不了（我碰到了），所以需要设置DNS。<br>网上的方法，有一种是修改 <code>/etc/network/interfaces</code> 加上 nameserver</p><p><pre class="lang:default decode:true">auto eth0<br>iface eth0 inet static<br>address 192.168.48.101<br>netmask 255.255.255.0<br>gateway 192.168.48.2<br>nameserver 8.8.8.8</pre><br>这个貌似没有用，最后有用的方法是，修改 <code>/etc/resolveconf/resolve.conf.d/base</code>，加上 nameserver 就可以了</p><p><pre class="lang:default decode:true">nameserver 192.168.48.2<br>nameserver 8.8.8.8<br>nameserver 8.8.4.4</pre></p><ul><li>END</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;用VM Player 4.0装了Ubuntu 12 server，然后复制了几个组成局域网来使用，发现了一些问题，网上基本上找不到完整的解决方法，这里记录下来。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="System" scheme="http://blog.samuelchen.net/categories/System/"/>
+    
+    
+      <category term="configuration" scheme="http://blog.samuelchen.net/tags/configuration/"/>
+    
+      <category term="article" scheme="http://blog.samuelchen.net/tags/article/"/>
+    
+      <category term="Linux" scheme="http://blog.samuelchen.net/tags/Linux/"/>
+    
+      <category term="Ubuntu" scheme="http://blog.samuelchen.net/tags/Ubuntu/"/>
+    
+      <category term="VM" scheme="http://blog.samuelchen.net/tags/VM/"/>
+    
+      <category term="network" scheme="http://blog.samuelchen.net/tags/network/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>改变使用方式，重定义一个行业</title>
+    <link href="http://blog.samuelchen.net/redefine-industry-by-changing-usage/"/>
+    <id>http://blog.samuelchen.net/redefine-industry-by-changing-usage/</id>
+    <published>2012-03-10T17:10:00.000Z</published>
+    <updated>2019-04-16T16:15:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>一直比较喜欢和敬佩能改变或重新定义一个行业一个产业的人和公司，Bill Gates 改变了人们使用电脑的方法，Jobs 重新定义了手机，任天堂将游戏从桌面带到了屏幕，又从沙发带到了客厅，从家里带到了身上，facebook 把社交带到了电脑（准确来说，虚拟人生很早就在做这个事情），Google改变了互联网的入口，亚马逊、Google 等改变了计算方式，……</p><a id="more"></a><p>今天，互联网和移动终端，我们都知道，正在改变这个行业，大家或多或少，或清晰或朦胧的感受到、预见到那些正在以及可能产生的变化，也一直在寻找，我也一直在思考，到底会是怎样。也许有一天，只是一只手指，轻轻的触碰到了那一点，刷的一下，就豁然开朗。</p><p>一直在思考，究竟我们能改变什么？上面那些变化，都是大的公司，在强有力的支持下做出的（除了facebook），也许一个小公司小团队很难做到，但谁知道呢。</p><p>云和端，云很重要，但它实际上是一个载体，就好比互联网，再怎么发展，也是一个工具。而云就是各种业务，应用的一个载体，或许会有一天有天翻地覆的变化，但现在，我能看到的，云是一个很重要的基础设施，要想从这上面想象变化，暂时还没有突破口。</p><p>而端，或者说客户端、消费端，由其表现形式，已经能呈现出非常丰富的变化。而最有可能重新定义的就是软件/应用的消费方式。比如，可能是一个冰箱同步你的菜谱并自动调温，可能是一个闹钟同步你的日程还报出内容。手机端，是一种设备，由于各家巨头都看到了，它也是表现能力非常强的一种设备，正在改变人们消费数字产品的方式，从桌面带到了街头。</p><p>由于其他的设备的发展还不很明朗，所以我想谈谈手机（平板，智能手持设备）可能的带来的改变。</p><p>那么手机有哪些特点？</p><ul><li>首先我们第一个想到的肯定是移动能力</li><li>其次是小尺寸的屏幕（视觉输出）</li><li>接着是加入的GPS定位能力（地理方位输入）</li><li>再就是拍照、摄像（视觉输入）</li><li>还有重力感应（方向和速度输入）</li><li>Siri让我们想起了手机还有语音输入的能力（是不是很奇怪，手机一直都能通话，但这么久才有这个功能，语音识别技术早在上世纪90年代就有了）</li><li>另外还有指南，湿度，高度识别等等（方位，湿度，温度，高度的输入等）<br>注意我第一段说的那些改变，基本上都不是技术上的革命，而是使用方法的革命。就拿Siri来说，典型的旧瓶装新酒，语音识别+wolfalpha+LBS+Schedual 等等，都是早已出现的技术。</li></ul><p>所以我想说，最重要的是方式的改变。借着手机这么丰富的传感功能，也许我们能探索到一些改变某件事情的方法，将互联网和传统结合，走出点新路。</p><p>就拿阅读这件事情来说，什么是阅读？阅读什么？为什么阅读？什么时间阅读？什么位置阅读？什么天气阅读？文字、图片、视频可以阅读大家都知道，但声音能阅读吗？关系能阅读吗？知识能阅读，能力能阅读吗？善恶能阅读吗？阅读能变成游戏吗？阅读能传递吗？无数个想法。Kindle正在改变阅读的载体，阅读的方法呢，也许将来是直接注射的，就好似嫁衣神功一般。</p><p>思想风暴，想想看阅读和手机传感结合能有什么方式？</p><ul><li>阅读内容的改变。除了文字和图片，视频也是可以阅读的，但其他的阅读，受限于内容和表现形式暂时没有想到更好的。视频的阅读，除了播放之外，１）可以拆分成图片＋字幕的方式像漫画一样阅读。２）可以用语音视频读出视频内容，以文字方式阅读。３）看视频的时候同时阅读视频的相关信息比如导演，主演，内容介绍，评论等（已经有网站把评论作为视频的字幕在上下两侧飞过）。总的来说，视频是另外一种内容消费方式，和阅读挂钩丧失了原有的魅力。</li><li>文字与图片的阅读，小屏幕的限制解除，重新排版，转换格式</li><li>阅读的时候看看附近的人都在阅读什么</li><li>看看当地的新闻</li><li>旅游地的文字资料</li><li>长途驾驶对地标照相，自动产生路书并读出来</li><li>两人站在一起晃晃手机就交换了阅读内容</li><li>拍摄报纸一角剪报，识别，存档，日期地点等</li><li>路上看到个海报，拍下来，识别后，自动为你找到相关内容随身看</li><li>平板的阅读方式又和手机不同<br>总的来说，阅读是一种输出的应用，对输入的要求较少，如何利用传感输入可以是一个思路。更进一步的是改变设备的输入输出方式，比如全息，当然这个在技术上和产业实力上都不是一个小事。现在这么多人和企业都在做手机和移动设备，除了一些跟着捞一把的小企业，相信大多都是看到了这些。</li></ul><p>其他的，比如内容的存储，存的越多，手机抖的越厉害。比如有CMS和CRM，为什么不能有RMS，好过现在通讯录。再有，有游戏，有SNS游戏，有MUD，为什么不能有社交关系地理位置的轻游戏或者RMS，比如根据高度差，根据甩手机的重力程度，来攻击，或者不叫攻击叫骚扰，你的朋友（一个同事介绍的LBS游戏给的灵感）。根据通话、短信频率确定关系远近，等等等等。</p><p>– 随想。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;一直比较喜欢和敬佩能改变或重新定义一个行业一个产业的人和公司，Bill Gates 改变了人们使用电脑的方法，Jobs 重新定义了手机，任天堂将游戏从桌面带到了屏幕，又从沙发带到了客厅，从家里带到了身上，facebook 把社交带到了电脑（准确来说，虚拟人生很早就在做这个事情），Google改变了互联网的入口，亚马逊、Google 等改变了计算方式，……&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Industry" scheme="http://blog.samuelchen.net/categories/Industry/"/>
+    
+    
+      <category term="article" scheme="http://blog.samuelchen.net/tags/article/"/>
+    
+      <category term="IT" scheme="http://blog.samuelchen.net/tags/IT/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>下一代互联网初见端倪</title>
+    <link href="http://blog.samuelchen.net/next-gen-internet/"/>
+    <id>http://blog.samuelchen.net/next-gen-internet/</id>
+    <published>2011-06-17T16:26:00.000Z</published>
+    <updated>2019-04-16T16:17:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>现在的互联网，以及所谓的物联网，争的是两块，一块是服务端，也就是云端，另一块是终端。</p><p>云端现在是Amazon, Google暂时领先于基础架构领域，MS, Apple 处于追赶之中，Facebook/Twitter则领先于SNS（此SNS含义相当广，包括身份，信用，关系，服务，应用等等）方面。传统厂商如IBM, HP基于其固有的优势，大力推广所谓私有云，实质是企业cluster，在下一代互联网中已经落后一步。</p><p>而终端则是Apple，Google 和 MS 三足鼎立。iOS和Android，已经成为了移动领域事实上的领头羊，MS在桌面的固有优势以及家庭媒体中的发力，使其保持在第一梯队中。而HP，虽然购买了3Par, Palm/webos，但依然未能表现出足够的进取。其他厂商，目前看来，只是陪太子读书的角色。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;现在的互联网，以及所谓的物联网，争的是两块，一块是服务端，也就是云端，另一块是终端。&lt;/p&gt;
+&lt;p&gt;云端现在是Amazon, Google暂时领先于基础架构领域，MS, Apple 处于追赶之中，Facebook/Twitter则领先于SNS（此SNS含义相当广，包括身份，
+      
+    
+    </summary>
+    
+      <category term="Industry" scheme="http://blog.samuelchen.net/categories/Industry/"/>
+    
+    
+      <category term="Internet" scheme="http://blog.samuelchen.net/tags/Internet/"/>
+    
+      <category term="Cloud" scheme="http://blog.samuelchen.net/tags/Cloud/"/>
+    
+      <category term="Next Generation" scheme="http://blog.samuelchen.net/tags/Next-Generation/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python 的编码，关于 Encode, Decode 的简单原则</title>
+    <link href="http://blog.samuelchen.net/simple-principle-for-encode-decode-in-python/"/>
+    <id>http://blog.samuelchen.net/simple-principle-for-encode-decode-in-python/</id>
+    <published>2011-04-15T07:14:00.000Z</published>
+    <updated>2019-04-16T16:17:29.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Python 中 encoding 的处理其实已经很简单了，根据我这近一个月来用python的经验，有一个简单的原则可以作为参考。</p><a id="more"></a><p>基于python 2.7</p><ol><li>类型要清楚， unicode 不是 str</li><li>decode 之后的结果都是 unicode</li><li>encode 之后的结果都是 str，其编码是你encode的参数</li><li>输出一律用 str</li><li>存取一律用 unicode</li><li>应用入口重设默认编码 <code>sys.setdefaultencoding(&#39;utf-8&#39;)</code> （记得需要<code>reload(sys)</code>） </li></ol><p>简单按照这个原则，编码基本上就不会错了。</p><p>举个例子，有个GBK编码的文件 name.txt，每行一个人名，现在要处理</p><pre>    for line in open('name.txt').readlines():      print line # 这时候 line 都是 gbk 的       str x = line.decode('gbk') # 转成 unicode               #(建议这么做，原则：但凡输入的，一律转换成unicode后处理)      print x # 输出 unicode (不建议这么做)      print x.encode('utf-8') # 输出 str (建议这么做，原则：但凡输出，一定编码成str)      store_to_db(x) # 这时候存的都是unicode       my_str = x.encode('big5') # 转成 big5了       print m_str # 输出的是 big5 的 str</pre><p>此外，encode 的时候不一定会成功，这时候会raise一个exception，这是因为 encode 还有一个参数用来控制encode失败后的处理，default是strict，也就是抛异常。</p><p>你可以用 <code>encode(src, &#39;replace&#39;)</code> 来处理，replace就表示碰到转不了的，用问号<code>&#39;?&#39;</code>来代替，而不是抛异常。</p><p>具体用法查文档。</p><p>同样，输出的时候，输出流也需要有编码。比如stdout默认是ascii的，而你要输出unicode，就需要得到一个基于unicode的输出流，<code>output = codecs.getwriter(&#39;utf-8&#39;)(sys.stdout)</code></p><p>– END</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Python 中 encoding 的处理其实已经很简单了，根据我这近一个月来用python的经验，有一个简单的原则可以作为参考。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://blog.samuelchen.net/categories/Programming/"/>
+    
+    
+      <category term="Python" scheme="http://blog.samuelchen.net/tags/Python/"/>
+    
+      <category term="encoding" scheme="http://blog.samuelchen.net/tags/encoding/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>web.py 在 Apache + Fastcgi 配置 Tips</title>
+    <link href="http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/"/>
+    <id>http://blog.samuelchen.net/config-webpy-in-apache-fastcgi/</id>
+    <published>2011-04-02T13:56:00.000Z</published>
+    <updated>2019-04-16T16:17:22.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>根据web.py官网的说明，配置使其运行在apache + fastcgi 上，碰到了许多问题，耗了两天时间才整明白。一方面是apache的配置不熟悉，另外一方面是其官方文档也有些疏漏，问题及解决办法如下(ubuntu 10.04)：</p><ul><li>调试日志<br>web.py 应用挂在服务器上以后，stdout/stderr，都好像转了（查网上的，未验证），另外apache的用户是www-data，用户当前目录也是没有权限，所以logging要记录在/tmp下，或者单独建一个/log目录给写权限才行，这个一般规划好了没什么问题。<br>另外，也可以做个ApacheLogHandler来将日志记到apache的日志文件中，这个网上可以搜到。<br>然后就是，apache的日志文件在/var/log/apache2/ 。如果你的网站配置文件修改了日志位置，要注意这个地方只记录了一部分，还有一些仍然会记录在default位置。<br>最后，可以使用traceback包来记录未处理的异常，代码如下：<br><pre><br>try:<h1 id="web-py-code"><a href="#web-py-code" class="headerlink" title="web.py code"></a>web.py code</h1><h1 id="urls-…"><a href="#urls-…" class="headerlink" title="urls = …"></a>urls = …</h1><h1 id="…"><a href="#…" class="headerlink" title="…"></a>…</h1><h1 id="app-run"><a href="#app-run" class="headerlink" title="app.run()"></a>app.run()</h1></pre></li></ul><p>except Exception, e:<br>    f = None<br>    if os.name == ‘posix’:<br>        f = open(‘/tmp/yule_unhandled_error.log’, ‘w’)<br>    else:<br>        f = open(‘%s/yule_unhandled_error.log’ % os.environ[‘temp’], ‘w’)<br>    traceback.print_exc( file=f )<br>    traceback.print_exc( file=f )<br>    f.close()<br></p><ul><li>python 库路径 (PYTHONPATH)<br>在 apache + fastcgi 中运行 python cgi，如果你使用了 PYTHONPATH 来引用库，你会发行看到的永远是 500 Internal Error。这是因为apache没有复制shell中的环境变量。<br>注意，不要使用envvar文件，或者在网站配置文件中用setEnv，passEnv 等方法，这些方法我试过完全没有用。<br>你要做的是，用代码将所有的路径全部都加到sys.path中。代码如下：<br><pre><br>import os, sys<br>python_path = “/you/python/lib/path:/you/python/lib/path2”.split(‘:’)<br>for path in python_path:<pre><code>sys.path.insert(0, path)</code></pre></pre><br>当然你可以检查path是否已经加入了，注意路径访问权限，牢记现在的用户是www-data。</li><li>静态文件<br>好了，现在都配好了，再访问网站 … OK 出来了！<br>等等！ 怎么搞的，样式表，图像怎么都显示不出来了？<br>原来是web.py <a href="http://webpy.org/cookbook/fastcgi-apache" target="_blank" rel="noopener">官网的配置文件</a>有少许疏漏，静态文件的转发不对！<br>假设静态目录是网站根下的 /static/ （这也是web.py的推荐位置），那么我们要做的是修改网站配置文件的mod_rewrite 规则为:<br><pre><h1 id="修改-ifmodule-这一节，注意蓝色行"><a href="#修改-ifmodule-这一节，注意蓝色行" class="headerlink" title="修改 ifmodule 这一节，注意蓝色行"></a>修改 ifmodule 这一节，注意蓝色行</h1>   RewriteEngine on<br>   RewriteBase /<br>   RewriteCond %{REQUEST_URI} !^/icons<br>   RewriteCond %{REQUEST_URI} !^/favicon.ico$<br>   <span style="color: blue;">RewriteCond %{REQUEST_URI} !^/static/  ### 注意这一行 </span><br>   RewriteCond %{REQUEST_URI} !^(/.<em>)+code.py/<br>   RewriteRule ^(.</em>)$ code.py/$1 [PT]<br></pre><br>好了，现在再试试，是不是已经好了 :)</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;根据web.py官网的说明，配置使其运行在apache + fastcgi 上，碰到了许多问题，耗了两天时间才整明白。一方面是apache的配置不熟悉，另外一方面是其官方文档也有些疏漏，问题及解决办法如下(ubuntu 10.04)：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;调试日志&lt;b
+      
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://blog.samuelchen.net/categories/Programming/"/>
+    
+    
+      <category term="configuration" scheme="http://blog.samuelchen.net/tags/configuration/"/>
+    
+      <category term="Python" scheme="http://blog.samuelchen.net/tags/Python/"/>
+    
+      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
+    
+      <category term="Linux" scheme="http://blog.samuelchen.net/tags/Linux/"/>
+    
+      <category term="Ubuntu" scheme="http://blog.samuelchen.net/tags/Ubuntu/"/>
+    
+      <category term="web.py" scheme="http://blog.samuelchen.net/tags/web-py/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Django 如何在模板(Template)中使用settings中预定义的变量</title>
+    <link href="http://blog.samuelchen.net/using-predefined-var-in-django-template/"/>
+    <id>http://blog.samuelchen.net/using-predefined-var-in-django-template/</id>
+    <published>2011-03-04T16:26:00.000Z</published>
+    <updated>2019-04-16T16:17:11.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在Django中编写模板(template)的时候， 有时候可能会用到settings中设定的变量， 比如说STATIC_URL。 此时， 如果你直接使用 <code></code> 是取不到值的。 那么怎么才能在模板中使用呢？ 难道非得在每个view中添加到context中吗？</p><p>答案是否定的。 根据Django文档中所描述， 我们至少有两种方法可以直接使用。 <a href="http://docs.djangoproject.com/en/dev/howto/static-files/#referring-to-static-files-in-templates" target="_blank" rel="noopener">http://docs.djangoproject.com/en/dev/howto/static-files/#referring-to-static-files-in-templates</a></p><a id="more"></a><p>方法1：</p><p>使用 <code>{ % load static %}</code> 载入 static 模块，然后使用 <code>{ % get_static_prefix %}</code> 就可以了。</p><p><pre>{ % load static %}</pre></p><p>&lt;img src=”{ % get_static_prefix %}images/hi.jpg” /&gt;<br>当然也可以将其定义为变量以多次使用</p><p><pre>{ % load static %}<br>{ % get_static_prefix as STATIC_PREFIX %}<br>&lt;img src=”images/hi.jpg” /&gt;<br>&lt;img src=”images/hi2.jpg” /&gt;</pre><br>方法2：</p><p>这个方法是推荐的方法， 直接使用 RequestContext 来传递。 其原因就是因为settings中定义的变量都会在request中传递， 但是response的时候是没有这些context的， 所以Django专门定义了RequestContext来帮你组合 （其实你自己也可以做这件事）。</p><p><pre>#注意这里是django.template，由此可见是专门为template设计的<br>from django.template import RequestContext</pre></p><p>def some_view(request):</p><pre><code># ...    return render_to_response(&apos;my_template.html&apos;,                          my_data_dictionary,                          context_instance=RequestContext(request))&lt;/pre&gt;</code></pre><p>这个实际作用就是将request中的context全部都加到response的context中去。</p><p>这样，你就可以直接在模板中使用<code></code> 来使用了，当然其他的变量也是可以的，不需要每个都单独去load了。</p><div></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在Django中编写模板(template)的时候， 有时候可能会用到settings中设定的变量， 比如说STATIC_URL。 此时， 如果你直接使用 &lt;code&gt;&lt;/code&gt; 是取不到值的。 那么怎么才能在模板中使用呢？ 难道非得在每个view中添加到context中吗？&lt;/p&gt;
+&lt;p&gt;答案是否定的。 根据Django文档中所描述， 我们至少有两种方法可以直接使用。 &lt;a href=&quot;http://docs.djangoproject.com/en/dev/howto/static-files/#referring-to-static-files-in-templates&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;http://docs.djangoproject.com/en/dev/howto/static-files/#referring-to-static-files-in-templates&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://blog.samuelchen.net/categories/Programming/"/>
+    
+    
+      <category term="Django" scheme="http://blog.samuelchen.net/tags/Django/"/>
+    
+      <category term="Python" scheme="http://blog.samuelchen.net/tags/Python/"/>
+    
+      <category term="static" scheme="http://blog.samuelchen.net/tags/static/"/>
+    
+      <category term="template" scheme="http://blog.samuelchen.net/tags/template/"/>
+    
+      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Django 静态文件配置</title>
+    <link href="http://blog.samuelchen.net/config-django-static-files/"/>
+    <id>http://blog.samuelchen.net/config-django-static-files/</id>
+    <published>2011-03-04T07:59:00.000Z</published>
+    <updated>2019-04-16T16:17:01.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。</p><p>这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的方式运行调试，更是麻烦。在网上找了很久，始终也没有一个很全面的解决方案。</p><p>自动动手，丰衣足食，参考 Django 官网的介绍，终于解决了。废话不多说，解决方案如下：</p><p>开发环境（manage.py)</p><p>参考 <a href="http://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-development" target="_blank" rel="noopener">http://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-development</a>.<br>网上有很多介绍改这个 MEDIA_ROOT, MEDIA_URL 改那个 STATIC_ROOT, STATIC_URL 的，注意，完全没有必要，开发时，这些都不需要改就可以运行。<br>MEDIA 是指你上传的文件存放，比如图像，视频，压缩包之类的，而STATIC是你网站运行需要依赖的一些静态文件，比如css, js, template 等等。开发时先不管它们。</p><ul><li>首先，复制 C:/Python27/Lib/site-packages/django/contrib/admin/media/ 下的文件，到你网站的 c:/mysite/static/ 下，那么就有了 c:/mysite/static/media/ 目录。</li><li>其次，将 /static/media/ 改为 /static/admin/ 。 这个修改是为了符合 ADMIN_MEDIA_PREFIX=’/static/admin/‘，你网站上的admin的静态文件都会渲染成 <a href="http://server/" target="_blank" rel="noopener">http://server/</a>/xxx/xxx.css 之类，也就成了 <a href="http://server/static/admin/xxx/xxx.css" target="_blank" rel="noopener">http://server/static/admin/xxx/xxx.css</a> ，这样就能找到正确的服务器静态文件了。同时，也是为了避免 media 和 static 造成混淆了，前面说了，MEDIA 实际上是用来存放上传下载文件的。</li><li><p>然后，打开你网站的 c:/mysite/settings.py ，修改 STATICFILES_DIRS 段</p><pre>STATICFILES_DIRS = (    'c:/mysite/static/',)</pre></li><li><p>最好，修改 c:/mysite/urls.py，在 urlpatterns 下面增加一行<br><pre>urlpatterns += staticfiles_urlpatterns()</pre><br>别忘了头上加上一句<br><pre>from django.contrib.staticfiles.urls import staticfiles_urlpatterns</pre><br>运行python manage.py runserver，用浏览器访问 <a href="http://localhost:8000/admin/" target="_blank" rel="noopener">http://localhost:8000/admin/</a> ， 看看是不是好了。</p></li></ul><p>部署环境</p><p>以后试过了再写。</p><p>&nbsp;</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。&lt;/p&gt;
+&lt;p&gt;这是怎么回事？其原因就是 Djan
+      
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://blog.samuelchen.net/categories/Programming/"/>
+    
+    
+      <category term="configuration" scheme="http://blog.samuelchen.net/tags/configuration/"/>
+    
+      <category term="Django" scheme="http://blog.samuelchen.net/tags/Django/"/>
+    
+      <category term="Python" scheme="http://blog.samuelchen.net/tags/Python/"/>
+    
+      <category term="static" scheme="http://blog.samuelchen.net/tags/static/"/>
+    
+      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
+    
+  </entry>
+  
+</feed>

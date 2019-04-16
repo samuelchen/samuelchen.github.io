@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Explorer. Dream. Discover.">
+    <title>Django 静态文件配置 - Explorer. Dream. Discover.</title>
+    <meta name="author" content="Samuel Chen">
+    <meta name="description" content="Explorer. Dream. Discover.">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。 这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的">
+<meta name="keywords" content="configuration,Django,Python,static,programming">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Django 静态文件配置">
+<meta property="og:url" content="http://blog.samuelchen.net/config-django-static-files/index.html">
+<meta property="og:site_name" content="Explorer. Dream. Discover.">
+<meta property="og:description" content="Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。 这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-16T16:17:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Django 静态文件配置">
+<meta name="twitter:description" content="Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。 这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的">
+<meta name="twitter:creator" content="@samuelchen">
+    
+    
+    
+        <meta property="og:image" content="/assets/images/avatar.gif"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Explorer. Dream. Discover.</a>
+    </h1>
+    
+        <a class="header-right-picture" href="/#about">
+            <img class="header-picture" src="/assets/images/avatar.gif">
+        </a>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    <div class="sidebar-profile">
+        <a href="/#about">
+            
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif">
+            
+        </a>
+        <span class="sidebar-profile-name">Samuel Chen</span>
+    </div>
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link st-search-show-outputs" href="#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
+                    <span class="sidebar-button-desc">Website</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">Mirror on Github</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Legacies</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Django 静态文件配置</h1>
+    
+    <div class="post-meta">
+    <time itemprop="datePublished" content="Fri Mar 04 2011 15:59:00 GMT+0800">
+        Mar 04, 2011
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Programming/">Programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+            <p>Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。</p>
+<p>这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的方式运行调试，更是麻烦。在网上找了很久，始终也没有一个很全面的解决方案。</p>
+<p>自动动手，丰衣足食，参考 Django 官网的介绍，终于解决了。废话不多说，解决方案如下：</p>
+<p>开发环境（manage.py)</p>
+<p>参考 <a href="http://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-development" target="_blank" rel="noopener">http://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-development</a>.<br>网上有很多介绍改这个 MEDIA_ROOT, MEDIA_URL 改那个 STATIC_ROOT, STATIC_URL 的，注意，完全没有必要，开发时，这些都不需要改就可以运行。<br>MEDIA 是指你上传的文件存放，比如图像，视频，压缩包之类的，而STATIC是你网站运行需要依赖的一些静态文件，比如css, js, template 等等。开发时先不管它们。</p>
+<ul>
+<li>首先，复制 C:/Python27/Lib/site-packages/django/contrib/admin/media/ 下的文件，到你网站的 c:/mysite/static/ 下，那么就有了 c:/mysite/static/media/ 目录。</li>
+<li>其次，将 /static/media/ 改为 /static/admin/ 。 这个修改是为了符合 ADMIN_MEDIA_PREFIX=’/static/admin/‘，你网站上的admin的静态文件都会渲染成 <a href="http://server/" target="_blank" rel="noopener">http://server/</a>/xxx/xxx.css 之类，也就成了 <a href="http://server/static/admin/xxx/xxx.css" target="_blank" rel="noopener">http://server/static/admin/xxx/xxx.css</a> ，这样就能找到正确的服务器静态文件了。同时，也是为了避免 media 和 static 造成混淆了，前面说了，MEDIA 实际上是用来存放上传下载文件的。</li>
+<li><p>然后，打开你网站的 c:/mysite/settings.py ，修改 STATICFILES_DIRS 段</p>
+<pre>STATICFILES_DIRS = (    'c:/mysite/static/',)</pre>
+</li>
+<li><p>最好，修改 c:/mysite/urls.py，在 urlpatterns 下面增加一行<br><pre>urlpatterns += staticfiles_urlpatterns()</pre><br>别忘了头上加上一句<br><pre>from django.contrib.staticfiles.urls import staticfiles_urlpatterns</pre><br>运行python manage.py runserver，用浏览器访问 <a href="http://localhost:8000/admin/" target="_blank" rel="noopener">http://localhost:8000/admin/</a> ， 看看是不是好了。</p>
+</li>
+</ul>
+<p>部署环境</p>
+<p>以后试过了再写。</p>
+<p>&nbsp;</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Django/">Django</a> <a class="tag tag--primary tag--small t-link" href="/tags/Python/">Python</a> <a class="tag tag--primary tag--small t-link" href="/tags/configuration/">configuration</a> <a class="tag tag--primary tag--small t-link" href="/tags/programming/">programming</a> <a class="tag tag--primary tag--small t-link" href="/tags/static/">static</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/using-predefined-var-in-django-template/" data-tooltip="Django 如何在模板(Template)中使用settings中预定义的变量">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 静态文件配置&amp;url=http://blog.samuelchen.net/config-django-static-files/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-django-static-files/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-django-static-files/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 Samuel Chen. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/using-predefined-var-in-django-template/" data-tooltip="Django 如何在模板(Template)中使用settings中预定义的变量">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 静态文件配置&amp;url=http://blog.samuelchen.net/config-django-static-files/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-django-static-files/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-django-static-files/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 静态文件配置&amp;url=http://blog.samuelchen.net/config-django-static-files/">
+                <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-django-static-files/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-django-static-files/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/avatar.gif">
+        
+            <h4 id="about-card-name">Samuel Chen</h4>
+        
+            <h5 id="about-card-bio"><p>I am living in Wuhan with my wife and daughter.<br>Before 2010, I was living in Beijing for a long time.<br>My interesings are cloud technology, distributed system, data mining and mobile technologies.<br>In my spare time, I like to play football and swiming.<br>“Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.</p>
+</h5>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br>
+                Wuhan, China
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'samuelchen';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','78osZec8utGs_7B3JCab','2.0.0');
+    </script>
+
+
+</html>

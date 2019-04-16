@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Explorer. Dream. Discover.">
+    <title>在 Azure Blob 存储上部署 Hexo 静态网站 - Explorer. Dream. Discover.</title>
+    <meta name="author" content="Samuel Chen">
+    <meta name="description" content="Explorer. Dream. Discover.">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="之前，个人博客一直都是用 Hexo 生成并部署为GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等挺麻">
+<meta name="keywords" content="deployment,static,Azure,Hexo,blob">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="在 Azure Blob 存储上部署 Hexo 静态网站">
+<meta property="og:url" content="http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/index.html">
+<meta property="og:site_name" content="Explorer. Dream. Discover.">
+<meta property="og:description" content="之前，个人博客一直都是用 Hexo 生成并部署为GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等挺麻">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-16T16:36:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在 Azure Blob 存储上部署 Hexo 静态网站">
+<meta name="twitter:description" content="之前，个人博客一直都是用 Hexo 生成并部署为GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等挺麻">
+<meta name="twitter:creator" content="@samuelchen">
+    
+    
+    
+        <meta property="og:image" content="/assets/images/avatar.gif"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Explorer. Dream. Discover.</a>
+    </h1>
+    
+        <a class="header-right-picture" href="/#about">
+            <img class="header-picture" src="/assets/images/avatar.gif">
+        </a>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    <div class="sidebar-profile">
+        <a href="/#about">
+            
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif">
+            
+        </a>
+        <span class="sidebar-profile-name">Samuel Chen</span>
+    </div>
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link st-search-show-outputs" href="#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
+                    <span class="sidebar-button-desc">Website</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">Mirror on Github</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Legacies</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">在 Azure Blob 存储上部署 Hexo 静态网站</h1>
+    
+    <div class="post-meta">
+    <time itemprop="datePublished" content="Wed Apr 17 2019 00:10:39 GMT+0800">
+        Apr 17, 2019
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Cloud2End/">Cloud2End</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+            <p>之前，<a href="http://blog.samuelchen.net">个人博客</a>一直都是用 <code>Hexo</code> 生成并部署为<br><code>GitHub Pages</code>。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub<br>上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。</p>
+<p>手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTP<br>Server 防火墙，FTP/Rsync/SSH 等等挺麻烦，就寻思着是不是能用对象存储来做。于是翻看了 Azure<br>Blob 到文档，发现真还行，而且还挺简单，内置支持。</p>
+<p>首先新建<strong>全局唯一</strong>的存储账号，比如我选则了 <code>chen</code>，这个会作为你 Azure 存储的一个 End<br>Point，比如 chen.blob.core.windows.net，可以直接通过这个域名来访问你的存储对象。这个时候<br>要注意一点，一定要选择 <code>StorageV2 (通用版 v2)</code> 类型，只有这个类型才支持直接部署静态网站。<br>我之前就是选择了 <code>v1</code> 类型，导致无法自动识别 <code>index.html</code> 而无法访问。建好后，选择<br><code>静态网站</code> 菜单并 <strong>启用</strong>，系统会自动生成名为 <code>$web</code> 的 <code>容器(Container)</code>，作为存储网站的根目录。</p>
+<p>以上配置完成后，就用 <code>hexo generate</code> 命令生成你的网站，网站生成后都在 <code>public</code> 目录<br>下，这些不细说。然后需要做的是把生成的网站传到刚建立到容器 <code>blog</code> 中，有几种方法可以做到：</p>
+<ol>
+<li>直接使用浏览器在 Azure 门户页面 <code>存储资源管理器</code> 中上传</li>
+<li>下载 <code>存储资源管理器</code> 桌面版，上传</li>
+<li>使用 <code>AzCopy</code> 上传 （需要.net）</li>
+<li>使用 Azure Client 命令行工具 <code>az</code></li>
+</ol>
+<p>前面2种方法都很简单，找到相应位置或者下载软件就行了，第3个需要.net，不足够通用，我使用到是第4种<br>方法，简单写了个脚本，每次自动上传，主要是下面这句，其他都省略了:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env sh</span></span><br><span class="line"></span><br><span class="line">BLOB_ACCOUNT=<span class="string">"chen"</span>     <span class="comment"># blob 账号</span></span><br><span class="line">BLOB_CONTAINER=<span class="string">'$web'</span>   <span class="comment"># blob 容器</span></span><br><span class="line"></span><br><span class="line">hexo clean &amp;&amp; hexo generate &amp;&amp; az storage blob upload-batch -d <span class="variable">$BLOB_CONTAINER</span> --account-name <span class="variable">$BLOB_ACCOUNT</span> -s ./public</span><br></pre></td></tr></table></figure>
+<p>然后就可以用 <code>https://chen.z?.web.core.windows.net</code> (？是某个数字，z? 代表一个地区)<br>访问你的网站了。</p>
+<p>安装 Azure Client 的步骤就不写了，直接看文档。安装好后，记得运行 <code>az login</code> 登录。</p>
+<p>最后，如果你有自己都域名，可以选择 <code>自定义域</code> 来配置，同时要配置 DNS.</p>
+<p>这种方法非常简单，费用也很低，基础 1G 才大概几美分。不过有一点不好的是，<code>v2</code> 类型的 blob<br>存储还有访问计费，每万次也有几～几十美分，而 Hexo 生成的静态网站文件很多，一次上传就得几百上千<br>个文件，而且只要改配置或者模版，文件就都大多数都修改了，得全部上传。</p>
+<p>Azure Blob 部署的静态网站，如果用 <code>windows.net</code> 访问，是自带 <code>https</code> 的，如果你需要给<br>自定义域名也用上https，需要配置 <code>CDN</code>。而且，<code>CDN</code> 会自动选择不同的地区访问，blob 是固定<br>地区的（比如 blob 账号、容器是在 美国东部 US-EAST，那么亚洲访问就稍慢）。</p>
+<p>– END –</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Azure/">Azure</a> <a class="tag tag--primary tag--small t-link" href="/tags/Hexo/">Hexo</a> <a class="tag tag--primary tag--small t-link" href="/tags/blob/">blob</a> <a class="tag tag--primary tag--small t-link" href="/tags/deployment/">deployment</a> <a class="tag tag--primary tag--small t-link" href="/tags/static/">static</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/" data-tooltip="为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=在 Azure Blob 存储上部署 Hexo 静态网站&amp;url=http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 Samuel Chen. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/" data-tooltip="为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=在 Azure Blob 存储上部署 Hexo 静态网站&amp;url=http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=在 Azure Blob 存储上部署 Hexo 静态网站&amp;url=http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/">
+                <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/avatar.gif">
+        
+            <h4 id="about-card-name">Samuel Chen</h4>
+        
+            <h5 id="about-card-bio"><p>I am living in Wuhan with my wife and daughter.<br>Before 2010, I was living in Beijing for a long time.<br>My interesings are cloud technology, distributed system, data mining and mobile technologies.<br>In my spare time, I like to play football and swiming.<br>“Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.</p>
+</h5>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br>
+                Wuhan, China
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js"></script>
+<!--SCRIPTS END-->
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','78osZec8utGs_7B3JCab','2.0.0');
+    </script>
+
+
+</html>

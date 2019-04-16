@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Explorer. Dream. Discover.">
+    <title>Machine Learning Memo 1 - Explorer. Dream. Discover.</title>
+    <meta name="author" content="Samuel Chen">
+    <meta name="description" content="Explorer. Dream. Discover.">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="最近开始看Andrew Ng 的 Machine Learning 系列课程，记录一下体会。 Machine Learning 学习笔记 - 第一周重要关键词：Supervised, Unsupervised, Regression, Classfication, Features 机器学习主要分为有监管的(supervised)和无监管(两类).有监管的基本上分为回归的(regression)和">
+<meta name="keywords" content="ML,supervised,unsupervised,classfication,regression,feature,course,memo">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Machine Learning Memo 1">
+<meta property="og:url" content="http://blog.samuelchen.net/Machine-Learning-Memo-1/index.html">
+<meta property="og:site_name" content="Explorer. Dream. Discover.">
+<meta property="og:description" content="最近开始看Andrew Ng 的 Machine Learning 系列课程，记录一下体会。 Machine Learning 学习笔记 - 第一周重要关键词：Supervised, Unsupervised, Regression, Classfication, Features 机器学习主要分为有监管的(supervised)和无监管(两类).有监管的基本上分为回归的(regression)和">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-16T16:14:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Machine Learning Memo 1">
+<meta name="twitter:description" content="最近开始看Andrew Ng 的 Machine Learning 系列课程，记录一下体会。 Machine Learning 学习笔记 - 第一周重要关键词：Supervised, Unsupervised, Regression, Classfication, Features 机器学习主要分为有监管的(supervised)和无监管(两类).有监管的基本上分为回归的(regression)和">
+<meta name="twitter:creator" content="@samuelchen">
+    
+    
+    
+        <meta property="og:image" content="/assets/images/avatar.gif"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Explorer. Dream. Discover.</a>
+    </h1>
+    
+        <a class="header-right-picture" href="/#about">
+            <img class="header-picture" src="/assets/images/avatar.gif">
+        </a>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    <div class="sidebar-profile">
+        <a href="/#about">
+            
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif">
+            
+        </a>
+        <span class="sidebar-profile-name">Samuel Chen</span>
+    </div>
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link st-search-show-outputs" href="#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
+                    <span class="sidebar-button-desc">Website</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">Mirror on Github</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Legacies</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Machine Learning Memo 1</h1>
+    
+    <div class="post-meta">
+    <time itemprop="datePublished" content="Tue Dec 12 2017 15:19:20 GMT+0800">
+        Dec 12, 2017
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Machine-Learning/">Machine Learning</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+            <p>最近开始看Andrew Ng 的 <a href="https://www.coursera.org/learn/machine-learning" target="_blank" rel="noopener">Machine Learning 系列课程</a>，记录一下体会。</p>
+<h3 id="Machine-Learning-学习笔记-第一周"><a href="#Machine-Learning-学习笔记-第一周" class="headerlink" title="Machine Learning 学习笔记 - 第一周"></a>Machine Learning 学习笔记 - 第一周</h3><p>重要关键词：Supervised, Unsupervised, Regression, Classfication, Features</p>
+<p>机器学习主要分为有监管的(supervised)和无监管(两类).<br>有监管的基本上分为回归的(regression)和聚类(classfication)两种。<br>无监管的主要是用来分类。</p>
+<p>假如有一件事情来了，如何来区分它适用哪一种方式？我总结了一点。</p>
+<ul>
+<li>Supervised (由人来<strong>监管或者指导</strong>已知答案的对错，从而判度未知答案或者预测）<ul>
+<li>Regression. 根据已有的历史数据来<strong>预测(predict)</strong>将来某个点的数据。例如，天气预测，股票预测。</li>
+<li>Classfication. 根据已有的历史数据来判断将来具有某些<strong>特征(feature)</strong>的某个数据，<strong>是否(weather or not)</strong> 某种状态。例如，某个年龄、某种肿瘤大小的患者是否(yes/no)是恶性的。再如，垃圾邮件标注及判断。</li>
+</ul>
+</li>
+<li>Unsupervised<ul>
+<li>从给定的历史数据来<strong>判断哪些数据是聚集在一起(在坐标轴上)</strong>，将这一部分数据归为一类，从而将所有数据归纳为几个分类(在之前，人并不知道结果）。例如，文章的分类，声音的剥离。</li>
+</ul>
+</li>
+</ul>
+<p>Feature 是指特征，表现为坐标轴，例如 判断肿瘤一例中的年龄和肿瘤大小就是两个特征。特征数量足够以及合适（并不是多）才能更准确的学习。</p>
+<p>– END</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/ML/">ML</a> <a class="tag tag--primary tag--small t-link" href="/tags/classfication/">classfication</a> <a class="tag tag--primary tag--small t-link" href="/tags/course/">course</a> <a class="tag tag--primary tag--small t-link" href="/tags/feature/">feature</a> <a class="tag tag--primary tag--small t-link" href="/tags/memo/">memo</a> <a class="tag tag--primary tag--small t-link" href="/tags/regression/">regression</a> <a class="tag tag--primary tag--small t-link" href="/tags/supervised/">supervised</a> <a class="tag tag--primary tag--small t-link" href="/tags/unsupervised/">unsupervised</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/" data-tooltip="为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/how-to-setup-kafka-web-console/" data-tooltip="How to Setup Kafka Web Console">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Machine Learning Memo 1&amp;url=http://blog.samuelchen.net/Machine-Learning-Memo-1/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Machine-Learning-Memo-1/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Machine-Learning-Memo-1/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 Samuel Chen. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/" data-tooltip="为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/how-to-setup-kafka-web-console/" data-tooltip="How to Setup Kafka Web Console">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Machine Learning Memo 1&amp;url=http://blog.samuelchen.net/Machine-Learning-Memo-1/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Machine-Learning-Memo-1/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Machine-Learning-Memo-1/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Machine Learning Memo 1&amp;url=http://blog.samuelchen.net/Machine-Learning-Memo-1/">
+                <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Machine-Learning-Memo-1/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Machine-Learning-Memo-1/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/avatar.gif">
+        
+            <h4 id="about-card-name">Samuel Chen</h4>
+        
+            <h5 id="about-card-bio"><p>I am living in Wuhan with my wife and daughter.<br>Before 2010, I was living in Beijing for a long time.<br>My interesings are cloud technology, distributed system, data mining and mobile technologies.<br>In my spare time, I like to play football and swiming.<br>“Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.</p>
+</h5>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br>
+                Wuhan, China
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'samuelchen';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','78osZec8utGs_7B3JCab','2.0.0');
+    </script>
+
+
+</html>
