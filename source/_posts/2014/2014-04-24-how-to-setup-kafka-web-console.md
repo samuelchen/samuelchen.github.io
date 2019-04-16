@@ -1,8 +1,8 @@
 title: How to setup Kafka Web Console
 tags:
-  - Config
+  - configuration
   - MQ
-  - Monitor
+  - monitor
   - Kafka
 id: 211
 categories:

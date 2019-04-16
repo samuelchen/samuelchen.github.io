@@ -45,6 +45,11 @@ fi
 
 info "Deploy to Azure blob account <$BLOB_ACCOUNT> container <$BLOB_CONTAINER>..."
 
+
+#--pattern                   : The pattern used for globbing files or blobs in the source. The
+#                                  supported patterns are '*', '?', '[seq]', and '[!seq]'.
+
+
 hexo clean
 $HEXO_GEN && az storage blob upload-batch -d $BLOB_CONTAINER --account-name $BLOB_ACCOUNT -s ./public
 

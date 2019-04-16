@@ -2,9 +2,9 @@ title: Django 如何在模板(template)中使用settings中预定义的变量
 tags:
   - Django
   - Python
-  - Static
-  - Template
-  - Programming
+  - static
+  - template
+  - programming
 id: 121
 categories:
   - Programming

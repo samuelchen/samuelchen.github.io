@@ -1,6 +1,6 @@
 title: 'python 的编码，关于 encode, decode 的简单原则'
 tags:
-  - Encoding
+  - encoding
   - Python
 id: 123
 categories:

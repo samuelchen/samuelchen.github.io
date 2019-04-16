@@ -1,6 +1,6 @@
 title: 为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存
 tags:
-  - Mac
+  - MacBook
 categories:
   - Life
 date: 2018-11-15 00:55:37

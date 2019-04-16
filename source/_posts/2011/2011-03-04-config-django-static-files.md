@@ -1,10 +1,10 @@
 title: Django 静态文件配置
 tags:
-  - Config
+  - configuration
   - Django
-  - Programming
+  - programming
   - Python
-  - Static
+  - static
 id: 120
 categories:
   - Programming

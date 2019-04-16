@@ -1,11 +1,11 @@
 title: Ubuntu12 虚拟机网络配置
 tags:
-  - Article
-  - Config
+  - article
+  - configuration
   - Linux
   - Ubuntu
   - VM
-  - Network
+  - network
 id: 188
 categories:
   - System

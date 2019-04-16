@@ -1,8 +1,8 @@
 title: web.py 在 apache + fastcgi 配置 tips
 tags:
-  - Config
+  - configuration
   - Linux
-  - Programming
+  - programming
   - Python
   - Ubuntu
   - web.py

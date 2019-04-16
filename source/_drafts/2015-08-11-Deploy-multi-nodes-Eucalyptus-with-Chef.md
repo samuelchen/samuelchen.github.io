@@ -4,9 +4,9 @@ layout: false
 tags:
     - Chef
     - Eucalyptus
-    - Cloud
-    - Deployment
-    - Config
+    - cloud
+    - deployment
+    - configuration
 categories:
     - Cloud2End
 ---
