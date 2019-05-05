@@ -7,7 +7,7 @@ tags:
   - blob
   - static
   - deployment
-comments: false
+comments: true
 date: 2019-04-17 00:10:39
 updated:
 ---
