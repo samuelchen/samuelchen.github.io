@@ -148,5 +148,11 @@ rclone sync ./public azure-chen:\$web
 
 这样，就可以把远端有，而本地没有到删除，而本地新增到也会复制到远端，减少了很多IO。
 
+另外，还有两个GUI工具(for macOS)：
+
+* Rclone OSX - https://github.com/rsyncOSX/rcloneosx
+* Rclone Browser - https://github.com/mmozeiko/RcloneBrowser
+  
+Rclone Browser 略微有点小问题， 并至今有2年没更新了，需要自己查issues[解决](https://github.com/mmozeiko/RcloneBrowser/issues/136)。
 
 --- END ---
