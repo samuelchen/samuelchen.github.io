@@ -12,18 +12,18 @@
     
         <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="之前，个人博客一直都是用 Hexo 生成并部署为GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等挺麻">
+    <meta name="description" content="之前，个人博客一直都是用 Hexo 生成并部署为 GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等">
 <meta name="keywords" content="deployment,static,Azure,Hexo,blob">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="在 Azure Blob 存储上部署 Hexo 静态网站">
 <meta property="og:url" content="http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/index.html">
 <meta property="og:site_name" content="Explorer. Dream. Discover.">
-<meta property="og:description" content="之前，个人博客一直都是用 Hexo 生成并部署为GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等挺麻">
+<meta property="og:description" content="之前，个人博客一直都是用 Hexo 生成并部署为 GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-16T16:36:11.000Z">
+<meta property="og:updated_time" content="2019-05-05T07:12:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在 Azure Blob 存储上部署 Hexo 静态网站">
-<meta name="twitter:description" content="之前，个人博客一直都是用 Hexo 生成并部署为GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等挺麻">
+<meta name="twitter:description" content="之前，个人博客一直都是用 Hexo 生成并部署为 GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等">
 <meta name="twitter:creator" content="@samuelchen">
     
     
@@ -229,7 +229,7 @@
     
     <div class="post-content markdown main-content-wrap" itemprop="articleBody">
         
-            <p>之前，<a href="http://blog.samuelchen.net">个人博客</a>一直都是用 <code>Hexo</code> 生成并部署为<br><code>GitHub Pages</code>。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub<br>上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。</p>
+            <p>之前，<a href="http://blog.samuelchen.net">个人博客</a>一直都是用 <code>Hexo</code> 生成并部署为 <code>GitHub Pages</code>。<br>最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。<br>不深究这个理由是否靠谱，得给博客换个地方了。</p>
 <p>手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTP<br>Server 防火墙，FTP/Rsync/SSH 等等挺麻烦，就寻思着是不是能用对象存储来做。于是翻看了 Azure<br>Blob 到文档，发现真还行，而且还挺简单，内置支持。</p>
 <p>首先新建<strong>全局唯一</strong>的存储账号，比如我选则了 <code>chen</code>，这个会作为你 Azure 存储的一个 End<br>Point，比如 chen.blob.core.windows.net，可以直接通过这个域名来访问你的存储对象。这个时候<br>要注意一点，一定要选择 <code>StorageV2 (通用版 v2)</code> 类型，只有这个类型才支持直接部署静态网站。<br>我之前就是选择了 <code>v1</code> 类型，导致无法自动识别 <code>index.html</code> 而无法访问。建好后，选择<br><code>静态网站</code> 菜单并 <strong>启用</strong>，系统会自动生成名为 <code>$web</code> 的 <code>容器(Container)</code>，作为存储网站的根目录。</p>
 <p>以上配置完成后，就用 <code>hexo generate</code> 命令生成你的网站，网站生成后都在 <code>public</code> 目录<br>下，这些不细说。然后需要做的是把生成的网站传到刚建立到容器 <code>blog</code> 中，有几种方法可以做到：</p>
@@ -243,8 +243,8 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env sh</span></span><br><span class="line"></span><br><span class="line">BLOB_ACCOUNT=<span class="string">"chen"</span>     <span class="comment"># blob 账号</span></span><br><span class="line">BLOB_CONTAINER=<span class="string">'$web'</span>   <span class="comment"># blob 容器</span></span><br><span class="line"></span><br><span class="line">hexo clean &amp;&amp; hexo generate &amp;&amp; az storage blob upload-batch -d <span class="variable">$BLOB_CONTAINER</span> --account-name <span class="variable">$BLOB_ACCOUNT</span> -s ./public</span><br></pre></td></tr></table></figure>
 <p>然后就可以用 <code>https://chen.z?.web.core.windows.net</code> (？是某个数字，z? 代表一个地区)<br>访问你的网站了。</p>
 <p>安装 Azure Client 的步骤就不写了，直接看文档。安装好后，记得运行 <code>az login</code> 登录。</p>
-<p>最后，如果你有自己都域名，可以选择 <code>自定义域</code> 来配置，同时要配置 DNS.</p>
-<p>这种方法非常简单，费用也很低，基础 1G 才大概几美分。不过有一点不好的是，<code>v2</code> 类型的 blob<br>存储还有访问计费，每万次也有几～几十美分，而 Hexo 生成的静态网站文件很多，一次上传就得几百上千<br>个文件，而且只要改配置或者模版，文件就都大多数都修改了，得全部上传。</p>
+<p>最后，如果你有自己的域名，可以选择 <code>自定义域</code> 来配置，同时要配置 DNS.</p>
+<p>这种方法非常简单，费用也很低，基础 1G 才大概几美分。不过有一点不好的是，<code>v2</code> 类型的 blob 存储<br>还有存取访问计费，每万次也有几～几十美分，而 Hexo 生成的静态网站文件很多，一次上传就得几百上千<br>个文件，而且只要改配置或者模版，文件就都大多数都修改了，得全部上传。</p>
 <p>Azure Blob 部署的静态网站，如果用 <code>windows.net</code> 访问，是自带 <code>https</code> 的，如果你需要给<br>自定义域名也用上https，需要配置 <code>CDN</code>。而且，<code>CDN</code> 会自动选择不同的地区访问，blob 是固定<br>地区的（比如 blob 账号、容器是在 美国东部 US-EAST，那么亚洲访问就稍慢）。</p>
 <p>– END –</p>
 
@@ -267,7 +267,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--disabled">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Use-rclone-to-sync-your-files-with-cloud/" data-tooltip="使用 Rclone 同步云端和本地文件">
                 
                     <i class="fa fa-angle-left"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -305,6 +305,12 @@
             </a>
         </li>
         
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
         <li class="post-action">
             
                 <a class="post-action-btn btn btn--default" href="#">
@@ -313,6 +319,10 @@
             </a>
         </li>
     </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
         
     </div>
@@ -334,7 +344,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--disabled">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Use-rclone-to-sync-your-files-with-cloud/" data-tooltip="使用 Rclone 同步云端和本地文件">
                 
                     <i class="fa fa-angle-left"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -371,6 +381,12 @@
                 <i class="fa fa-twitter"></i>
             </a>
         </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
         
         <li class="post-action">
             
@@ -432,6 +448,17 @@
     <!--SCRIPTS-->
 <script src="/assets/js/script.min.js"></script>
 <!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'samuelchen';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
 
 
     <script type="text/javascript">

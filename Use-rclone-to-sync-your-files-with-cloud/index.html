@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Explorer. Dream. Discover.">
+    <title>使用 Rclone 同步云端和本地文件 - Explorer. Dream. Discover.</title>
+    <meta name="author" content="Samuel Chen">
+    <meta name="description" content="Explorer. Dream. Discover.">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="之前在这篇blog中介绍过使用Azure Client az 来部署生成到网站.使用az很方便，但是也有些缺点，例如会把整个网站全部重新上传一遍，速度慢不说，还浪费多次blob的操作。 后来找到了另外一个工具rclone（下载、安装、文档，或使用各平台包管理器安装），它可以像rsync一样同步本地和远端文件，只更新变化过的文件。 使用起来也很简单， 首先新建一个远端配置rclone config，">
+<meta name="keywords" content="deployment,static,Azure,blob,rsync,synchronization">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="使用 Rclone 同步云端和本地文件">
+<meta property="og:url" content="http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/index.html">
+<meta property="og:site_name" content="Explorer. Dream. Discover.">
+<meta property="og:description" content="之前在这篇blog中介绍过使用Azure Client az 来部署生成到网站.使用az很方便，但是也有些缺点，例如会把整个网站全部重新上传一遍，速度慢不说，还浪费多次blob的操作。 后来找到了另外一个工具rclone（下载、安装、文档，或使用各平台包管理器安装），它可以像rsync一样同步本地和远端文件，只更新变化过的文件。 使用起来也很简单， 首先新建一个远端配置rclone config，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-05T07:36:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 Rclone 同步云端和本地文件">
+<meta name="twitter:description" content="之前在这篇blog中介绍过使用Azure Client az 来部署生成到网站.使用az很方便，但是也有些缺点，例如会把整个网站全部重新上传一遍，速度慢不说，还浪费多次blob的操作。 后来找到了另外一个工具rclone（下载、安装、文档，或使用各平台包管理器安装），它可以像rsync一样同步本地和远端文件，只更新变化过的文件。 使用起来也很简单， 首先新建一个远端配置rclone config，">
+<meta name="twitter:creator" content="@samuelchen">
+    
+    
+    
+        <meta property="og:image" content="/assets/images/avatar.gif"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Explorer. Dream. Discover.</a>
+    </h1>
+    
+        <a class="header-right-picture" href="/#about">
+            <img class="header-picture" src="/assets/images/avatar.gif">
+        </a>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    <div class="sidebar-profile">
+        <a href="/#about">
+            
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif">
+            
+        </a>
+        <span class="sidebar-profile-name">Samuel Chen</span>
+    </div>
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link st-search-show-outputs" href="#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
+                    <span class="sidebar-button-desc">Website</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">Mirror on Github</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Legacies</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">使用 Rclone 同步云端和本地文件</h1>
+    
+    <div class="post-meta">
+    <time itemprop="datePublished" content="Sun May 05 2019 15:11:18 GMT+0800">
+        May 05, 2019
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Cloud2End/">Cloud2End</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+            <p>之前在<a href="/Deploy-Hexo-static-website-on-Azure-Blob-storage/">这篇blog</a>中介绍过使用Azure Client <code>az</code> 来部署生成到网站.<br>使用<code>az</code>很方便，但是也有些缺点，例如会把整个网站全部重新上传一遍，速度慢不说，还浪费多次<code>blob</code>的操作。</p>
+<p>后来找到了另外一个工具<code>rclone</code>（<a href="https://rclone.org" target="_blank" rel="noopener">下载、安装、文档</a>，或使用各平台包管理器安装），<br>它可以像<code>rsync</code>一样同步本地和远端文件，只更新变化过的文件。</p>
+<p>使用起来也很简单， 首先新建一个远端配置<code>rclone config</code>，根据提示，输入名字，类型，account 或者<br>connection string。例如，我配置 <code>azure-chen</code> 这个名字（本地名称）对应 azure 上 <code>chen</code> 这个 blob 账号。</p>
+<p>然后就可以使用了：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出远端容器</span></span><br><span class="line">rclone lsd azure-chen:</span><br><span class="line"></span><br><span class="line">          -1 2019-04-12 13:09:50        -1 <span class="variable">$web</span></span><br><span class="line">		  </span><br><span class="line"><span class="comment"># 列出容器中文件</span></span><br><span class="line">rclone ls azure-chen:\<span class="variable">$web</span></span><br><span class="line"></span><br><span class="line">    11965 404.html</span><br><span class="line">	...</span><br><span class="line">	...</span><br><span class="line">    42150 all-tags/index.html</span><br><span class="line">    12676 archives/2011/03/index.html</span><br><span class="line">    12150 archives/2011/04/index.html</span><br><span class="line">    10677 archives/2011/06/index.html</span><br><span class="line">    17724 archives/2011/index.html</span><br><span class="line">    10626 archives/2012/03/index.html</span><br><span class="line">    10316 archives/2012/06/index.html</span><br><span class="line">    12050 archives/2012/index.html</span><br><span class="line">    10429 archives/2014/04/index.html</span><br><span class="line">    10424 archives/2014/index.html</span><br><span class="line">    10545 archives/2017/12/index.html</span><br><span class="line">    10539 archives/2017/index.html</span><br><span class="line">    10792 archives/2018/11/index.html</span><br><span class="line">    10786 archives/2018/index.html</span><br><span class="line">    10715 archives/2019/04/index.html</span><br><span class="line">    10710 archives/2019/index.html</span><br><span class="line">    26245 archives/index.html</span><br><span class="line">    10983 archives/page/2/index.html</span><br><span class="line">    28747 assets/css/font-awesome.css</span><br><span class="line">      735 assets/css/jquery.fancybox-thumbs.css</span><br><span class="line">     4955 assets/css/jquery.fancybox.css</span><br><span class="line">    93008 assets/css/style.css</span><br><span class="line">    74762 assets/css/style.min.css</span><br><span class="line">    58575 assets/css/tranquilpeak.css</span><br><span class="line">    93888 assets/fonts/FontAwesome.otf</span><br><span class="line">    60767 assets/fonts/fontawesome-webfont.eot</span><br><span class="line">   313398 assets/fonts/fontawesome-webfont.svg</span><br><span class="line">   122092 assets/fonts/fontawesome-webfont.ttf</span><br><span class="line">    71508 assets/fonts/fontawesome-webfont.woff</span><br><span class="line">    56780 assets/fonts/fontawesome-webfont.woff2</span><br><span class="line">    31124 assets/fonts/merriweather-bold.ttf</span><br><span class="line">    24668 assets/fonts/merriweather-boldItalic.ttf</span><br><span class="line">    31304 assets/fonts/merriweather-light.ttf</span><br><span class="line">    22264 assets/fonts/merriweather-lightItalic.ttf</span><br><span class="line">    30972 assets/fonts/merriweather.ttf</span><br><span class="line">    24476 assets/fonts/open-sans-bold.ttf</span><br><span class="line">    24292 assets/fonts/open-sans.ttf</span><br><span class="line">   143844 assets/images/avatar.gif</span><br><span class="line">       43 assets/images/blank.gif</span><br><span class="line">   259098 assets/images/cover.jpg</span><br><span class="line">     6567 assets/images/fancybox_loading.gif</span><br><span class="line">    13984 assets/images/fancybox_loading@2x.gif</span><br><span class="line">     1003 assets/images/fancybox_overlay.png</span><br><span class="line">     1362 assets/images/fancybox_sprite.png</span><br><span class="line">     6553 assets/images/fancybox_sprite@2x.png</span><br><span class="line">	...</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查</span></span><br><span class="line">rclone check ./public azure-chen:\<span class="variable">$web</span></span><br><span class="line"></span><br><span class="line">	2019/05/05 14:49:44 ERROR : ... : File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">	2019/05/05 14:49:44 ERROR : tags/Article/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">	2019/05/05 14:49:44 ERROR : tags/Config/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">	2019/05/05 14:49:44 ERROR : tags/Encoding/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">	2019/05/05 14:49:44 ERROR : tags/Mac/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">	2019/05/05 14:49:44 ERROR : tags/Network/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">	2019/05/05 14:49:44 ERROR : tags/Monitor/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">	2019/05/05 14:49:44 ERROR : tags/Programming/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">	2019/05/05 14:49:44 ERROR : tags/Static/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">	2019/05/05 14:49:44 ERROR : tags/Template/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">	2019/05/05 14:49:44 NOTICE: Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public: 10 files missing</span><br><span class="line">	2019/05/05 14:49:44 NOTICE: Azure container <span class="variable">$web</span>: 10 differences found</span><br><span class="line">	2019/05/05 14:49:44 NOTICE: Azure container <span class="variable">$web</span>: 111 matching files</span><br><span class="line">	2019/05/05 14:49:44 Failed to check: 10 differences found</span><br><span class="line">	<span class="comment"># 发现 10 个不同</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 同步 （从本地到远端）</span></span><br><span class="line">rclone sync ./public azure-chen:\<span class="variable">$web</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次 check</span></span><br><span class="line">rclone check ./public/ blog:\<span class="variable">$web</span></span><br><span class="line"></span><br><span class="line">	2019/05/05 14:51:17 NOTICE: Azure container <span class="variable">$web</span>: 0 differences found</span><br><span class="line">	2019/05/05 14:51:17 NOTICE: Azure container <span class="variable">$web</span>: 111 matching files</span><br><span class="line">	<span class="comment"># 没有不同到了（远端到已经被删除）</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑一个网页并重新生成网站</span></span><br><span class="line">hexo gen</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次 check</span></span><br><span class="line">rclone check ./public/ blog:\<span class="variable">$web</span></span><br><span class="line"></span><br><span class="line">	2019/05/05 14:55:32 ERROR : atom.xml: Sizes differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : sitemap.xml: MD5 differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : Deploy-Hexo-static-website-on-Azure-Blob-storage/index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : archives/index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : all-categories/index.html: MD5 differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : all-tags/index.html: MD5 differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : categories/Cloud2End/index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : archives/2019/index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : tags/Hexo/index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : archives/2019/04/index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:32 ERROR : tags/Azure/index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:33 ERROR : tags/blob/index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:33 ERROR : tags/deployment/index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:33 ERROR : tags/static/index.html: Sizes differ</span><br><span class="line">	2019/05/05 14:55:33 NOTICE: Azure container <span class="variable">$web</span>: 15 differences found</span><br><span class="line">	2019/05/05 14:55:33 NOTICE: Azure container <span class="variable">$web</span>: 96 matching files</span><br><span class="line">	2019/05/05 14:55:33 Failed to check: 15 differences found</span><br><span class="line">	<span class="comment"># 发现15处不同</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 部署（同步）</span></span><br><span class="line">rclone sync ./public azure-chen:\<span class="variable">$web</span></span><br></pre></td></tr></table></figure>
+<p>这样，就可以把远端有，而本地没有到删除，而本地新增到也会复制到远端，减少了很多IO。</p>
+<p>— END —</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Azure/">Azure</a> <a class="tag tag--primary tag--small t-link" href="/tags/blob/">blob</a> <a class="tag tag--primary tag--small t-link" href="/tags/deployment/">deployment</a> <a class="tag tag--primary tag--small t-link" href="/tags/rsync/">rsync</a> <a class="tag tag--primary tag--small t-link" href="/tags/static/">static</a> <a class="tag tag--primary tag--small t-link" href="/tags/synchronization/">synchronization</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Deploy-Hexo-static-website-on-Azure-Blob-storage/" data-tooltip="在 Azure Blob 存储上部署 Hexo 静态网站">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=使用 Rclone 同步云端和本地文件&amp;url=http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 Samuel Chen. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Deploy-Hexo-static-website-on-Azure-Blob-storage/" data-tooltip="在 Azure Blob 存储上部署 Hexo 静态网站">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=使用 Rclone 同步云端和本地文件&amp;url=http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=使用 Rclone 同步云端和本地文件&amp;url=http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/">
+                <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/avatar.gif">
+        
+            <h4 id="about-card-name">Samuel Chen</h4>
+        
+            <h5 id="about-card-bio"><p>I am living in Wuhan with my wife and daughter.<br>Before 2010, I was living in Beijing for a long time.<br>My interesings are cloud technology, distributed system, data mining and mobile technologies.<br>In my spare time, I like to play football and swiming.<br>“Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.</p>
+</h5>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br>
+                Wuhan, China
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'samuelchen';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','78osZec8utGs_7B3JCab','2.0.0');
+    </script>
+
+
+</html>

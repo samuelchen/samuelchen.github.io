@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.samuelchen.net/"/>
-  <updated>2019-04-16T16:36:11.000Z</updated>
+  <updated>2019-05-05T07:36:26.000Z</updated>
   <id>http://blog.samuelchen.net/</id>
   
   <author>
@@ -17,19 +17,54 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>在 Azure Blob 存储上部署 Hexo 静态网站</title>
-    <link href="http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/"/>
-    <id>http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/</id>
-    <published>2019-04-16T16:10:39.000Z</published>
-    <updated>2019-04-16T16:36:11.000Z</updated>
+    <title>使用 Rclone 同步云端和本地文件</title>
+    <link href="http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/"/>
+    <id>http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/</id>
+    <published>2019-05-05T07:11:18.000Z</published>
+    <updated>2019-05-05T07:36:26.000Z</updated>
     
-    <content type="html"><![CDATA[<p>之前，<a href="http://blog.samuelchen.net">个人博客</a>一直都是用 <code>Hexo</code> 生成并部署为<br><code>GitHub Pages</code>。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub<br>上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。</p><p>手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTP<br>Server 防火墙，FTP/Rsync/SSH 等等挺麻烦，就寻思着是不是能用对象存储来做。于是翻看了 Azure<br>Blob 到文档，发现真还行，而且还挺简单，内置支持。</p><p>首先新建<strong>全局唯一</strong>的存储账号，比如我选则了 <code>chen</code>，这个会作为你 Azure 存储的一个 End<br>Point，比如 chen.blob.core.windows.net，可以直接通过这个域名来访问你的存储对象。这个时候<br>要注意一点，一定要选择 <code>StorageV2 (通用版 v2)</code> 类型，只有这个类型才支持直接部署静态网站。<br>我之前就是选择了 <code>v1</code> 类型，导致无法自动识别 <code>index.html</code> 而无法访问。建好后，选择<br><code>静态网站</code> 菜单并 <strong>启用</strong>，系统会自动生成名为 <code>$web</code> 的 <code>容器(Container)</code>，作为存储网站的根目录。</p><p>以上配置完成后，就用 <code>hexo generate</code> 命令生成你的网站，网站生成后都在 <code>public</code> 目录<br>下，这些不细说。然后需要做的是把生成的网站传到刚建立到容器 <code>blog</code> 中，有几种方法可以做到：</p><ol><li>直接使用浏览器在 Azure 门户页面 <code>存储资源管理器</code> 中上传</li><li>下载 <code>存储资源管理器</code> 桌面版，上传</li><li>使用 <code>AzCopy</code> 上传 （需要.net）</li><li>使用 Azure Client 命令行工具 <code>az</code></li></ol><p>前面2种方法都很简单，找到相应位置或者下载软件就行了，第3个需要.net，不足够通用，我使用到是第4种<br>方法，简单写了个脚本，每次自动上传，主要是下面这句，其他都省略了:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env sh</span></span><br><span class="line"></span><br><span class="line">BLOB_ACCOUNT=<span class="string">"chen"</span>     <span class="comment"># blob 账号</span></span><br><span class="line">BLOB_CONTAINER=<span class="string">'$web'</span>   <span class="comment"># blob 容器</span></span><br><span class="line"></span><br><span class="line">hexo clean &amp;&amp; hexo generate &amp;&amp; az storage blob upload-batch -d <span class="variable">$BLOB_CONTAINER</span> --account-name <span class="variable">$BLOB_ACCOUNT</span> -s ./public</span><br></pre></td></tr></table></figure><p>然后就可以用 <code>https://chen.z?.web.core.windows.net</code> (？是某个数字，z? 代表一个地区)<br>访问你的网站了。</p><p>安装 Azure Client 的步骤就不写了，直接看文档。安装好后，记得运行 <code>az login</code> 登录。</p><p>最后，如果你有自己都域名，可以选择 <code>自定义域</code> 来配置，同时要配置 DNS.</p><p>这种方法非常简单，费用也很低，基础 1G 才大概几美分。不过有一点不好的是，<code>v2</code> 类型的 blob<br>存储还有访问计费，每万次也有几～几十美分，而 Hexo 生成的静态网站文件很多，一次上传就得几百上千<br>个文件，而且只要改配置或者模版，文件就都大多数都修改了，得全部上传。</p><p>Azure Blob 部署的静态网站，如果用 <code>windows.net</code> 访问，是自带 <code>https</code> 的，如果你需要给<br>自定义域名也用上https，需要配置 <code>CDN</code>。而且，<code>CDN</code> 会自动选择不同的地区访问，blob 是固定<br>地区的（比如 blob 账号、容器是在 美国东部 US-EAST，那么亚洲访问就稍慢）。</p><p>– END –</p>]]></content>
+    <content type="html"><![CDATA[<p>之前在<a href="/Deploy-Hexo-static-website-on-Azure-Blob-storage/">这篇blog</a>中介绍过使用Azure Client <code>az</code> 来部署生成到网站.<br>使用<code>az</code>很方便，但是也有些缺点，例如会把整个网站全部重新上传一遍，速度慢不说，还浪费多次<code>blob</code>的操作。</p><p>后来找到了另外一个工具<code>rclone</code>（<a href="https://rclone.org" target="_blank" rel="noopener">下载、安装、文档</a>，或使用各平台包管理器安装），<br>它可以像<code>rsync</code>一样同步本地和远端文件，只更新变化过的文件。</p><p>使用起来也很简单， 首先新建一个远端配置<code>rclone config</code>，根据提示，输入名字，类型，account 或者<br>connection string。例如，我配置 <code>azure-chen</code> 这个名字（本地名称）对应 azure 上 <code>chen</code> 这个 blob 账号。</p><p>然后就可以使用了：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出远端容器</span></span><br><span class="line">rclone lsd azure-chen:</span><br><span class="line"></span><br><span class="line">          -1 2019-04-12 13:09:50        -1 <span class="variable">$web</span></span><br><span class="line">  </span><br><span class="line"><span class="comment"># 列出容器中文件</span></span><br><span class="line">rclone ls azure-chen:\<span class="variable">$web</span></span><br><span class="line"></span><br><span class="line">    11965 404.html</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">    42150 all-tags/index.html</span><br><span class="line">    12676 archives/2011/03/index.html</span><br><span class="line">    12150 archives/2011/04/index.html</span><br><span class="line">    10677 archives/2011/06/index.html</span><br><span class="line">    17724 archives/2011/index.html</span><br><span class="line">    10626 archives/2012/03/index.html</span><br><span class="line">    10316 archives/2012/06/index.html</span><br><span class="line">    12050 archives/2012/index.html</span><br><span class="line">    10429 archives/2014/04/index.html</span><br><span class="line">    10424 archives/2014/index.html</span><br><span class="line">    10545 archives/2017/12/index.html</span><br><span class="line">    10539 archives/2017/index.html</span><br><span class="line">    10792 archives/2018/11/index.html</span><br><span class="line">    10786 archives/2018/index.html</span><br><span class="line">    10715 archives/2019/04/index.html</span><br><span class="line">    10710 archives/2019/index.html</span><br><span class="line">    26245 archives/index.html</span><br><span class="line">    10983 archives/page/2/index.html</span><br><span class="line">    28747 assets/css/font-awesome.css</span><br><span class="line">      735 assets/css/jquery.fancybox-thumbs.css</span><br><span class="line">     4955 assets/css/jquery.fancybox.css</span><br><span class="line">    93008 assets/css/style.css</span><br><span class="line">    74762 assets/css/style.min.css</span><br><span class="line">    58575 assets/css/tranquilpeak.css</span><br><span class="line">    93888 assets/fonts/FontAwesome.otf</span><br><span class="line">    60767 assets/fonts/fontawesome-webfont.eot</span><br><span class="line">   313398 assets/fonts/fontawesome-webfont.svg</span><br><span class="line">   122092 assets/fonts/fontawesome-webfont.ttf</span><br><span class="line">    71508 assets/fonts/fontawesome-webfont.woff</span><br><span class="line">    56780 assets/fonts/fontawesome-webfont.woff2</span><br><span class="line">    31124 assets/fonts/merriweather-bold.ttf</span><br><span class="line">    24668 assets/fonts/merriweather-boldItalic.ttf</span><br><span class="line">    31304 assets/fonts/merriweather-light.ttf</span><br><span class="line">    22264 assets/fonts/merriweather-lightItalic.ttf</span><br><span class="line">    30972 assets/fonts/merriweather.ttf</span><br><span class="line">    24476 assets/fonts/open-sans-bold.ttf</span><br><span class="line">    24292 assets/fonts/open-sans.ttf</span><br><span class="line">   143844 assets/images/avatar.gif</span><br><span class="line">       43 assets/images/blank.gif</span><br><span class="line">   259098 assets/images/cover.jpg</span><br><span class="line">     6567 assets/images/fancybox_loading.gif</span><br><span class="line">    13984 assets/images/fancybox_loading@2x.gif</span><br><span class="line">     1003 assets/images/fancybox_overlay.png</span><br><span class="line">     1362 assets/images/fancybox_sprite.png</span><br><span class="line">     6553 assets/images/fancybox_sprite@2x.png</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查</span></span><br><span class="line">rclone check ./public azure-chen:\<span class="variable">$web</span></span><br><span class="line"></span><br><span class="line">2019/05/05 14:49:44 ERROR : ... : File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">2019/05/05 14:49:44 ERROR : tags/Article/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">2019/05/05 14:49:44 ERROR : tags/Config/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">2019/05/05 14:49:44 ERROR : tags/Encoding/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">2019/05/05 14:49:44 ERROR : tags/Mac/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">2019/05/05 14:49:44 ERROR : tags/Network/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">2019/05/05 14:49:44 ERROR : tags/Monitor/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">2019/05/05 14:49:44 ERROR : tags/Programming/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">2019/05/05 14:49:44 ERROR : tags/Static/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">2019/05/05 14:49:44 ERROR : tags/Template/index.html: File not <span class="keyword">in</span> Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public</span><br><span class="line">2019/05/05 14:49:44 NOTICE: Local file system at /path/to/<span class="built_in">local</span>/files/work/my-blog/public: 10 files missing</span><br><span class="line">2019/05/05 14:49:44 NOTICE: Azure container <span class="variable">$web</span>: 10 differences found</span><br><span class="line">2019/05/05 14:49:44 NOTICE: Azure container <span class="variable">$web</span>: 111 matching files</span><br><span class="line">2019/05/05 14:49:44 Failed to check: 10 differences found</span><br><span class="line"><span class="comment"># 发现 10 个不同</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 同步 （从本地到远端）</span></span><br><span class="line">rclone sync ./public azure-chen:\<span class="variable">$web</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次 check</span></span><br><span class="line">rclone check ./public/ blog:\<span class="variable">$web</span></span><br><span class="line"></span><br><span class="line">2019/05/05 14:51:17 NOTICE: Azure container <span class="variable">$web</span>: 0 differences found</span><br><span class="line">2019/05/05 14:51:17 NOTICE: Azure container <span class="variable">$web</span>: 111 matching files</span><br><span class="line"><span class="comment"># 没有不同到了（远端到已经被删除）</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑一个网页并重新生成网站</span></span><br><span class="line">hexo gen</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次 check</span></span><br><span class="line">rclone check ./public/ blog:\<span class="variable">$web</span></span><br><span class="line"></span><br><span class="line">2019/05/05 14:55:32 ERROR : atom.xml: Sizes differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : sitemap.xml: MD5 differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : Deploy-Hexo-static-website-on-Azure-Blob-storage/index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : archives/index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : all-categories/index.html: MD5 differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : all-tags/index.html: MD5 differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : categories/Cloud2End/index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : archives/2019/index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : tags/Hexo/index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : archives/2019/04/index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:32 ERROR : tags/Azure/index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:33 ERROR : tags/blob/index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:33 ERROR : tags/deployment/index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:33 ERROR : tags/static/index.html: Sizes differ</span><br><span class="line">2019/05/05 14:55:33 NOTICE: Azure container <span class="variable">$web</span>: 15 differences found</span><br><span class="line">2019/05/05 14:55:33 NOTICE: Azure container <span class="variable">$web</span>: 96 matching files</span><br><span class="line">2019/05/05 14:55:33 Failed to check: 15 differences found</span><br><span class="line"><span class="comment"># 发现15处不同</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 部署（同步）</span></span><br><span class="line">rclone sync ./public azure-chen:\<span class="variable">$web</span></span><br></pre></td></tr></table></figure><p>这样，就可以把远端有，而本地没有到删除，而本地新增到也会复制到远端，减少了很多IO。</p><p>— END —</p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;之前，&lt;a href=&quot;http://blog.samuelchen.net&quot;&gt;个人博客&lt;/a&gt;一直都是用 &lt;code&gt;Hexo&lt;/code&gt; 生成并部署为&lt;br&gt;&lt;code&gt;GitHub Pages&lt;/code&gt;。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，
+        &lt;p&gt;之前在&lt;a href=&quot;/Deploy-Hexo-static-website-on-Azure-Blob-storage/&quot;&gt;这篇blog&lt;/a&gt;中介绍过使用Azure Client &lt;code&gt;az&lt;/code&gt; 来部署生成到网站.&lt;br&gt;使用&lt;code&gt;az&lt;/cod
+      
+    
+    </summary>
+    
+      <category term="Cloud2End" scheme="http://blog.samuelchen.net/categories/Cloud2End/"/>
+    
+    
+      <category term="deployment" scheme="http://blog.samuelchen.net/tags/deployment/"/>
+    
+      <category term="static" scheme="http://blog.samuelchen.net/tags/static/"/>
+    
+      <category term="Azure" scheme="http://blog.samuelchen.net/tags/Azure/"/>
+    
+      <category term="blob" scheme="http://blog.samuelchen.net/tags/blob/"/>
+    
+      <category term="rsync" scheme="http://blog.samuelchen.net/tags/rsync/"/>
+    
+      <category term="synchronization" scheme="http://blog.samuelchen.net/tags/synchronization/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在 Azure Blob 存储上部署 Hexo 静态网站</title>
+    <link href="http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/"/>
+    <id>http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/</id>
+    <published>2019-04-16T16:10:39.000Z</published>
+    <updated>2019-05-05T07:12:12.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前，<a href="http://blog.samuelchen.net">个人博客</a>一直都是用 <code>Hexo</code> 生成并部署为 <code>GitHub Pages</code>。<br>最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。<br>不深究这个理由是否靠谱，得给博客换个地方了。</p><p>手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTP<br>Server 防火墙，FTP/Rsync/SSH 等等挺麻烦，就寻思着是不是能用对象存储来做。于是翻看了 Azure<br>Blob 到文档，发现真还行，而且还挺简单，内置支持。</p><p>首先新建<strong>全局唯一</strong>的存储账号，比如我选则了 <code>chen</code>，这个会作为你 Azure 存储的一个 End<br>Point，比如 chen.blob.core.windows.net，可以直接通过这个域名来访问你的存储对象。这个时候<br>要注意一点，一定要选择 <code>StorageV2 (通用版 v2)</code> 类型，只有这个类型才支持直接部署静态网站。<br>我之前就是选择了 <code>v1</code> 类型，导致无法自动识别 <code>index.html</code> 而无法访问。建好后，选择<br><code>静态网站</code> 菜单并 <strong>启用</strong>，系统会自动生成名为 <code>$web</code> 的 <code>容器(Container)</code>，作为存储网站的根目录。</p><p>以上配置完成后，就用 <code>hexo generate</code> 命令生成你的网站，网站生成后都在 <code>public</code> 目录<br>下，这些不细说。然后需要做的是把生成的网站传到刚建立到容器 <code>blog</code> 中，有几种方法可以做到：</p><ol><li>直接使用浏览器在 Azure 门户页面 <code>存储资源管理器</code> 中上传</li><li>下载 <code>存储资源管理器</code> 桌面版，上传</li><li>使用 <code>AzCopy</code> 上传 （需要.net）</li><li>使用 Azure Client 命令行工具 <code>az</code></li></ol><p>前面2种方法都很简单，找到相应位置或者下载软件就行了，第3个需要.net，不足够通用，我使用到是第4种<br>方法，简单写了个脚本，每次自动上传，主要是下面这句，其他都省略了:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env sh</span></span><br><span class="line"></span><br><span class="line">BLOB_ACCOUNT=<span class="string">"chen"</span>     <span class="comment"># blob 账号</span></span><br><span class="line">BLOB_CONTAINER=<span class="string">'$web'</span>   <span class="comment"># blob 容器</span></span><br><span class="line"></span><br><span class="line">hexo clean &amp;&amp; hexo generate &amp;&amp; az storage blob upload-batch -d <span class="variable">$BLOB_CONTAINER</span> --account-name <span class="variable">$BLOB_ACCOUNT</span> -s ./public</span><br></pre></td></tr></table></figure><p>然后就可以用 <code>https://chen.z?.web.core.windows.net</code> (？是某个数字，z? 代表一个地区)<br>访问你的网站了。</p><p>安装 Azure Client 的步骤就不写了，直接看文档。安装好后，记得运行 <code>az login</code> 登录。</p><p>最后，如果你有自己的域名，可以选择 <code>自定义域</code> 来配置，同时要配置 DNS.</p><p>这种方法非常简单，费用也很低，基础 1G 才大概几美分。不过有一点不好的是，<code>v2</code> 类型的 blob 存储<br>还有存取访问计费，每万次也有几～几十美分，而 Hexo 生成的静态网站文件很多，一次上传就得几百上千<br>个文件，而且只要改配置或者模版，文件就都大多数都修改了，得全部上传。</p><p>Azure Blob 部署的静态网站，如果用 <code>windows.net</code> 访问，是自带 <code>https</code> 的，如果你需要给<br>自定义域名也用上https，需要配置 <code>CDN</code>。而且，<code>CDN</code> 会自动选择不同的地区访问，blob 是固定<br>地区的（比如 blob 账号、容器是在 美国东部 US-EAST，那么亚洲访问就稍慢）。</p><p>– END –</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;之前，&lt;a href=&quot;http://blog.samuelchen.net&quot;&gt;个人博客&lt;/a&gt;一直都是用 &lt;code&gt;Hexo&lt;/code&gt; 生成并部署为 &lt;code&gt;GitHub Pages&lt;/code&gt;。&lt;br&gt;最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了
       
     
     </summary>
@@ -166,11 +201,11 @@
     
       <category term="configuration" scheme="http://blog.samuelchen.net/tags/configuration/"/>
     
-      <category term="article" scheme="http://blog.samuelchen.net/tags/article/"/>
-    
       <category term="Linux" scheme="http://blog.samuelchen.net/tags/Linux/"/>
     
       <category term="Ubuntu" scheme="http://blog.samuelchen.net/tags/Ubuntu/"/>
+    
+      <category term="article" scheme="http://blog.samuelchen.net/tags/article/"/>
     
       <category term="VM" scheme="http://blog.samuelchen.net/tags/VM/"/>
     
@@ -281,9 +316,9 @@
     
       <category term="configuration" scheme="http://blog.samuelchen.net/tags/configuration/"/>
     
-      <category term="Python" scheme="http://blog.samuelchen.net/tags/Python/"/>
-    
       <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
+    
+      <category term="Python" scheme="http://blog.samuelchen.net/tags/Python/"/>
     
       <category term="Linux" scheme="http://blog.samuelchen.net/tags/Linux/"/>
     
@@ -314,13 +349,13 @@
     
       <category term="Django" scheme="http://blog.samuelchen.net/tags/Django/"/>
     
+      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
+    
       <category term="Python" scheme="http://blog.samuelchen.net/tags/Python/"/>
     
       <category term="static" scheme="http://blog.samuelchen.net/tags/static/"/>
     
       <category term="template" scheme="http://blog.samuelchen.net/tags/template/"/>
-    
-      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
     
   </entry>
   
@@ -350,11 +385,11 @@
     
       <category term="Django" scheme="http://blog.samuelchen.net/tags/Django/"/>
     
+      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
+    
       <category term="Python" scheme="http://blog.samuelchen.net/tags/Python/"/>
     
       <category term="static" scheme="http://blog.samuelchen.net/tags/static/"/>
-    
-      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
     
   </entry>
   
