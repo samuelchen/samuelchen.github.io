@@ -23,3 +23,24 @@
         _st('install','<%= theme.swiftype_install_key %>','2.0.0');
     </script>
 <% } %>
+<% if (theme.mermaid.enable) { %>
+    <!-- <%- js('assets/js/mermaid.min.js') %> -->
+
+    <!-- if CDN fails, use local file -->
+    <script src="https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js"></script>
+    <script> window.mermaid || document.write('<script src="/assets/js/mermaid.min.js"><\/script>')</script>
+
+    <script>
+        $(document).ready(function() {
+            var mermaid_config = {
+                startOnLoad: true,
+                theme: '<%- theme.mermaid.theme %>',
+                flowchart:{
+                    useMaxWidth: false,
+                    htmlLabels: true
+                }                
+            }
+            mermaid.initialize(mermaid_config);
+        });
+    </script>
+<% } %>

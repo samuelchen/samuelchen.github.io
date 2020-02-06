@@ -169,3 +169,10 @@ swiftype_install_key: 78osZec8utGs_7B3JCab
 fb_admin_ids:
 # Your Facebook app id used to connect your blog with your facebook app account (Facebook Insights). E.g : 9841307
 fb_app_id:
+
+
+# Mermaid tag (flowchart, seq chart, class chart, ...)
+mermaid:
+  enable: true
+  # Available themes: default | dark | forest | neutral
+  theme: neutral
