@@ -78,6 +78,10 @@ if __name__ == "__main__":
     app.run()
 ```
 
+Raised Github issue at `Flask`:
+
+* https://github.com/pallets/flask/issues/3516
+
 Environment:
 
 * Window 10
