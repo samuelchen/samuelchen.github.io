@@ -1,15 +1,18 @@
 ---
 title: 用Scrapy创建可管理、多站点的爬虫实战
-date: 2020-02-04 16:07:03
-comments: true
+draft: draft
 categories:
-	- Programming
+  - Programming
 tags:
-	- spider
-	- scrapy
-	- Python
-	- article
+  - spider
+  - scrapy
+  - Python
+  - article
+comments: true
+date: 2020-02-07 18:57:03
+updated:
 ---
+
 
 本文介绍，如何从零开始，一步一步的，利用Python及Scrapy创建一个可以抓取不同站点，可管理的爬虫。
 
@@ -106,7 +109,58 @@ tags:
 
 ## 数据（数据库，缓存，文件等）
 
-* 所有支持的网站的定义
+### 所有支持的网站的定义
+
+我们首先需要一个地方来定义所有支持的网站，内容包括其网址，索引页、小说页、章节页的URL 格式，
+以及其各种页面的解析规则，解析方式，需要的字段等meta信息。
+
+如果将其存储在数据库中，不便于修改（还需要增加CRUD界面），所以直接用文件定义，格式用
+JSON 均可，其结构和schema 定义如下：
+
+* 存于 `${BASE_FOLDER)/sites` 目录下
+* 每个网站定义一个文件
+* 文件schema:
+
+```json
+{
+  "title": "spider supported site schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "site name"
+    },
+    "url": {
+      "type": "string",
+      "description": "site url"
+    },
+    "home": {
+      "type": "string",
+      "description": "path to home page. 'url'+'home'= home page url."
+    },
+    "patterns": {
+      "type": "array",
+      "description": "patterns to parse pages.",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+
+          }
+        }
+      ]
+    }
+    "index": {
+      "type": "string",
+      "description": "index pages
+    }
+  }
+}
+```
+
+
+
+
 * 记录每个网站的小说索引
 * 记录所有的小说
 * 记录一个小说所有章节
@@ -118,22 +172,88 @@ tags:
 
 ## 流程（基于scrapy）
 
-```flow
-st=>start: Start:>http://www.google.com[blank]
-e=>end:>http://www.google.com
-op1=>operation: My Operation
-sub1=>subroutine: My Subroutine
-cond=>condition: Yes
-or No?:>http://www.google.com
-io=>inputoutput: catch something...
-para=>parallel: parallel tasks
+### 流程图
 
-st->op1->cond
-cond(yes)->io->e
-cond(no)->para
-para(path1, bottom)->sub1(right)->op1
-para(path2, top)->op1
+* 根据传入参数调用不同的爬虫并爬取不同内容
+
+```mermaid
+graph TD
+
+START(开始) --> command[获得参数]
+
+command --> args[/参数/]
+
+args --> no-args([无参数])
+args --> sites([网站列表])
+args --> novels([小说列表])
+args --> chapter-from([章节开始])
+args --> chapter-to([章节结束])
+
+no-args --> site-ids([site-ids])
+
+sites --> supported-sites{是支持的网站?}
+supported-sites --yes--> site-ids
+supported-sites --no--> drop(丢弃)
+
+novels --> novel-ids([novel-ids])
+chapter-from --> chapter-from-id([chapter-from-id])
+chapter-to --> chapter-to-id([chapter-to-id])
+
+site-ids --> home[爬首页]
+site-ids --> index[爬索引页]
+site-ids --> novel[爬小说]
+site-ids --> chapter[爬章节]
+
+novel-ids --> novel
+novel-ids --> chapter
+
+chapter-from-id --> chapter
+chapter-to-id --> chapter
+
+home --> END(结束)
+index --> END
+novel --> END
+chapter --> END
+
 ```
+
+* 爬首页 (home spider)
+
+```mermaid
+graph TD
+
+START(开始) --> site-ids([site-ids])
+site-ids --> parse-index[/解析获得索引页信息/]
+parse-index --> duplicated{是否有重复?}
+duplicated --yes--> resolve-duplicated[去重]
+duplicated --no--> store[存储索引页数据]
+resolve-duplicated --> store
+store --> END(结束)
+```
+
+
+* 从索引页爬取所有小说页
+
+```mermaid
+graph TD
+
+START(开始) --> supported-sites[/读取所有支持网站定义/]
+supported-sites --> command-args[/获得参数/]
+command-args --> no-args{无参数?}
+no-args --Yes--> crawl-all-sites[爬取所有网站]
+no-args --No--> site-ids[/所有要爬取的网站id/]
+site-ids --> crawl-specified-sites[爬取指定网站]
+crawl-all-sites --> trigger-home-spider[触发home spider]
+crawl-specified-sites --> trigger-home-spider
+trigger-home-spider --> parse-index[/解析获得索引页信息/]
+parse-index --> duplicated{是否有重复?}
+duplicated --yes--> resolve-duplicated[去重]
+duplicated --no--> store[存储索引数据]
+resolve-duplicated --> store
+store --> END(结束)
+
+```
+
 
 ### Spider 
 
@@ -142,3 +262,5 @@ para(path2, top)->op1
 * 爬取小说页面和章节的 Novel Spider
 * 爬取小说章节的 Chapter Spider
 
+`scrapy` 预定义了很多类型的通用爬虫，如 `CrawlSpider`, `FeedSpider` 等，但都不适合
+因此我们从最基本的 `Spider` 继承 开始。

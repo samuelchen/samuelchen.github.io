@@ -1,5 +1,13 @@
 {
     "editor.insertSpaces": false,
     "editor.fontSize": 14,
+    "spellright.language": [
+        "en"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ],
 
 }
