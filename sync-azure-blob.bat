@@ -49,7 +49,7 @@ set BLOG_PATH=%cd%
 echo "BLOG_PATH is %BLOG_PATH%"
 
 call :Info "Generating and checking ..."
-rem call hexo gen && call rclone check ./public %RCLONE_CONF%:%BLOB_CONTAINER%
+call hexo gen && call rclone check ./public %RCLONE_CONF%:%BLOB_CONTAINER%
 
 call :Info "Press [y] then [ENTER] to start. [CTRL] + [C] to break."
 set /p K= 1>nul 2>&1
