@@ -1,5 +1,6 @@
 ---
 title: 用Scrapy创建可管理、多站点的爬虫实战
+slug: multi-sites-managable-spider-with-scrapy-in-action
 draft: draft
 categories:
   - Programming

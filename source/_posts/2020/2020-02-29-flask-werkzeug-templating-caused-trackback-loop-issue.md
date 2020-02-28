@@ -1,18 +1,22 @@
 ---
-title: Flask (Werkzeug) templating caused trackback loop issue
-draft: draft
-date: 2020-02-27 15:59:17
-updated:
+title: Flask (Werkzeug) templating caused trackback loop reference issue
 categories: Programming
 tags:
-	- Flask
-	- Python
-	- Jinja
-	- Werkzeug
-	- bug
-	- trackback
-	- template
+  - Flask
+  - Python
+  - Jinja
+  - Werkzeug
+  - bug
+  - trackback
+  - template
+comments: false
+draft: draft
+date: 2020-02-28 16:24:15
+updated:
+id: flask-werkzeug-templating-caused-trackback-loop-issue
 ---
+
+
 
 Today, I was facing an issue when using `Flask` template.
 

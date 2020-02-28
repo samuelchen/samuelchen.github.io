@@ -1,5 +1,6 @@
 ---
 title: 为 Hexo, Hugo 和 VSCode 添加 markdown 流程图(mermaid)支持
+slug: add-markdown-chart-to-vscode-hexo-and-hugo
 date: 2020-02-06 15:54:51
 updated:
 categories:
