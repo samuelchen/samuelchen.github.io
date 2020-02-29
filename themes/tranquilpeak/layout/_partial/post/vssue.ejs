@@ -1,0 +1,27 @@
+<div id="comments">
+</div>
+<link rel="stylesheet" href="https://unpkg.com/vssue/dist/vssue.min.css">
+<script src="https://unpkg.com/vue/dist/vue.runtime.min.js"></script>
+<script src="https://unpkg.com/vssue/dist/vssue.github.min.js"></script>
+<script>
+    new Vue({
+      el: '#comments',
+
+      render: h => h('Vssue', {
+        props: {
+          // 在这里设置当前页面对应的 Issue 标题
+          title: '<%- truncate(post.title, {length:50}) %>',
+
+          // 在这里设置你使用的平台的 OAuth App 配置
+          options: {
+            owner: '<%- theme.comments.owner %>',
+            repo: '<%- theme.comments.repo %>',
+            clientId: '<%- theme.comments.client_id %>',
+            clientSecret: '<%- theme.comments.client_secret %>', // 只有在使用某些平台时需要
+			labels: <%- theme.comments.labels %>,
+			prefix: []
+          },
+        }
+      })
+    })
+  </script>

@@ -5,12 +5,13 @@
 <script>
 	const gitment = new Gitment({
 		id: '<%- truncate(post.title, {length:50}) %>', // optional
-		owner: '<%- theme.gitment.owner %>',
-		repo: '<%- theme.gitment.repo %>',
+		owner: '<%- theme.comments.owner %>',
+		repo: '<%- theme.comments.repo %>',
 		oauth: {
-			client_id: '<%- theme.gitment.oauth.client_id %>',
-			client_secret: '<%- theme.gitment.oauth.client_secret %>',
+			client_id: '<%- theme.comments.client_id %>',
+			client_secret: '<%- theme.comments.client_secret %>',
 		},
+		labels: <%- theme.comments.labels %>,
 		// ...
 		// For more available options, check out the documentation below
 	})

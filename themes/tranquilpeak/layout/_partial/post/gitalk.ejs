@@ -1,0 +1,17 @@
+<div id="comments">
+</div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+	const gitalk = new Gitalk({
+		id: '<%- truncate(post.title, {length:50}) %>', // optional
+		owner: '<%- theme.comments.owner %>',
+		repo: '<%- theme.comments.repo %>',
+		clientID: '<%- theme.comments.client_id %>',
+		clientSecret: '<%- theme.comments.client_secret %>',
+		admin: <%- theme.comments.admin %>,
+		labels: <%- theme.comments.labels %>,
+		distractionFreeMode: false  // Facebook-like distraction free mode
+	})
+	gitalk.render('comments');
+</script>

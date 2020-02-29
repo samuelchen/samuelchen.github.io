@@ -47,11 +47,18 @@
             </div>
         <% } %>
         <%- partial('post/actions') %>
-        <% if (post.comments && theme.disqus_shortname) { %>
-            <%- partial('post/disqus') %>
-        <% } %>
-        <% if (post.comments && theme.gitment.enabled) { %>
-            <%- partial('post/gitment') %>
+        <% if (post.comments) { %>
+            <% if (theme.comments && theme.comments.sys) { %>
+                <% if (theme.comments.sys == 'vssue') { %>
+                    <%- partial('post/vssue') %>
+                <% } else if (theme.comments.sys == 'gitalk') { %>
+                    <%- partial('post/gitalk') %>
+                <% } else if (theme.comments.sys == 'gitment') { %>
+                    <%- partial('post/gitment') %>
+                <% } %>
+            <% } else if (theme.disqus_shortname) { %>
+                <%- partial('post/disqus') %>
+            <% } %>
         <% } %>
     </div>
 </article>

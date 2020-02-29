@@ -179,11 +179,17 @@ mermaid:
   # Available themes: default | dark | forest | neutral
   theme: neutral
 
+# Vssue (comment system based on Github/GitLab/BitBucket/... issue API)
+# Gitalk (comment system based on Github issue API, suppport anonymous)
 # Gitment (comment system based on Github issue API)
-gitment:
-    enabled: true
+comments:
+    # avaiable: vssue | gitalk | gitment
+    sys: vssue
+
     owner: samuelchen
     repo: samuelchen.github.io
-    oauth:
-        client_id: 82fc507622c63bb0b5c9
-        client_secret: d88a2e4d50c00b59670fcf56bfb3906ab6c996a6
+    client_id: 82fc507622c63bb0b5c9
+    client_secret: d88a2e4d50c00b59670fcf56bfb3906ab6c996a6
+    labels: "['comment', ]"
+
+    admin: "['samuelchen', ]"       # gitalk only
