@@ -9,8 +9,6 @@ tags:
   - bug
   - trackback
   - template
-comments: false
-draft: draft
 date: 2020-02-28 16:24:15
 updated:
 id: flask-werkzeug-templating-caused-trackback-loop-issue

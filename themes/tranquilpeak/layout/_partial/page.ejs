@@ -50,6 +50,9 @@
         <% if (post.comments && theme.disqus_shortname) { %>
             <%- partial('post/disqus') %>
         <% } %>
+        <% if (post.comments && theme.gitment.enabled) { %>
+            <%- partial('post/gitment') %>
+        <% } %>
     </div>
 </article>
 

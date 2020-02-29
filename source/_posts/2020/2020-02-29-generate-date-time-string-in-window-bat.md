@@ -6,7 +6,6 @@ tags:
   - window
   - datetime
   - string
-comments: false
 date: 2020-02-29 00:36:31
 updated:
 id: generate-date-time-string-in-window-bat

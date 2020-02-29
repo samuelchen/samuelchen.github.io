@@ -158,13 +158,15 @@ tag_pagination: true
 
 # Integrated services
 # Your Disqus shortname
-disqus_shortname: samuelchen
+disqus_shortname:
+    # samuelchen
 # Your Google analystics web property ID : UA-XXXXX-X
 google_analytics_id:
 # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
 gravatar_email:
 # Your swiftype install key
-swiftype_install_key: 78osZec8utGs_7B3JCab
+swiftype_install_key: 
+    # 78osZec8utGs_7B3JCab
 # Your Facebook user ids used to connect your blog with your facebook user accounts (Facebook Insights). Separate ids with comma. e.g : 9830047,1003342
 fb_admin_ids:
 # Your Facebook app id used to connect your blog with your facebook app account (Facebook Insights). E.g : 9841307
@@ -176,3 +178,12 @@ mermaid:
   enable: true
   # Available themes: default | dark | forest | neutral
   theme: neutral
+
+# Gitment (comment system based on Github issue API)
+gitment:
+    enabled: true
+    owner: samuelchen
+    repo: samuelchen.github.io
+    oauth:
+        client_id: 82fc507622c63bb0b5c9
+        client_secret: d88a2e4d50c00b59670fcf56bfb3906ab6c996a6

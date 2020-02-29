@@ -20,7 +20,7 @@ if %errorlevel% equ 0 (
 	exit /b 1
 )
 
-call r1clone version 1>nul 2>&1 
+call rclone version 1>nul 2>&1 
 if %errorlevel% equ 0 (
 	call :Debug "Rclone client found"
 ) else (
