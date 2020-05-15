@@ -184,7 +184,7 @@ mermaid:
 # Gitment (comment system based on Github issue API)
 comments:
     # avaiable: vssue | gitalk | gitment
-    sys: vssue
+    sys: gitalk
 
     owner: samuelchen
     repo: samuelchen.github.io

@@ -1,13 +1,15 @@
 ---
-title: 用Scrapy创建可管理、多站点的爬虫实战
-slug: multi-sites-managable-spider-with-scrapy-in-action
+title: 用Scrapy创建可管理、多站点的爬虫实战(0) - 需求
+slug: multi-sites-managable-spider-with-scrapy-in-action-1
 draft: draft
 categories:
   - Programming
 tags:
   - spider
-  - scrapy
+  - Scrapy
   - Python
+  - design
+  - serials
   - article
 comments: true
 date: 2020-02-07 18:57:03
@@ -168,6 +170,43 @@ JSON 均可，其结构和schema 定义如下：
 * 爬取冲突/重复的记录
 * 分布式爬取时的锁
 * 所有的小说封面图片
+
+
+### 文件如何存储
+
+需要数据库表吗，还是一个字段？或是规则作品名生成？
+
+```
+    DB_t_article_media = Table('article_media', meta,
+                               Column('id', Integer, primary_key=True, autoincrement=True),
+                               Column('aid', Integer, ForeignKey(DB_t_article.c.id, ondelete='CASCADE'), index=True),
+                               Column('cid', Integer, index=True), # chapter id
+                               Column('name', String(100)),     # media name w/o ext
+                               Column('ext', String(20), index=True),  # media file extension. jpg, png, pdf... None)
+                               Column('path', String(100)),     # local path w/o name
+                               Column('type', String(10), index=True),     # album, file, ...
+                               Column('field', String(50), index=True),     # origin replaced in what field
+                               Column('var', String(50), )
+                               Column('url', Text),     # origin url or None
+                               Column('update_on', DateTime(timezone=True)),  # last updated datetime by the author
+                               Column('timestamp', DateTime(timezone=True), default=get_timestamp,
+                                      onupdate=get_timestamp),
+
+                               UniqueConstraint('aid', 'name'),
+                               schema=schema
+                               )
+```
+
+自动生成文件名，使用 hash 及 hash 目录，还是 site/name，还是两者结合？
+
+
+下载的文件如何替换？存数据库，原位置变量替换？变量如果被使用？
+
+
+如何下载文件，schema 如何设计 plugin 如何设计 流程有何影响
+
+
+封面和普通文件如何区分
 
 #### 
 
