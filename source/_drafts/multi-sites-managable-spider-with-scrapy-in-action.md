@@ -176,7 +176,7 @@ JSON 均可，其结构和schema 定义如下：
 
 需要数据库表吗，还是一个字段？或是规则作品名生成？
 
-```
+```python
     DB_t_article_media = Table('article_media', meta,
                                Column('id', Integer, primary_key=True, autoincrement=True),
                                Column('aid', Integer, ForeignKey(DB_t_article.c.id, ondelete='CASCADE'), index=True),
