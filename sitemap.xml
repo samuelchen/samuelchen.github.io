@@ -2,9 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/</loc>
+    
+    <lastmod>2020-06-11T17:03:21.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.samuelchen.net/generate-date-time-string-in-window-bat/</loc>
+    
+    <lastmod>2020-06-09T09:59:28.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/</loc>
+    
+    <lastmod>2020-06-09T09:59:28.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/</loc>
+    
+    <lastmod>2020-06-09T09:59:28.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.samuelchen.net/Use-rclone-to-sync-your-files-with-cloud/</loc>
     
-    <lastmod>2019-05-05T07:36:26.000Z</lastmod>
+    <lastmod>2019-05-05T08:07:50.000Z</lastmod>
     
   </url>
   
@@ -100,14 +128,14 @@
   </url>
   
   <url>
-    <loc>http://blog.samuelchen.net/all-tags/index.html</loc>
+    <loc>http://blog.samuelchen.net/all-categories/index.html</loc>
     
     <lastmod>2018-11-15T17:23:31.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://blog.samuelchen.net/all-categories/index.html</loc>
+    <loc>http://blog.samuelchen.net/all-tags/index.html</loc>
     
     <lastmod>2018-11-15T17:23:31.000Z</lastmod>
     

@@ -13,7 +13,7 @@
         <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
     
     <meta name="description" content="在Django中编写模板(template)的时候， 有时候可能会用到settings中设定的变量， 比如说STATIC_URL。 此时， 如果你直接使用  是取不到值的。 那么怎么才能在模板中使用呢？ 难道非得在每个view中添加到context中吗？ 答案是否定的。 根据Django文档中所描述， 我们至少有两种方法可以直接使用。 http://docs.djangoproject.com/e">
-<meta name="keywords" content="Django,programming,Python,static,template">
+<meta name="keywords" content="Python,Django,programming,static,template">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Django 如何在模板(Template)中使用settings中预定义的变量">
 <meta property="og:url" content="http://blog.samuelchen.net/using-predefined-var-in-django-template/index.html">
@@ -48,7 +48,7 @@
     </h1>
     
         <a class="header-right-picture" href="/#about">
-            <img class="header-picture" src="/assets/images/avatar.gif">
+            <img class="header-picture" src="/assets/images/avatar.gif"/>
         </a>
     
 </header>
@@ -57,7 +57,7 @@
     <div class="sidebar-profile">
         <a href="/#about">
             
-            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif">
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif"/>
             
         </a>
         <span class="sidebar-profile-name">Samuel Chen</span>
@@ -68,7 +68,8 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="/ 
+                <a  class="sidebar-button-link "
+                    href="/ 
                     ">
             
                     <i class="sidebar-button-icon fa fa-lg fa-home"></i>
@@ -78,7 +79,8 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="/all-categories
+                <a  class="sidebar-button-link "
+                    href="/all-categories
                             ">
             
                     <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
@@ -88,7 +90,8 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="/all-tags
+                <a  class="sidebar-button-link "
+                    href="/all-tags
                             ">
             
                     <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
@@ -98,7 +101,8 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="/all-archives
+                <a  class="sidebar-button-link "
+                    href="/all-archives
                             ">
             
                     <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
@@ -108,7 +112,8 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link st-search-show-outputs" href="#search
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="#search
                             ">
             
                     <i class="sidebar-button-icon fa fa-lg fa-search"></i>
@@ -118,7 +123,8 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="#about
+                <a  class="sidebar-button-link "
+                    href="#about
                             ">
             
                     <i class="sidebar-button-icon fa fa-lg fa-question"></i>
@@ -132,7 +138,7 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+                <a  class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
             
                     <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
                     <span class="sidebar-button-desc">Website</span>
@@ -141,7 +147,7 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+                <a  class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
             
                     <i class="sidebar-button-icon fa fa-lg fa-github"></i>
                     <span class="sidebar-button-desc">GitHub</span>
@@ -150,7 +156,7 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+                <a  class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
             
                     <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
                     <span class="sidebar-button-desc">Stack Overflow</span>
@@ -159,7 +165,7 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+                <a  class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
             
                     <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
                     <span class="sidebar-button-desc">Twitter</span>
@@ -172,7 +178,8 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="/atom.xml
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
                             ">
             
                     <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
@@ -186,7 +193,7 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+                <a  class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
             
                     <i class="sidebar-button-icon fa fa-lg fa-github"></i>
                     <span class="sidebar-button-desc">Mirror on Github</span>
@@ -195,7 +202,7 @@
         
         <li class="sidebar-button">
             
-                <a class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+                <a  class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
             
                     <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
                     <span class="sidebar-button-desc">Legacies</span>
@@ -207,14 +214,14 @@
 </nav>
             <div id="main" data-behavior="1">
                 
-<article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
     
         <div class="post-header main-content-wrap">
     
         <h1 class="post-title" itemprop="headline">Django 如何在模板(Template)中使用settings中预定义的变量</h1>
     
     <div class="post-meta">
-    <time itemprop="datePublished" content="Sat Mar 05 2011 00:26:00 GMT+0800">
+    <time  itemprop="datePublished" content="Sat Mar 05 2011 00:26:00 GMT+0800">
         Mar 05, 2011
     </time>
     
@@ -255,7 +262,7 @@ return render_to_response(&apos;my_template.html&apos;,
     <div class="post-footer main-content-wrap">
         
             <div class="post-footer-tags">
-                <span class="text-color-light text-small">TAGGED IN</span><br>
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
     <a class="tag tag--primary tag--small t-link" href="/tags/Django/">Django</a> <a class="tag tag--primary tag--small t-link" href="/tags/Python/">Python</a> <a class="tag tag--primary tag--small t-link" href="/tags/programming/">programming</a> <a class="tag tag--primary tag--small t-link" href="/tags/static/">static</a> <a class="tag tag--primary tag--small t-link" href="/tags/template/">template</a>
 
@@ -266,7 +273,7 @@ return render_to_response(&apos;my_template.html&apos;,
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/config-webpy-in-apache-fastcgi/" data-tooltip="web.py 在 Apache + Fastcgi 配置 Tips">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/config-webpy-in-apache-fastcgi/"  data-tooltip="web.py 在 Apache + Fastcgi 配置 Tips">
                 
                     <i class="fa fa-angle-left"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -284,7 +291,7 @@ return render_to_response(&apos;my_template.html&apos;,
     </nav>
     <ul class="post-actions post-action-share">
         <li class="post-action hide-lg hide-md hide-sm">
-            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
                 <i class="fa fa-share-alt"></i>
             </a>
         </li>
@@ -305,7 +312,7 @@ return render_to_response(&apos;my_template.html&apos;,
         </li>
         
             <li class="post-action">
-                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                <a class="post-action-btn btn btn--default" href="#comments">
                     <i class="fa fa-comment-o"></i>
                 </a>
             </li>
@@ -320,9 +327,28 @@ return render_to_response(&apos;my_template.html&apos;,
     </ul>
 </div>
         
-            <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            
+                
+                    <div id="comments">
 </div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+	const gitalk = new Gitalk({
+		id: 'Django 如何在模板(Template)中使用settings中预定义的变量', // optional
+		owner: 'samuelchen',
+		repo: 'samuelchen.github.io',
+		clientID: '82fc507622c63bb0b5c9',
+		clientSecret: 'd88a2e4d50c00b59670fcf56bfb3906ab6c996a6',
+		admin: ['samuelchen', ],
+		labels: ['comment', ],
+		distractionFreeMode: false  // Facebook-like distraction free mode
+	})
+	gitalk.render('comments');
+</script>
+
+                
+            
         
     </div>
 </article>
@@ -331,7 +357,7 @@ return render_to_response(&apos;my_template.html&apos;,
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2019 Samuel Chen. All Rights Reserved.
+        Copyrights &copy; 2020 Samuel Chen. All Rights Reserved.
     </span>
 </footer>
 
@@ -343,7 +369,7 @@ return render_to_response(&apos;my_template.html&apos;,
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/config-webpy-in-apache-fastcgi/" data-tooltip="web.py 在 Apache + Fastcgi 配置 Tips">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/config-webpy-in-apache-fastcgi/"  data-tooltip="web.py 在 Apache + Fastcgi 配置 Tips">
                 
                     <i class="fa fa-angle-left"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -361,7 +387,7 @@ return render_to_response(&apos;my_template.html&apos;,
     </nav>
     <ul class="post-actions post-action-share">
         <li class="post-action hide-lg hide-md hide-sm">
-            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
                 <i class="fa fa-share-alt"></i>
             </a>
         </li>
@@ -382,7 +408,7 @@ return render_to_response(&apos;my_template.html&apos;,
         </li>
         
             <li class="post-action">
-                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                <a class="post-action-btn btn btn--default" href="#comments">
                     <i class="fa fa-comment-o"></i>
                 </a>
             </li>
@@ -425,7 +451,7 @@ return render_to_response(&apos;my_template.html&apos;,
             <i class="fa fa-remove"></i>
         </div>
         
-            <img id="about-card-picture" src="/assets/images/avatar.gif">
+            <img id="about-card-picture" src="/assets/images/avatar.gif"/>
         
             <h4 id="about-card-name">Samuel Chen</h4>
         
@@ -436,7 +462,7 @@ return render_to_response(&apos;my_template.html&apos;,
         
             <h5 id="about-card-location">
                 <i class="fa fa-map-marker"></i>
-                <br>
+                <br/>
                 Wuhan, China
             </h5>
         
@@ -448,25 +474,25 @@ return render_to_response(&apos;my_template.html&apos;,
 <script src="/assets/js/script.min.js"></script>
 <!--SCRIPTS END-->
 
-    <script type="text/javascript">
-        var disqus_shortname = 'samuelchen';
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript';
-            dsq.async = true;
-            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
 
 
-    <script type="text/javascript">
-        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
-                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
-            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
-        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
 
-        _st('install','78osZec8utGs_7B3JCab','2.0.0');
+    <!-- if CDN fails, use local file -->
+    <script src="https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js"></script>
+    <script> window.mermaid || document.write('<script src="/assets/js/mermaid.min.js"><\/script>')</script>
+
+    <script>
+        $(document).ready(function() {
+            var mermaid_config = {
+                startOnLoad: true,
+                theme: 'neutral',
+                flowchart:{
+                    useMaxWidth: false,
+                    htmlLabels: true
+                }                
+            }
+            mermaid.initialize(mermaid_config);
+        });
     </script>
 
 

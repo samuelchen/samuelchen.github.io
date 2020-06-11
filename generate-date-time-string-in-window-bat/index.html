@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Explorer. Dream. Discover.">
+    <title>Window 批处理(BAT)中生成格式化日期时间字符串 - Explorer. Dream. Discover.</title>
+    <meta name="author" content="Samuel Chen">
+    <meta name="description" content="Explorer. Dream. Discover.">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="今天打算写一些脚本同时支持 Windows 和 Linux，因此需要同一个脚本需要写一个 shell 版本和一个bat 版本。 其中一项需求是要生成一个日志文件，文件后缀是当前系统时间的字符串’yyymmddMMHHSS’这种格式的，所以需要取到当前时间并格式化。 在 Linux 中，这是一个很简单的需求，直接使用 date +&amp;#39;%y%m%d%H%M%S&amp;#39; 就可以拿到，但是在 Wi">
+<meta name="keywords" content="bat,window,datetime,string">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Window 批处理(BAT)中生成格式化日期时间字符串">
+<meta property="og:url" content="http://blog.samuelchen.net/generate-date-time-string-in-window-bat/index.html">
+<meta property="og:site_name" content="Explorer. Dream. Discover.">
+<meta property="og:description" content="今天打算写一些脚本同时支持 Windows 和 Linux，因此需要同一个脚本需要写一个 shell 版本和一个bat 版本。 其中一项需求是要生成一个日志文件，文件后缀是当前系统时间的字符串’yyymmddMMHHSS’这种格式的，所以需要取到当前时间并格式化。 在 Linux 中，这是一个很简单的需求，直接使用 date +&amp;#39;%y%m%d%H%M%S&amp;#39; 就可以拿到，但是在 Wi">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-06-09T09:59:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Window 批处理(BAT)中生成格式化日期时间字符串">
+<meta name="twitter:description" content="今天打算写一些脚本同时支持 Windows 和 Linux，因此需要同一个脚本需要写一个 shell 版本和一个bat 版本。 其中一项需求是要生成一个日志文件，文件后缀是当前系统时间的字符串’yyymmddMMHHSS’这种格式的，所以需要取到当前时间并格式化。 在 Linux 中，这是一个很简单的需求，直接使用 date +&amp;#39;%y%m%d%H%M%S&amp;#39; 就可以拿到，但是在 Wi">
+<meta name="twitter:creator" content="@samuelchen">
+    
+    
+    
+        <meta property="og:image" content="/assets/images/avatar.gif"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Explorer. Dream. Discover.</a>
+    </h1>
+    
+        <a class="header-right-picture" href="/#about">
+            <img class="header-picture" src="/assets/images/avatar.gif"/>
+        </a>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    <div class="sidebar-profile">
+        <a href="/#about">
+            
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif"/>
+            
+        </a>
+        <span class="sidebar-profile-name">Samuel Chen</span>
+    </div>
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
+                    <span class="sidebar-button-desc">Website</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">Mirror on Github</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Legacies</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Window 批处理(BAT)中生成格式化日期时间字符串</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sat Feb 29 2020 00:36:31 GMT+0800">
+        Feb 29, 2020
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Programming/">Programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+            <p>今天打算写一些脚本同时支持 Windows 和 Linux，因此需要同一个脚本需要写一个 shell 版本和一个<br><code>bat</code> 版本。</p>
+<p>其中一项需求是要生成一个日志文件，文件后缀是当前系统时间的字符串’yyymmddMMHHSS’这种格式的，<br>所以需要取到当前时间并格式化。</p>
+<p>在 Linux 中，这是一个很简单的需求，直接使用 <code>date +&#39;%y%m%d%H%M%S&#39;</code> 就可以拿到，但是在 Windows<br>中就非常麻烦了。</p>
+<p>在 Windows 中，最直接的想法是和 Linux 类似，使用 <code>date /t</code> 和 <code>time /t</code> 命令来获取，然后利用<br><code>%date:~0,4%</code> 来取到年份（<code>%:~0,4%</code> 是 bat 取子字符串语法，表示取 0 到 4 个字符，前开后闭），<br>其他分别取到月、日、小时、分钟和秒，最后组合。完整的例子如下.</p>
+<p><code>%date:~0,4%%date:~5,2%%date:~8,2%%time:~0,2%%time:~3,2%%time:~6,2%</code></p>
+<p>这个例子<strong>基本上</strong>是可以工作的。但为什么说“基本上”？因为这个方法只能适用于部分系统，没有考虑区域(locale)。</p>
+<p>由于 <code>Windows</code> 有区域和格式设定，所以 <code>date</code> 和 <code>time</code> 命令显示出来时间格式是经过格式化的，换<br>句话说，不同的区域由于设置的时间格式不同，返回的格式串就不同。比如中国/中文，经常使用 <code>2020-02-02</code><br>这种格式，而欧美/英文，经常使用 <code>02/02/20</code> 这种格式。所以上面那个在英文系统下，多半显示不对。</p>
+<p>也在网上找了些例子，有些考虑到了不同的格式，但也是用 <code>date</code> 各种判断拼凑出来，也有提到<br>直接访问 CMOS 硬件 clock 的方法，都是非常麻烦，不太适用于写短小的<code>bat</code>批处理文件。</p>
+<p>最终，找到了一个<strong>比较好</strong>的办法，那就是利用 <code>WMI</code> 的接口来直接获得时间。说说它比“比较好”的原因是<br>因为 <code>WMI</code> 的接口不一定每个机器都有，这个命令也是处于<code>deprecated</code>即将退休的状态。</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="comment">rem set local ENABLEDELAYEDEXPANSION</span></span><br><span class="line"></span><br><span class="line">wmic /? &gt;&gt; <span class="built_in">nul</span>|| <span class="built_in">echo</span> "wmic <span class="keyword">not</span> found." &amp;&amp; <span class="built_in">echo</span> 'quit'</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> ( 'wmic os get LocalDateTime /value' ) <span class="keyword">do</span> (</span><br><span class="line">    <span class="built_in">echo</span> "<span class="variable">%%i</span>" | <span class="built_in">findstr</span> "LocalDateTime" &gt; <span class="built_in">nul</span> &amp;&amp; <span class="built_in">set</span> DT=<span class="variable">%%i</span></span><br><span class="line">)</span><br><span class="line"><span class="built_in">set</span> DT=<span class="variable">%DT:~14,14%</span></span><br><span class="line"><span class="comment">rem echo "%DT%"</span></span><br></pre></td></tr></table></figure>
+<p>此外，利用 <code>PowerShell</code> 也是一个<strong>比较好</strong>的办法，问题同样是可能有些机器没装。如果想处理时区信息，<br>可以使用 <code>tzinfo</code> 命令。</p>
+<p>总之，根据自身需求和环境，选择合适的方法。</p>
+<p>– END –</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/bat/">bat</a> <a class="tag tag--primary tag--small t-link" href="/tags/datetime/">datetime</a> <a class="tag tag--primary tag--small t-link" href="/tags/string/">string</a> <a class="tag tag--primary tag--small t-link" href="/tags/window/">window</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/flask-werkzeug-templating-caused-trackback-loop-issue/" data-tooltip="Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Window 批处理(BAT)中生成格式化日期时间字符串&amp;url=http://blog.samuelchen.net/generate-date-time-string-in-window-bat/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/generate-date-time-string-in-window-bat/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/generate-date-time-string-in-window-bat/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#comments">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            
+                
+                    <div id="comments">
+</div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+	const gitalk = new Gitalk({
+		id: 'Window 批处理(BAT)中生成格式化日期时间字符串', // optional
+		owner: 'samuelchen',
+		repo: 'samuelchen.github.io',
+		clientID: '82fc507622c63bb0b5c9',
+		clientSecret: 'd88a2e4d50c00b59670fcf56bfb3906ab6c996a6',
+		admin: ['samuelchen', ],
+		labels: ['comment', ],
+		distractionFreeMode: false  // Facebook-like distraction free mode
+	})
+	gitalk.render('comments');
+</script>
+
+                
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Samuel Chen. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/flask-werkzeug-templating-caused-trackback-loop-issue/" data-tooltip="Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Window 批处理(BAT)中生成格式化日期时间字符串&amp;url=http://blog.samuelchen.net/generate-date-time-string-in-window-bat/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/generate-date-time-string-in-window-bat/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/generate-date-time-string-in-window-bat/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#comments">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Window 批处理(BAT)中生成格式化日期时间字符串&amp;url=http://blog.samuelchen.net/generate-date-time-string-in-window-bat/">
+                <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/generate-date-time-string-in-window-bat/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/generate-date-time-string-in-window-bat/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/avatar.gif"/>
+        
+            <h4 id="about-card-name">Samuel Chen</h4>
+        
+            <h5 id="about-card-bio"><p>I am living in Wuhan with my wife and daughter.<br>Before 2010, I was living in Beijing for a long time.<br>My interesings are cloud technology, distributed system, data mining and mobile technologies.<br>In my spare time, I like to play football and swiming.<br>“Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.</p>
+</h5>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Wuhan, China
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js"></script>
+<!--SCRIPTS END-->
+
+
+
+
+    <!-- if CDN fails, use local file -->
+    <script src="https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js"></script>
+    <script> window.mermaid || document.write('<script src="/assets/js/mermaid.min.js"><\/script>')</script>
+
+    <script>
+        $(document).ready(function() {
+            var mermaid_config = {
+                startOnLoad: true,
+                theme: 'neutral',
+                flowchart:{
+                    useMaxWidth: false,
+                    htmlLabels: true
+                }                
+            }
+            mermaid.initialize(mermaid_config);
+        });
+    </script>
+
+
+</html>

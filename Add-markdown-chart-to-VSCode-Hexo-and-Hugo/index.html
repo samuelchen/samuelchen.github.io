@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Explorer. Dream. Discover.">
+    <title>为 Hexo, Hugo 和 VSCode 添加 Markdown 流程图(Mermaid)支持 - Explorer. Dream. Discover.</title>
+    <meta name="author" content="Samuel Chen">
+    <meta name="description" content="Explorer. Dream. Discover.">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="最近在写blog时想画流程图，但又因为可能会频繁修改而不想用图片。因此经过一番搜寻，发现了 mermaid这个工具，支持用 markdown 撰写 流程图，时序图，甘特图，类图 等各种（简直神器）。最让人高兴的是，Hexo（博客）, Hugo（网站） 以及 VSCode 都有插件或者方法可以支持。 以下就分别介绍如何在VSCode, Hexo 以及 Hugo 中安装设置来支持 mermaid. V">
+<meta name="keywords" content="blog,diagram,flowchart,mermaid,markdown,hexo,hugo,vscode">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="为 Hexo, Hugo 和 VSCode 添加 Markdown 流程图(Mermaid)支持">
+<meta property="og:url" content="http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/index.html">
+<meta property="og:site_name" content="Explorer. Dream. Discover.">
+<meta property="og:description" content="最近在写blog时想画流程图，但又因为可能会频繁修改而不想用图片。因此经过一番搜寻，发现了 mermaid这个工具，支持用 markdown 撰写 流程图，时序图，甘特图，类图 等各种（简直神器）。最让人高兴的是，Hexo（博客）, Hugo（网站） 以及 VSCode 都有插件或者方法可以支持。 以下就分别介绍如何在VSCode, Hexo 以及 Hugo 中安装设置来支持 mermaid. V">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/vscode-markdown-flowchart.png">
+<meta property="og:updated_time" content="2020-06-09T09:59:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="为 Hexo, Hugo 和 VSCode 添加 Markdown 流程图(Mermaid)支持">
+<meta name="twitter:description" content="最近在写blog时想画流程图，但又因为可能会频繁修改而不想用图片。因此经过一番搜寻，发现了 mermaid这个工具，支持用 markdown 撰写 流程图，时序图，甘特图，类图 等各种（简直神器）。最让人高兴的是，Hexo（博客）, Hugo（网站） 以及 VSCode 都有插件或者方法可以支持。 以下就分别介绍如何在VSCode, Hexo 以及 Hugo 中安装设置来支持 mermaid. V">
+<meta name="twitter:image" content="http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/vscode-markdown-flowchart.png">
+<meta name="twitter:creator" content="@samuelchen">
+    
+    
+    
+        <meta property="og:image" content="/assets/images/avatar.gif"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Explorer. Dream. Discover.</a>
+    </h1>
+    
+        <a class="header-right-picture" href="/#about">
+            <img class="header-picture" src="/assets/images/avatar.gif"/>
+        </a>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    <div class="sidebar-profile">
+        <a href="/#about">
+            
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif"/>
+            
+        </a>
+        <span class="sidebar-profile-name">Samuel Chen</span>
+    </div>
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
+                    <span class="sidebar-button-desc">Website</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">Mirror on Github</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Legacies</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">为 Hexo, Hugo 和 VSCode 添加 Markdown 流程图(Mermaid)支持</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Thu Feb 06 2020 15:54:51 GMT+0800">
+        Feb 06, 2020
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Utility/">Utility</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+            <p>最近在写blog时想画流程图，但又因为可能会频繁修改而不想用图片。因此经过一番搜寻，发现了 <a href="https://mermaid-js.github.io/mermaid/" target="_blank" rel="noopener"><code>mermaid</code></a><br>这个工具，支持用 <code>markdown</code> 撰写 <strong>流程图</strong>，<strong>时序图</strong>，<strong>甘特图</strong>，<strong>类图</strong> 等各种（简直神器）。<br>最让人高兴的是，Hexo（博客）, Hugo（网站） 以及 VSCode 都有插件或者方法可以支持。</p>
+<p>以下就分别介绍如何在VSCode, Hexo 以及 Hugo 中安装设置来支持 <code>mermaid</code>.</p>
+<h2 id="VSCode"><a href="#VSCode" class="headerlink" title="VSCode"></a>VSCode</h2><p>在 VSCode 中安装插件 <a href="https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid" target="_blank" rel="noopener"><code>Markdown Preview Mermaid Support</code></a>，<br>就可以在编辑时实时预览 <code>markdown</code> 中的 <code>mermaid</code> 图形了，图形编写使用 ``` 包围，并以 <code>mermaid</code>作为语言标签。</p>
+<p>例如（：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">` `</span> `mermaid</span><br><span class="line">graph TD;</span><br><span class="line"><span class="code">	A--&gt;B;</span></span><br><span class="line"><span class="code">	A--&gt;C;</span></span><br><span class="line"><span class="code">	B--&gt;D;</span></span><br><span class="line"><span class="code">	C--&gt;D;</span></span><br><span class="line"><span class="code">` `</span> `</span><br></pre></td></tr></table></figure>
+<p>如图所示：<br><img src="vscode-markdown-flowchart.png" alt></p>
+<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><p>Hexo 默认是不支持 <code>mermaid</code> 的，需要添加插件支持，在你的 Hexo Blog 目录下，输入命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-filter-mermaid-diagrams</span><br></pre></td></tr></table></figure>
+<p>此外，如果使用的主题支持<code>mermaid</code>，需要在所用主题的 <code>_config.yml</code> 中开启 <code>mermaid</code> 支持：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Mermaid (markdwon to flow chart, seq chart, class chart ...)</span></span><br><span class="line"><span class="attr">mermaid:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># Available themes: default | dark | forest | neutral</span></span><br><span class="line"><span class="attr">  theme:</span> <span class="string">default</span></span><br></pre></td></tr></table></figure>
+<pre><code>*请稍等一段时间，以下代码会变为SVG流程图*
+</code></pre><pre class="mermaid">graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;</pre>
+
+<p><strong>如果所使用的主题不支持 <code>mermaid</code>，请参考 <a href></a></strong></p>
+<h3 id="给-Hexo-主题添加-memaid-支持"><a href="#给-Hexo-主题添加-memaid-支持" class="headerlink" title="给 Hexo 主题添加 memaid 支持"></a>给 Hexo 主题添加 <code>memaid</code> 支持</h3><p>最简单的办法，利用<code>mermaid</code>官方CDN，直接在 ${blog}\themes\tranquilpeak\layout_partial\script.ejs<br>中修改，文件最后增加两行如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">"https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;script&gt;mermaid.initialize(&#123;<span class="attr">startOnLoad</span>:<span class="literal">true</span>&#125;);<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>如果希望这个主题能支持更多配置，可以在主题的 <code>_config.yml</code> 中增加 <code>mermaid</code> 配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Mermaid (markdwon to flow chart, seq chart, class chart ...)</span></span><br><span class="line"><span class="attr">mermaid:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># Available themes: default | dark | forest | neutral</span></span><br><span class="line"><span class="attr">  theme:</span> <span class="string">default</span></span><br><span class="line">  <span class="comment"># You can add more options</span></span><br></pre></td></tr></table></figure>
+<p>然后在 <code>${blog}\themes\tranquilpeak\layout\_partial\script.ejs</code> 中修改，文件最后增加：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;% <span class="keyword">if</span> (theme.mermaid.enable) &#123; %&gt;</span><br><span class="line">    &lt;%- js(<span class="string">'assets/js/mermaid.min.js'</span>) %&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        $(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> mermaid_config = &#123;</span><br><span class="line">                startOnLoad: <span class="literal">true</span>,</span><br><span class="line">                theme: <span class="string">'&lt;%- theme.mermaid.theme %&gt;'</span>,</span><br><span class="line">                flowchart:&#123;</span><br><span class="line">                    useMaxWidth: <span class="literal">false</span>,</span><br><span class="line">                    htmlLabels: <span class="literal">true</span></span><br><span class="line">                &#125;                </span><br><span class="line">            &#125;</span><br><span class="line">            mermaid.initialize(mermaid_config);</span><br><span class="line">        &#125;);</span><br><span class="line">    &lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;% &#125; %&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其中 <code>theme.mermaid.enable</code> <code>theme.mermaid.theme</code> 就是你增加的主题配置选项，具体<br>详见 <code>mermaid</code> 官方文档。</p>
+<p>最后，可以将 <code>mermaid.min.js</code> 放到主题的js目录 <code>${blog}\themes\tranquilpeak\source\assets\js\</code> 下，<br>再使用如下技巧，当 CDN 出问题时，可以使用本地文件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- <span class="keyword">if</span> CDN fails, use local file --&gt;</span><br><span class="line">&lt;script src=<span class="string">"https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;script&gt; <span class="built_in">window</span>.mermaid || <span class="built_in">document</span>.write(<span class="string">'&lt;script src="/assets/js/mermaid.min.js"&gt;&lt;\/script&gt;'</span>)&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Hugo"><a href="#Hugo" class="headerlink" title="Hugo"></a>Hugo</h2><pre><code>to be written
+理论上和 Hexo 类似，待写
+</code></pre><p>— END —</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/blog/">blog</a> <a class="tag tag--primary tag--small t-link" href="/tags/diagram/">diagram</a> <a class="tag tag--primary tag--small t-link" href="/tags/flowchart/">flowchart</a> <a class="tag tag--primary tag--small t-link" href="/tags/hexo/">hexo</a> <a class="tag tag--primary tag--small t-link" href="/tags/hugo/">hugo</a> <a class="tag tag--primary tag--small t-link" href="/tags/markdown/">markdown</a> <a class="tag tag--primary tag--small t-link" href="/tags/mermaid/">mermaid</a> <a class="tag tag--primary tag--small t-link" href="/tags/vscode/">vscode</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/flask-werkzeug-templating-caused-trackback-loop-issue/"  data-tooltip="Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Use-rclone-to-sync-your-files-with-cloud/" data-tooltip="使用 Rclone 同步云端和本地文件">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=为 Hexo, Hugo 和 VSCode 添加 Markdown 流程图(Mermaid)支持&amp;url=http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#comments">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            
+                
+                    <div id="comments">
+</div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+	const gitalk = new Gitalk({
+		id: '为 Hexo, Hugo 和 VSCode 添加 Markdown 流程图(Mermaid)支持', // optional
+		owner: 'samuelchen',
+		repo: 'samuelchen.github.io',
+		clientID: '82fc507622c63bb0b5c9',
+		clientSecret: 'd88a2e4d50c00b59670fcf56bfb3906ab6c996a6',
+		admin: ['samuelchen', ],
+		labels: ['comment', ],
+		distractionFreeMode: false  // Facebook-like distraction free mode
+	})
+	gitalk.render('comments');
+</script>
+
+                
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Samuel Chen. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/flask-werkzeug-templating-caused-trackback-loop-issue/"  data-tooltip="Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Use-rclone-to-sync-your-files-with-cloud/" data-tooltip="使用 Rclone 同步云端和本地文件">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=为 Hexo, Hugo 和 VSCode 添加 Markdown 流程图(Mermaid)支持&amp;url=http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#comments">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=为 Hexo, Hugo 和 VSCode 添加 Markdown 流程图(Mermaid)支持&amp;url=http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/">
+                <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/avatar.gif"/>
+        
+            <h4 id="about-card-name">Samuel Chen</h4>
+        
+            <h5 id="about-card-bio"><p>I am living in Wuhan with my wife and daughter.<br>Before 2010, I was living in Beijing for a long time.<br>My interesings are cloud technology, distributed system, data mining and mobile technologies.<br>In my spare time, I like to play football and swiming.<br>“Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.</p>
+</h5>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Wuhan, China
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js"></script>
+<!--SCRIPTS END-->
+
+
+
+
+    <!-- if CDN fails, use local file -->
+    <script src="https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js"></script>
+    <script> window.mermaid || document.write('<script src="/assets/js/mermaid.min.js"><\/script>')</script>
+
+    <script>
+        $(document).ready(function() {
+            var mermaid_config = {
+                startOnLoad: true,
+                theme: 'neutral',
+                flowchart:{
+                    useMaxWidth: false,
+                    htmlLabels: true
+                }                
+            }
+            mermaid.initialize(mermaid_config);
+        });
+    </script>
+
+
+</html>

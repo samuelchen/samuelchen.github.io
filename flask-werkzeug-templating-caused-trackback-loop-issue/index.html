@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Explorer. Dream. Discover.">
+    <title>Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue - Explorer. Dream. Discover.</title>
+    <meta name="author" content="Samuel Chen">
+    <meta name="description" content="Explorer. Dream. Discover.">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="Today, I was facing an issue when using Flask template. If use an dash “-“ linked variable name in Flask template, it will cause Flask to hang withoutthrowing any exception. At beginning, I guess it m">
+<meta name="keywords" content="Python,template,Flask,Jinja,Werkzeug,bug,trackback">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue">
+<meta property="og:url" content="http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/index.html">
+<meta property="og:site_name" content="Explorer. Dream. Discover.">
+<meta property="og:description" content="Today, I was facing an issue when using Flask template. If use an dash “-“ linked variable name in Flask template, it will cause Flask to hang withoutthrowing any exception. At beginning, I guess it m">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/flask_tb_next_loop_ref.png">
+<meta property="og:updated_time" content="2020-06-09T09:59:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue">
+<meta name="twitter:description" content="Today, I was facing an issue when using Flask template. If use an dash “-“ linked variable name in Flask template, it will cause Flask to hang withoutthrowing any exception. At beginning, I guess it m">
+<meta name="twitter:image" content="http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/flask_tb_next_loop_ref.png">
+<meta name="twitter:creator" content="@samuelchen">
+    
+    
+    
+        <meta property="og:image" content="/assets/images/avatar.gif"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Explorer. Dream. Discover.</a>
+    </h1>
+    
+        <a class="header-right-picture" href="/#about">
+            <img class="header-picture" src="/assets/images/avatar.gif"/>
+        </a>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    <div class="sidebar-profile">
+        <a href="/#about">
+            
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif"/>
+            
+        </a>
+        <span class="sidebar-profile-name">Samuel Chen</span>
+    </div>
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
+                    <span class="sidebar-button-desc">Website</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">Mirror on Github</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Legacies</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Fri Feb 28 2020 16:24:15 GMT+0800">
+        Feb 28, 2020
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Programming/">Programming</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+            <p>Today, I was facing an issue when using <code>Flask</code> template.</p>
+<p>If use an dash “-“ linked variable name in Flask template, it will cause Flask to hang without<br>throwing any exception.</p>
+<p>At beginning, I guess it may be an issue of <code>Jinja</code> template rending. But after traced in IDE<br>(Pycharm community 2019.3), I saw that templating raised the exception and <code>Werkzeug</code> is handling. </p>
+<p>At first I uses Flask debug mode and IDE <strong>debug</strong> run to step into codes to dig it. IDE gets<br>slower and slower and the debugger hung in <code>Werkzerg</code> codes.</p>
+<p>Eventually, I found an endless loop in <code>Python\Lib\traceback.py</code> to walk trackback stacks. The<br>trackbacks are stored in a link which nodes point to next. In <code>flask\templating.py</code>,<br><code>flask\app.py</code> and <code>werkzeug\debug\tbtools.py</code>, the exception was catched. In<br><code>handle_exception()</code> of <code>flask\app.py</code>, <code>Werkzeug</code> wants to log it and print it out.<br>The trackback link has looped reference as below picture.</p>
+<p><img src="flask_tb_next_loop_ref.png" alt></p>
+<p>Simple code to re-produce it as below (<strong>“font-size”</strong> variable caused.).</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, render_template_string, make_response, url_for, redirect</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">template_page = <span class="string">'''</span></span><br><span class="line"><span class="string">&lt;html&gt;</span></span><br><span class="line"><span class="string">&lt;head&gt;</span></span><br><span class="line"><span class="string">&lt;meta charset="&#123;&#123; encoding &#125;&#125;" /&gt;</span></span><br><span class="line"><span class="string">&lt;meta http-equiv="content-type" content="text/html; charset=&#123;&#123; encoding &#125;&#125;" /&gt;</span></span><br><span class="line"><span class="string">&lt;style type="text/css"&gt;</span></span><br><span class="line"><span class="string">  body, pre, p, div, input, h1,h2,h3,h4,h5 &#123;</span></span><br><span class="line"><span class="string">    font-family : Consolas, Courier New;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&lt;/style&gt;</span></span><br><span class="line"><span class="string">&lt;/head&gt;</span></span><br><span class="line"><span class="string">&lt;body&gt;</span></span><br><span class="line"><span class="string">    &lt;div id="wrapper" style="font-size:&#123;&#123; font-size &#125;&#125;em"&gt;</span></span><br><span class="line"><span class="string">        &#123;&#123; content | safe &#125;&#125;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">&lt;/body&gt;'''</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    context = &#123;</span><br><span class="line">        <span class="string">"encoding"</span>: <span class="string">'utf-8'</span>,</span><br><span class="line">        <span class="string">"font-size"</span>: <span class="number">0.9</span>,</span><br><span class="line">        <span class="string">"content"</span>: <span class="string">'hello flask'</span></span><br><span class="line">    &#125;</span><br><span class="line">    resp = make_response(render_template_string(template_page, **context))</span><br><span class="line">    resp.headers[<span class="string">'Content-Type'</span>] = <span class="string">'text/html; charset=utf-8'</span></span><br><span class="line">    <span class="keyword">return</span> resp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="comment"># app.run(debug=True, host='0.0.0.0', port=8080)</span></span><br><span class="line"></span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+<p>Raised Github issue at <code>Flask</code>:</p>
+<ul>
+<li><a href="https://github.com/pallets/flask/issues/3516" target="_blank" rel="noopener">https://github.com/pallets/flask/issues/3516</a></li>
+</ul>
+<p>Environment:</p>
+<ul>
+<li>Window 10</li>
+<li>Python 3.6.8150.1013 (venv)</li>
+<li>Flask 1.1.1</li>
+<li>Werkzeug 0.16.1</li>
+</ul>
+<p>Possible related Python issue:</p>
+<ul>
+<li><a href="https://bugs.python.org/issue9427" target="_blank" rel="noopener">Issue9427 - logging.error(‘…’, exc_info=True) should display upper frames, too</a></li>
+<li><a href="https://bugs.python.org/issue1553375" target="_blank" rel="noopener">Issue1553375 - Add traceback.print_full_exception()</a></li>
+</ul>
+<p>– END –</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Flask/">Flask</a> <a class="tag tag--primary tag--small t-link" href="/tags/Jinja/">Jinja</a> <a class="tag tag--primary tag--small t-link" href="/tags/Python/">Python</a> <a class="tag tag--primary tag--small t-link" href="/tags/Werkzeug/">Werkzeug</a> <a class="tag tag--primary tag--small t-link" href="/tags/bug/">bug</a> <a class="tag tag--primary tag--small t-link" href="/tags/template/">template</a> <a class="tag tag--primary tag--small t-link" href="/tags/trackback/">trackback</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/generate-date-time-string-in-window-bat/"  data-tooltip="Window 批处理(BAT)中生成格式化日期时间字符串">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/" data-tooltip="为 Hexo, Hugo 和 VSCode 添加 Markdown 流程图(Mermaid)支持">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue&amp;url=http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#comments">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            
+                
+                    <div id="comments">
+</div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+	const gitalk = new Gitalk({
+		id: 'Flask (Werkzeug) Templating Caused Trackback Lo...', // optional
+		owner: 'samuelchen',
+		repo: 'samuelchen.github.io',
+		clientID: '82fc507622c63bb0b5c9',
+		clientSecret: 'd88a2e4d50c00b59670fcf56bfb3906ab6c996a6',
+		admin: ['samuelchen', ],
+		labels: ['comment', ],
+		distractionFreeMode: false  // Facebook-like distraction free mode
+	})
+	gitalk.render('comments');
+</script>
+
+                
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Samuel Chen. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/generate-date-time-string-in-window-bat/"  data-tooltip="Window 批处理(BAT)中生成格式化日期时间字符串">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/" data-tooltip="为 Hexo, Hugo 和 VSCode 添加 Markdown 流程图(Mermaid)支持">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue&amp;url=http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#comments">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Flask (Werkzeug) Templating Caused Trackback Loop Reference Issue&amp;url=http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/">
+                <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/avatar.gif"/>
+        
+            <h4 id="about-card-name">Samuel Chen</h4>
+        
+            <h5 id="about-card-bio"><p>I am living in Wuhan with my wife and daughter.<br>Before 2010, I was living in Beijing for a long time.<br>My interesings are cloud technology, distributed system, data mining and mobile technologies.<br>In my spare time, I like to play football and swiming.<br>“Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.</p>
+</h5>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Wuhan, China
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js"></script>
+<!--SCRIPTS END-->
+
+
+
+
+    <!-- if CDN fails, use local file -->
+    <script src="https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js"></script>
+    <script> window.mermaid || document.write('<script src="/assets/js/mermaid.min.js"><\/script>')</script>
+
+    <script>
+        $(document).ready(function() {
+            var mermaid_config = {
+                startOnLoad: true,
+                theme: 'neutral',
+                flowchart:{
+                    useMaxWidth: false,
+                    htmlLabels: true
+                }                
+            }
+            mermaid.initialize(mermaid_config);
+        });
+    </script>
+
+
+</html>

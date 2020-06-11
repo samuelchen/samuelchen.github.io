@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Explorer. Dream. Discover.">
+    <title>API Gateway by Fabio &amp; Consul - Explorer. Dream. Discover.</title>
+    <meta name="author" content="Samuel Chen">
+    <meta name="description" content="Explorer. Dream. Discover.">
+    
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="Fabio is a HTTP router app written by Go language. It is Zero-configuration and simple to deploy. As official document mentioned, “It delivers 23.000 req/sec every day since Sep 2015 without problems”">
+<meta name="keywords" content="Consul,microservice,service discovery,API Gateway,Fabio">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="API Gateway by Fabio &amp; Consul">
+<meta property="og:url" content="http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/index.html">
+<meta property="og:site_name" content="Explorer. Dream. Discover.">
+<meta property="og:description" content="Fabio is a HTTP router app written by Go language. It is Zero-configuration and simple to deploy. As official document mentioned, “It delivers 23.000 req/sec every day since Sep 2015 without problems”">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/consul-dashboard.jpg">
+<meta property="og:image" content="http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/fabio-routing.jpg">
+<meta property="og:image" content="http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/consul-service.jpg">
+<meta property="og:updated_time" content="2020-06-11T17:03:21.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="API Gateway by Fabio &amp; Consul">
+<meta name="twitter:description" content="Fabio is a HTTP router app written by Go language. It is Zero-configuration and simple to deploy. As official document mentioned, “It delivers 23.000 req/sec every day since Sep 2015 without problems”">
+<meta name="twitter:image" content="http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/consul-dashboard.jpg">
+<meta name="twitter:creator" content="@samuelchen">
+    
+    
+    
+        <meta property="og:image" content="/assets/images/avatar.gif"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">Explorer. Dream. Discover.</a>
+    </h1>
+    
+        <a class="header-right-picture" href="/#about">
+            <img class="header-picture" src="/assets/images/avatar.gif"/>
+        </a>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    <div class="sidebar-profile">
+        <a href="/#about">
+            
+            <img class="sidebar-profile-picture" src="/assets/images/avatar.gif"/>
+            
+        </a>
+        <span class="sidebar-profile-name">Samuel Chen</span>
+    </div>
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/ 
+                    ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-categories
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-tags
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/all-archives
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archives</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs"
+                    href="#search
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="#about
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About me</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.samuelchen.net" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-user-secret"></i>
+                    <span class="sidebar-button-desc">Website</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://stackoverflow.com/users/687197/samuel-chen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://twitter.com/samuelchen" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+                    <span class="sidebar-button-desc">Twitter</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link "
+                    href="/atom.xml
+                            ">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://samuelchen.github.io/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">Mirror on Github</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://samuelchen.github.io/legacy/" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Legacies</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">API Gateway by Fabio &amp; Consul</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Wed Feb 28 2018 16:21:23 GMT+0800">
+        Feb 28, 2018
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Cloud2End/">Cloud2End</a>
+
+
+    
+</div>
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        
+            <p>Fabio is a HTTP router app written by Go language. It is Zero-configuration and simple to deploy. As official document mentioned, “It delivers 23.000 req/sec every day since Sep 2015 without problems”. It’s written and maintained by Frank Schroeder at eBay in Amsterdam.</p>
+<h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><p><em>Check <a href="/Service-Discover-by-Consul">Service Discover by Consul</a> for installation of Consul</em></p>
+<ul>
+<li>Project pages<ul>
+<li><a href="https://fabiolb.net" target="_blank" rel="noopener">https://fabiolb.net</a> (<a href="https://fabiolb.net/" target="_blank" rel="noopener">https://fabiolb.net/</a>)</li>
+<li><a href="https://github.com/fabiolb/fabio" target="_blank" rel="noopener">https://github.com/fabiolb/fabio</a></li>
+<li><a href="https://www.consul.io/" target="_blank" rel="noopener">https://www.consul.io/</a></li>
+</ul>
+</li>
+</ul>
+<p>Fabio is a single file app. You just download the executable for your OS from its release page (<a href="https://github.com/fabiolb/fabio/releases" target="_blank" rel="noopener">https://github.com/fabiolb/fabio/releases</a>) or use <code>brew install fabio</code> (MacOS) or <code>go get github.com/fabiolb/fabio</code> (Golang) to download to local. Rename it to <code>fabio</code> and add executing privilege.</p>
+<h2 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h2><p>Fabio is zero-conf app. Which means you need almost no configuration. If you deploy it on the machine where you Consul deployed, it will automatically find service and register health check on it (Consul default localhost:8500)</p>
+<p>Check the Fabio Wiki: <a href="https://github.com/fabiolb/fabio/wiki/Quickstart" target="_blank" rel="noopener">https://github.com/fabiolb/fabio/wiki/Quickstart</a></p>
+<h3 id="How-a-registered-service-in-Consul-will-be-listed-in-Fabio-routers"><a href="#How-a-registered-service-in-Consul-will-be-listed-in-Fabio-routers" class="headerlink" title="How a registered service in Consul will be listed in Fabio routers?"></a>How a registered service in Consul will be listed in Fabio routers?</h3><p>Use a tag to identify a service in Consul. It will be recognized as a router.<br>e.g. the following is a service registry config file.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"service"</span>: &#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"jenkins"</span>, <span class="attr">"port"</span>: <span class="number">8080</span>,</span><br><span class="line">    <span class="attr">"tags"</span>: [<span class="string">"propel-/jenkins"</span>],</span><br><span class="line">    <span class="attr">"address"</span>: <span class="string">"ec4t01624.itcs.entsvcs.net"</span>,</span><br><span class="line">	<span class="attr">"port"</span>: <span class="number">8080</span>,</span><br><span class="line">    <span class="attr">"check"</span>: &#123;</span><br><span class="line">      <span class="attr">"http"</span>: <span class="string">"http://ec4t01624.itcs.entsvcs.net:8080/jenkins/"</span>,</span><br><span class="line">      <span class="attr">"interval"</span>: <span class="string">"10s"</span>,</span><br><span class="line">      <span class="attr">"timeout"</span>: <span class="string">"1s"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Note that <code>“tags”: [“propel-/jekins”]</code>. It means this is a service for Fabio. <code>propel-</code> is the prefix of tag to identify (which default is <code>urlprefix-</code>. You can change it by <code>-registry.consul.tagprefix “propel-”</code>.) <code>/jekins</code> means the endpoint to the service.</p>
+<p>Visit <a href="http://myconsul:8500/" target="_blank" rel="noopener">http://myconsul:8500/</a> and check “service” tab, you will see registered service and the tags.<br><img src="consul-dashboard.jpg" alt></p>
+<p>Visit <a href="http://myfabio:9998/" target="_blank" rel="noopener">http://myfabio:9998/</a>, you will see the routers (with red rectangle marked)<br><img src="fabio-routing.jpg" alt></p>
+<p>At last, visit <a href="http://myfabio:9999/jenkins" target="_blank" rel="noopener">http://myfabio:9999/jenkins</a> (/${tag}). You will be routed to <a href="http://ec4t01624.itcs.entsvcs.net:8080/jenkins" target="_blank" rel="noopener">http://ec4t01624.itcs.entsvcs.net:8080/jenkins</a> .</p>
+<h3 id="How-if-I-need-to-route-to-a-host-without-a-path"><a href="#How-if-I-need-to-route-to-a-host-without-a-path" class="headerlink" title="How if I need to route to a host without a path"></a>How if I need to route to a host without a path</h3><p>e.g. my tomcat server at <a href="http://ec4t01624.itcs.entsvcs.net:8080/" target="_blank" rel="noopener">http://ec4t01624.itcs.entsvcs.net:8080/</a></p>
+<p>You need to set the tag with an option <code>strip=/tomcat</code>. It means the router will strip <code>/tomcat</code> from url path when routing. See the blue rectangle mark in the above 2nd screenshot (<code>option</code> column of tomcat). You will see it in <code>Consul</code> dashboard as below.<br><img src="consul-service.jpg" alt></p>
+<p>Visit <a href="http://myfabio:9999/tomcat/" target="_blank" rel="noopener">http://myfabio:9999/tomcat/</a>. It will route to <a href="http://ec4t01624.itcs.entsvcs.net:8080/" target="_blank" rel="noopener">http://ec4t01624.itcs.entsvcs.net:8080/</a> . The <code>/tomcat</code> in url path is removed. (note the last <code>/</code> is required. Check the <code>source</code> column in above 2nd screenshot.)</p>
+<p>The service registry config file in Consul is:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"services"</span>: [&#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"tomcat"</span>,</span><br><span class="line">    <span class="attr">"tags"</span>:[<span class="string">"propel-/tomcat/ strip=/tomcat"</span>],</span><br><span class="line">    <span class="attr">"address"</span>: <span class="string">"ec4t01624.itcs.entsvcs.net"</span>,</span><br><span class="line">    <span class="attr">"port"</span>: <span class="number">8080</span>,</span><br><span class="line">    <span class="attr">"check"</span>: &#123;</span><br><span class="line">      <span class="attr">"http"</span>: <span class="string">"http://ec4t01624.itcs.entsvcs.net:8080"</span>,</span><br><span class="line">      <span class="attr">"interval"</span>: <span class="string">"10s"</span>,</span><br><span class="line">      <span class="attr">"timeout"</span>: <span class="string">"3s"</span>,</span><br><span class="line">      <span class="attr">"status"</span>: <span class="string">"passing"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Run"><a href="#Run" class="headerlink" title="Run"></a>Run</h2><p>Just run <code>$ fabio</code> in terminal.</p>
+<p>You may use –help to check the arguments. Or use a <code>fabio.properties</code> file as configuration.</p>
+<p>To run with prefix, <code>$ fabio -registry.consul.tagprefix propel-</code></p>
+<h3 id="Run-as-service"><a href="#Run-as-service" class="headerlink" title="Run as service"></a>Run as service</h3><pre><code>TODO
+</code></pre><h2 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h2><ul>
+<li>When I test with Apache Benchmark (ab), if the concurrent clients number sets to 500, it will occurs <code>socket too many open files</code> error. You need to use <code>ulimited -n 65535</code> to fix it.</li>
+</ul>
+<ul>
+<li>Check the log, you will see which service is captured.</li>
+</ul>
+<p>– END –</p>
+
+        
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/API-Gateway/">API Gateway</a> <a class="tag tag--primary tag--small t-link" href="/tags/Consul/">Consul</a> <a class="tag tag--primary tag--small t-link" href="/tags/Fabio/">Fabio</a> <a class="tag tag--primary tag--small t-link" href="/tags/microservice/">microservice</a> <a class="tag tag--primary tag--small t-link" href="/tags/service-discovery/">service discovery</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/"  data-tooltip="为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Machine-Learning-Memo-1/" data-tooltip="Machine Learning Memo 1">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=API Gateway by Fabio &amp; Consul&amp;url=http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#comments">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+        
+            
+                
+                    <div id="comments">
+</div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+	const gitalk = new Gitalk({
+		id: 'API Gateway by Fabio & Consul', // optional
+		owner: 'samuelchen',
+		repo: 'samuelchen.github.io',
+		clientID: '82fc507622c63bb0b5c9',
+		clientSecret: 'd88a2e4d50c00b59670fcf56bfb3906ab6c996a6',
+		admin: ['samuelchen', ],
+		labels: ['comment', ],
+		distractionFreeMode: false  // Facebook-like distraction free mode
+	})
+	gitalk.render('comments');
+</script>
+
+                
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Samuel Chen. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/"  data-tooltip="为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Machine-Learning-Memo-1/" data-tooltip="Machine Learning Memo 1">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=API Gateway by Fabio &amp; Consul&amp;url=http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#comments">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="1">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=API Gateway by Fabio &amp; Consul&amp;url=http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/">
+                <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/avatar.gif"/>
+        
+            <h4 id="about-card-name">Samuel Chen</h4>
+        
+            <h5 id="about-card-bio"><p>I am living in Wuhan with my wife and daughter.<br>Before 2010, I was living in Beijing for a long time.<br>My interesings are cloud technology, distributed system, data mining and mobile technologies.<br>In my spare time, I like to play football and swiming.<br>“Explorer. Dream. Discover. “ is my favorite quotation. And it is also the way I am looking for and doing.</p>
+</h5>
+        
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Wuhan, China
+            </h5>
+        
+    </div>
+</div>
+        <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js"></script>
+<!--SCRIPTS END-->
+
+
+
+
+    <!-- if CDN fails, use local file -->
+    <script src="https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js"></script>
+    <script> window.mermaid || document.write('<script src="/assets/js/mermaid.min.js"><\/script>')</script>
+
+    <script>
+        $(document).ready(function() {
+            var mermaid_config = {
+                startOnLoad: true,
+                theme: 'neutral',
+                flowchart:{
+                    useMaxWidth: false,
+                    htmlLabels: true
+                }                
+            }
+            mermaid.initialize(mermaid_config);
+        });
+    </script>
+
+
+</html>
