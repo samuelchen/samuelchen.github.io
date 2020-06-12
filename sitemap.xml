@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.samuelchen.net/my-contributions-to-open-source-projects/</loc>
+    
+    <lastmod>2020-06-12T13:45:23.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.samuelchen.net/api-gateway-by-fabio-n-consul/</loc>
     
     <lastmod>2020-06-11T17:03:21.000Z</lastmod>
@@ -16,14 +23,14 @@
   </url>
   
   <url>
-    <loc>http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/</loc>
+    <loc>http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/</loc>
     
     <lastmod>2020-06-09T09:59:28.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://blog.samuelchen.net/flask-werkzeug-templating-caused-trackback-loop-issue/</loc>
+    <loc>http://blog.samuelchen.net/Add-markdown-chart-to-VSCode-Hexo-and-Hugo/</loc>
     
     <lastmod>2020-06-09T09:59:28.000Z</lastmod>
     

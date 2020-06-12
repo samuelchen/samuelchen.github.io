@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.samuelchen.net/"/>
-  <updated>2020-06-09T09:59:28.000Z</updated>
+  <updated>2020-06-12T13:45:23.000Z</updated>
   <id>http://blog.samuelchen.net/</id>
   
   <author>
@@ -15,6 +15,65 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>My Contributions to Open Source Projects</title>
+    <link href="http://blog.samuelchen.net/my-contributions-to-open-source-projects/"/>
+    <id>http://blog.samuelchen.net/my-contributions-to-open-source-projects/</id>
+    <published>2020-06-21T13:40:03.000Z</published>
+    <updated>2020-06-12T13:45:23.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><em>整理了自己对开源软件做的一些修改、提交或者错误报告</em></p><ul><li><p>Alibaba Cloud SDK for Python</p><ul><li>support proxy environment var<br><a href="https://github.com/aliyun/aliyun-openapi-python-sdk/pull/72" target="_blank" rel="noopener">https://github.com/aliyun/aliyun-openapi-python-sdk/pull/72</a></li><li>review for commit DescribeFileSystemStatistics<br><a href="https://github.com/aliyun/aliyun-openapi-python-sdk/pull/315" target="_blank" rel="noopener">https://github.com/aliyun/aliyun-openapi-python-sdk/pull/315</a></li></ul></li><li><p>truepy - Python library for generating TrueLicense licenses</p><ul><li>Fix importing issue by replace “pycrypto” with “pycryptodome”<br><a href="https://github.com/moses-palmer/truepy/pull/5" target="_blank" rel="noopener">https://github.com/moses-palmer/truepy/pull/5</a></li></ul></li><li><p>Scrapy/w3lib - lib for html parsing in scrapy spider framework</p><ul><li>Report issue “Scrapy can not auto detect GBK html encoding” (work around in scrapy pipline/middleware way myself)<br><a href="https://github.com/scrapy/w3lib/issues/155" target="_blank" rel="noopener">https://github.com/scrapy/w3lib/issues/155</a></li></ul></li><li><p>Flask/Jinja - template engine for python</p><ul><li>Found &amp; report bug. “Traceback formatting in Python 3.6 32-bit Windows causes hang”<br><a href="https://github.com/pallets/jinja/issues/1162" target="_blank" rel="noopener">https://github.com/pallets/jinja/issues/1162</a></li></ul></li><li><p>Tonado - Python high performace web framework</p><ul><li>Fix broken demo<br><a href="https://github.com/tornadoweb/tornado/pull/1792" target="_blank" rel="noopener">https://github.com/tornadoweb/tornado/pull/1792</a></li></ul></li><li><p>KafkaOffsetMonitor - Montior tool for Kafaka</p><ul><li>Report bug about node on zookeeper cluster and figure out work around.<br><a href="https://github.com/quantifind/KafkaOffsetMonitor/issues/14" target="_blank" rel="noopener">https://github.com/quantifind/KafkaOffsetMonitor/issues/14</a></li></ul></li><li><p>fmdb - Object-C wrapper for SQLite</p><ul><li>Fix i myself reported bug (owner used his own fix). listed in contirbutors (line 36).<br><a href="https://github.com/ccgus/fmdb/pull/105" target="_blank" rel="noopener">https://github.com/ccgus/fmdb/pull/105</a><br><a href="https://github.com/ccgus/fmdb/blob/master/CONTRIBUTORS.txt" target="_blank" rel="noopener">https://github.com/ccgus/fmdb/blob/master/CONTRIBUTORS.txt</a></li></ul></li><li><p>TouchXml - iOS port of NSXMLDocument (XML parser)</p><ul><li>Add build target for framework<br><a href="https://github.com/TouchCode/TouchXML/pull/33" target="_blank" rel="noopener">https://github.com/TouchCode/TouchXML/pull/33</a></li></ul></li><li><p>Formalchemy - HTML form generation framework by Python</p><ul><li>fix to ignore the KeyError while sync data to model.<br><a href="https://github.com/FormAlchemy/formalchemy/pull/13" target="_blank" rel="noopener">https://github.com/FormAlchemy/formalchemy/pull/13</a></li><li>typo fix<br><a href="https://github.com/FormAlchemy/fa.jquery/pull/7" target="_blank" rel="noopener">https://github.com/FormAlchemy/fa.jquery/pull/7</a></li></ul></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;em&gt;整理了自己对开源软件做的一些修改、提交或者错误报告&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Alibaba Cloud SDK for Python&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;support proxy environment var&lt;br&gt;&lt;a href=&quot;ht
+      
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://blog.samuelchen.net/categories/Programming/"/>
+    
+    
+      <category term="cloud" scheme="http://blog.samuelchen.net/tags/cloud/"/>
+    
+      <category term="Python" scheme="http://blog.samuelchen.net/tags/Python/"/>
+    
+      <category term="article" scheme="http://blog.samuelchen.net/tags/article/"/>
+    
+      <category term="aliyun" scheme="http://blog.samuelchen.net/tags/aliyun/"/>
+    
+      <category term="object-c" scheme="http://blog.samuelchen.net/tags/object-c/"/>
+    
+      <category term="iOS" scheme="http://blog.samuelchen.net/tags/iOS/"/>
+    
+      <category term="truepy" scheme="http://blog.samuelchen.net/tags/truepy/"/>
+    
+      <category term="scrapy" scheme="http://blog.samuelchen.net/tags/scrapy/"/>
+    
+      <category term="tornado" scheme="http://blog.samuelchen.net/tags/tornado/"/>
+    
+      <category term="flask" scheme="http://blog.samuelchen.net/tags/flask/"/>
+    
+      <category term="jinja" scheme="http://blog.samuelchen.net/tags/jinja/"/>
+    
+      <category term="kafka" scheme="http://blog.samuelchen.net/tags/kafka/"/>
+    
+      <category term="fmdb" scheme="http://blog.samuelchen.net/tags/fmdb/"/>
+    
+      <category term="zookeeper" scheme="http://blog.samuelchen.net/tags/zookeeper/"/>
+    
+      <category term="touchxml" scheme="http://blog.samuelchen.net/tags/touchxml/"/>
+    
+      <category term="formalchemy" scheme="http://blog.samuelchen.net/tags/formalchemy/"/>
+    
+  </entry>
   
   <entry>
     <title>Window 批处理(BAT)中生成格式化日期时间字符串</title>
@@ -493,11 +552,11 @@
     
       <category term="Django" scheme="http://blog.samuelchen.net/tags/Django/"/>
     
-      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
-    
       <category term="static" scheme="http://blog.samuelchen.net/tags/static/"/>
     
       <category term="template" scheme="http://blog.samuelchen.net/tags/template/"/>
+    
+      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
     
   </entry>
   
@@ -529,9 +588,9 @@
     
       <category term="Django" scheme="http://blog.samuelchen.net/tags/Django/"/>
     
-      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
-    
       <category term="static" scheme="http://blog.samuelchen.net/tags/static/"/>
+    
+      <category term="programming" scheme="http://blog.samuelchen.net/tags/programming/"/>
     
   </entry>
   
