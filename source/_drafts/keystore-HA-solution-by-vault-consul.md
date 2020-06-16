@@ -7,8 +7,8 @@ categories:
 tags:
 	- cloud
 	- HashiCorp
-	- vault
-	- consul
+	- Vault
+	- Consul
 	- keystore
 	- cluster
 	- deployment

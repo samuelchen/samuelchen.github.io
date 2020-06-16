@@ -6,9 +6,8 @@ categories:
 tags:
   - Alibaba Cloud
   - keystore
-  - vault
+  - Vault
   - encryption
-  - decryption
   - cloud
   - microservice
 comments: false

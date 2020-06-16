@@ -4,10 +4,9 @@ slug: encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault
 categories:
   - Architecture & System
 tags:
-  - vault
+  - Vault
   - HashiCorp
   - encryption
-  - decryption
   - Alibaba Cloud
   - cloud
   - microservice
