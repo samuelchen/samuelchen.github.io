@@ -80,7 +80,7 @@ Reversible algorithm. Plaint text (data) is encrypted with public key. The encry
 ## Anaysis
 
 * Keystore - One more system means one more point need to care the load, failure and so on. Need to communicate between severs even to set/get a property of resource (such as vm property password). 
-* Vault - Described in [this post](2019-02-27-encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault.md)
+* Vault - Described in [this post](../encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault)
 * Encoding - Too weak. Easy to be decode.
 * Abstract algorithm - Irreversible. Not appropriate.
 * Symmetric encryption - Good choice. Need to store the key in separate place. Good solution for encryption and decryption in same system. (e.g. AES)
