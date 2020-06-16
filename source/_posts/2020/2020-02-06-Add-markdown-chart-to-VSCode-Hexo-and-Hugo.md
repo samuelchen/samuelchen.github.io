@@ -14,6 +14,7 @@ tags:
 	- hexo
 	- hugo
 	- vscode
+id: add-markdown-chart-to-vscode-hexo-and-hugo
 ---
 
 最近在写blog时想画流程图，但又因为可能会频繁修改而不想用图片。因此经过一番搜寻，发现了 [`mermaid`](https://mermaid-js.github.io/mermaid/) 

@@ -1,5 +1,6 @@
 ---
 title: 在 Azure Blob 存储上部署 Hexo 静态网站
+slug: deploy-hexo-static-website-on-azure-blob-storage
 categories: Cloud2End
 tags:
   - Azure
@@ -7,11 +8,14 @@ tags:
   - blob
   - static
   - deployment
+  - cloud
 comments: true
 date: 2019-04-17 00:10:39
 updated:
+id: deploy-hexo-static-website-on-azure-blob-storage
 ---
 
+    _所有静态网站都可用采用此方法_
 
 之前，[个人博客](http://blog.samuelchen.net)一直都是用 `Hexo` 生成并部署为 `GitHub Pages`。
 最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。

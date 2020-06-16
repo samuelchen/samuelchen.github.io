@@ -6,8 +6,10 @@ categories:
 	- Cloud2End
 tags:
 	- Consul
+	- HashiCorp
 	- microservice
 	- service discovery
+	- cloud
 date: 2018-02-07 15:23:16
 updated:
 ---

@@ -1,10 +1,11 @@
 ---
 title: my contributions to open source projects
+slug: my-contributions-to-open-source-projects
 categories:
   - Programming
 tags:
   - cloud
-  - aliyun
+  - Alibaba Cloud
   - Python
   - object-c
   - iOS
@@ -19,10 +20,10 @@ tags:
   - touchxml
   - formalchemy
   - article
-draft: draft
 comments: true
 date: 2020-06-21 21:40:03
 updated:
+id: my-contributions-to-open-source-projects
 ---
 
 

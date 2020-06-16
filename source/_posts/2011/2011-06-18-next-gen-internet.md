@@ -1,9 +1,11 @@
+---
 title: 下一代互联网初见端倪
+slug: next-generation-internet
 tags:
-  - Internet
-  - Cloud
+  - internet
+  - cloud
   - Next Generation
-id: 124
+id: next-generation-internet
 categories:
   - Industry
 date: 2011-06-18 00:26:00

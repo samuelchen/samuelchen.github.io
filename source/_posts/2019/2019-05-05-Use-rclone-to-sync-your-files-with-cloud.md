@@ -1,5 +1,6 @@
 ---
 title: 使用 rclone 同步云端和本地文件
+slug: use-rclone-to-sync-your-files-with-cloud
 date: 2019-05-05 15:11:18
 updated:
 categories: Cloud2End
@@ -10,7 +11,9 @@ tags:
   - static
   - deployment
   - synchronization
+  - cloud
 comments: true
+id: use-rclone-to-sync-your-files-with-cloud
 ---
 
 之前在[这篇blog](/Deploy-Hexo-static-website-on-Azure-Blob-storage/)中介绍过使用Azure Client `az` 来部署生成到网站. 

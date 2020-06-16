@@ -7,12 +7,14 @@ tags:
   - API Gateway
   - Fabio
   - Consul
+  - HashiCorp
   - microservice
   - service discovery
+  - cloud
 draft: draft
 comments: true
 date: 2018-02-28 16:21:23
-updated:
+updated: 2020-06-15 21:42:12
 ---
 
 

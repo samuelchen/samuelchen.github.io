@@ -1,13 +1,15 @@
+---
 title: How to setup Kafka Web Console
+slug: how-to-setup-kafka-web-console
 tags:
   - configuration
   - MQ
   - monitor
   - Kafka
-id: 211
 categories:
   - Cloud2End
 date: 2014-04-24 15:15:11
+id: how-to-setup-kafka-web-console
 ---
 
 This project is hosted at [https://github.com/claudemamo/kafka-web-console](https://github.com/claudemamo/kafka-web-console)
