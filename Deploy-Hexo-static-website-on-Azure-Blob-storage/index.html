@@ -12,18 +12,18 @@
     
         <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="之前，个人博客一直都是用 Hexo 生成并部署为 GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等">
-<meta name="keywords" content="deployment,static,Azure,Hexo,blob">
+    <meta name="description" content="_所有静态网站都可用采用此方法_ 之前，个人博客一直都是用 Hexo 生成并部署为 GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙">
+<meta name="keywords" content="cloud,deployment,static,Azure,Hexo,blob">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="在 Azure Blob 存储上部署 Hexo 静态网站">
 <meta property="og:url" content="http://blog.samuelchen.net/Deploy-Hexo-static-website-on-Azure-Blob-storage/index.html">
 <meta property="og:site_name" content="Explorer. Dream. Discover.">
-<meta property="og:description" content="之前，个人博客一直都是用 Hexo 生成并部署为 GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等">
+<meta property="og:description" content="_所有静态网站都可用采用此方法_ 之前，个人博客一直都是用 Hexo 生成并部署为 GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-05T07:12:12.000Z">
+<meta property="og:updated_time" content="2020-06-16T11:18:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在 Azure Blob 存储上部署 Hexo 静态网站">
-<meta name="twitter:description" content="之前，个人博客一直都是用 Hexo 生成并部署为 GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙，FTP/Rsync/SSH 等等">
+<meta name="twitter:description" content="_所有静态网站都可用采用此方法_ 之前，个人博客一直都是用 Hexo 生成并部署为 GitHub Pages。最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。不深究这个理由是否靠谱，得给博客换个地方了。 手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTPServer 防火墙">
 <meta name="twitter:creator" content="@samuelchen">
     
     
@@ -236,7 +236,8 @@
     
     <div class="post-content markdown main-content-wrap" itemprop="articleBody">
         
-            <p>之前，<a href="http://blog.samuelchen.net">个人博客</a>一直都是用 <code>Hexo</code> 生成并部署为 <code>GitHub Pages</code>。<br>最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。<br>不深究这个理由是否靠谱，得给博客换个地方了。</p>
+            <pre><code>_所有静态网站都可用采用此方法_
+</code></pre><p>之前，<a href="http://blog.samuelchen.net">个人博客</a>一直都是用 <code>Hexo</code> 生成并部署为 <code>GitHub Pages</code>。<br>最近知道，因为百度的爬虫太频繁而被 GitHub 屏蔽了，所以所有部署在 GitHub 上的网站都没有收录。<br>不深究这个理由是否靠谱，得给博客换个地方了。</p>
 <p>手头有 Azure 和 Vultr 的 VPS，但考虑到部署静态网站到 VPS 有点大材小用，而且需要部署 HTTP<br>Server 防火墙，FTP/Rsync/SSH 等等挺麻烦，就寻思着是不是能用对象存储来做。于是翻看了 Azure<br>Blob 到文档，发现真还行，而且还挺简单，内置支持。</p>
 <p>首先新建<strong>全局唯一</strong>的存储账号，比如我选则了 <code>chen</code>，这个会作为你 Azure 存储的一个 End<br>Point，比如 chen.blob.core.windows.net，可以直接通过这个域名来访问你的存储对象。这个时候<br>要注意一点，一定要选择 <code>StorageV2 (通用版 v2)</code> 类型，只有这个类型才支持直接部署静态网站。<br>我之前就是选择了 <code>v1</code> 类型，导致无法自动识别 <code>index.html</code> 而无法访问。建好后，选择<br><code>静态网站</code> 菜单并 <strong>启用</strong>，系统会自动生成名为 <code>$web</code> 的 <code>容器(Container)</code>，作为存储网站的根目录。</p>
 <p>以上配置完成后，就用 <code>hexo generate</code> 命令生成你的网站，网站生成后都在 <code>public</code> 目录<br>下，这些不细说。然后需要做的是把生成的网站传到刚建立到容器 <code>blog</code> 中，有几种方法可以做到：</p>
@@ -265,7 +266,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/Azure/">Azure</a> <a class="tag tag--primary tag--small t-link" href="/tags/Hexo/">Hexo</a> <a class="tag tag--primary tag--small t-link" href="/tags/blob/">blob</a> <a class="tag tag--primary tag--small t-link" href="/tags/deployment/">deployment</a> <a class="tag tag--primary tag--small t-link" href="/tags/static/">static</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/Azure/">Azure</a> <a class="tag tag--primary tag--small t-link" href="/tags/Hexo/">Hexo</a> <a class="tag tag--primary tag--small t-link" href="/tags/blob/">blob</a> <a class="tag tag--primary tag--small t-link" href="/tags/cloud/">cloud</a> <a class="tag tag--primary tag--small t-link" href="/tags/deployment/">deployment</a> <a class="tag tag--primary tag--small t-link" href="/tags/static/">static</a>
 
             </div>
         
@@ -282,7 +283,7 @@
             </li>
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/" data-tooltip="为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/" data-tooltip="Encrypt/Decrypt and Store Sensitive Content With HashiCorp Vault">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right"></i>
@@ -378,7 +379,7 @@
             </li>
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/" data-tooltip="为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/" data-tooltip="Encrypt/Decrypt and Store Sensitive Content With HashiCorp Vault">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right"></i>

@@ -5,25 +5,25 @@
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Explorer. Dream. Discover.">
-    <title>Django 静态文件配置 - Explorer. Dream. Discover.</title>
+    <title>Solution Selection for Sensitive Content Storing - Explorer. Dream. Discover.</title>
     <meta name="author" content="Samuel Chen">
     <meta name="description" content="Explorer. Dream. Discover.">
     
     
         <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。 这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的">
-<meta name="keywords" content="configuration,Python,Django,programming,static">
+    <meta name="description" content="Background &amp;amp; PurposeIn Alicloud API project, we have some sensitive data such as secret key, vm password and so on stored in database. To avoid store plain text, we need a solution to encrypt and">
+<meta name="keywords" content="cloud,microservice,Alibaba Cloud,keystore,vault,encryption,decryption,AES,RSA,MD5,SHA">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Django 静态文件配置">
-<meta property="og:url" content="http://blog.samuelchen.net/config-django-static-files/index.html">
+<meta property="og:title" content="Solution Selection for Sensitive Content Storing">
+<meta property="og:url" content="http://blog.samuelchen.net/solution-selection-for-sensitive-content-storing/index.html">
 <meta property="og:site_name" content="Explorer. Dream. Discover.">
-<meta property="og:description" content="Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。 这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的">
+<meta property="og:description" content="Background &amp;amp; PurposeIn Alicloud API project, we have some sensitive data such as secret key, vm password and so on stored in database. To avoid store plain text, we need a solution to encrypt and">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-16T16:17:01.000Z">
+<meta property="og:updated_time" content="2020-06-15T16:00:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Django 静态文件配置">
-<meta name="twitter:description" content="Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。 这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的">
+<meta name="twitter:title" content="Solution Selection for Sensitive Content Storing">
+<meta name="twitter:description" content="Background &amp;amp; PurposeIn Alicloud API project, we have some sensitive data such as secret key, vm password and so on stored in database. To avoid store plain text, we need a solution to encrypt and">
 <meta name="twitter:creator" content="@samuelchen">
     
     
@@ -218,16 +218,16 @@
     
         <div class="post-header main-content-wrap">
     
-        <h1 class="post-title" itemprop="headline">Django 静态文件配置</h1>
+        <h1 class="post-title" itemprop="headline">Solution Selection for Sensitive Content Storing</h1>
     
     <div class="post-meta">
-    <time  itemprop="datePublished" content="Fri Mar 04 2011 15:59:00 GMT+0800">
-        Mar 04, 2011
+    <time  itemprop="datePublished" content="Fri Jan 11 2019 19:10:38 GMT+0800">
+        Jan 11, 2019
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/Programming/">Programming</a>
+    <a class="category-link" href="/categories/Cloud2End/">Cloud2End</a>
 
 
     
@@ -236,23 +236,110 @@
     
     <div class="post-content markdown main-content-wrap" itemprop="articleBody">
         
-            <p>Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。</p>
-<p>这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的方式运行调试，更是麻烦。在网上找了很久，始终也没有一个很全面的解决方案。</p>
-<p>自动动手，丰衣足食，参考 Django 官网的介绍，终于解决了。废话不多说，解决方案如下：</p>
-<p>开发环境（manage.py)</p>
-<p>参考 <a href="http://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-development" target="_blank" rel="noopener">http://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-development</a>.<br>网上有很多介绍改这个 MEDIA_ROOT, MEDIA_URL 改那个 STATIC_ROOT, STATIC_URL 的，注意，完全没有必要，开发时，这些都不需要改就可以运行。<br>MEDIA 是指你上传的文件存放，比如图像，视频，压缩包之类的，而STATIC是你网站运行需要依赖的一些静态文件，比如css, js, template 等等。开发时先不管它们。</p>
+            <h2 id="Background-amp-Purpose"><a href="#Background-amp-Purpose" class="headerlink" title="Background &amp; Purpose"></a>Background &amp; Purpose</h2><p>In Alicloud API project, we have some sensitive data such as secret key, vm password and so on stored in database. To avoid store plain text, we need a solution to encrypt and decrypt sensitive data. </p>
+<h2 id="Solutions"><a href="#Solutions" class="headerlink" title="Solutions"></a>Solutions</h2><h3 id="Keystore"><a href="#Keystore" class="headerlink" title="Keystore"></a>Keystore</h3><p>Systems that provide ability to store sensitive key/token/password. Encryption and decryption will handled by the system.</p>
 <ul>
-<li>首先，复制 C:/Python27/Lib/site-packages/django/contrib/admin/media/ 下的文件，到你网站的 c:/mysite/static/ 下，那么就有了 c:/mysite/static/media/ 目录。</li>
-<li>其次，将 /static/media/ 改为 /static/admin/ 。 这个修改是为了符合 ADMIN_MEDIA_PREFIX=’/static/admin/‘，你网站上的admin的静态文件都会渲染成 <a href="http://server/" target="_blank" rel="noopener">http://server/</a>/xxx/xxx.css 之类，也就成了 <a href="http://server/static/admin/xxx/xxx.css" target="_blank" rel="noopener">http://server/static/admin/xxx/xxx.css</a> ，这样就能找到正确的服务器静态文件了。同时，也是为了避免 media 和 static 造成混淆了，前面说了，MEDIA 实际上是用来存放上传下载文件的。</li>
-<li><p>然后，打开你网站的 c:/mysite/settings.py ，修改 STATICFILES_DIRS 段</p>
-<pre>STATICFILES_DIRS = (    'c:/mysite/static/',)</pre>
+<li><p>IDM</p>
 </li>
-<li><p>最好，修改 c:/mysite/urls.py，在 urlpatterns 下面增加一行<br><pre>urlpatterns += staticfiles_urlpatterns()</pre><br>别忘了头上加上一句<br><pre>from django.contrib.staticfiles.urls import staticfiles_urlpatterns</pre><br>运行python manage.py runserver，用浏览器访问 <a href="http://localhost:8000/admin/" target="_blank" rel="noopener">http://localhost:8000/admin/</a> ， 看看是不是好了。</p>
+<li><p>Valut</p>
 </li>
 </ul>
-<p>部署环境</p>
-<p>以后试过了再写。</p>
-<p>&nbsp;</p>
+<p>Need to involve a new system and maintain it. </p>
+<h3 id="Encoding"><a href="#Encoding" class="headerlink" title="Encoding"></a>Encoding</h3><p>Reversible character encoding algorithms. Same algorithm will be used for encryption and decryption.</p>
+<ul>
+<li>HEX, BASE64 (BASE##), UTF8 and etc.</li>
+<li>compaction algorithm such as Huffman Coding, ZIP (Deflate) , JPEG, MPEG and etc.</li>
+<li>etc</li>
+</ul>
+<p>Easy to be decode. </p>
+<h3 id="Abstract-algorithm"><a href="#Abstract-algorithm" class="headerlink" title="Abstract algorithm"></a>Abstract algorithm</h3><p>Irreversible algorithm. Not appropriate for us.</p>
+<ul>
+<li>MD5</li>
+<li>SHA-1, SHA-256</li>
+<li>MAC</li>
+<li>etc.</li>
+</ul>
+<h3 id="Symmetric-encryption"><a href="#Symmetric-encryption" class="headerlink" title="Symmetric encryption"></a>Symmetric encryption</h3><p>Reversible algorithm. Plaint text (data) is encrypted or decrpyted with given private key (shared secret) with same algorithm. <a href="https://en.wikipedia.org/wiki/Symmetric-key_algorithm" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Symmetric-key_algorithm</a></p>
+<ul>
+<li>DES</li>
+<li>AES</li>
+<li>RC</li>
+<li>etc.</li>
+</ul>
+<p>Need to share the private key.</p>
+<h3 id="Asymmetric-encryption"><a href="#Asymmetric-encryption" class="headerlink" title="Asymmetric encryption"></a>Asymmetric encryption</h3><p>Reversible algorithm. Plaint text (data) is encrypted with public key. The encrypted data is decrypted only with private key. The public key can be openly distributed without compromising security. Encryption and decryption in different way.  <a href="https://en.wikipedia.org/wiki/Public-key_cryptography" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Public-key_cryptography</a></p>
+<ul>
+<li>RSA</li>
+<li>DSA</li>
+<li>ECC</li>
+<li>etc.</li>
+</ul>
+<h2 id="Anaysis"><a href="#Anaysis" class="headerlink" title="Anaysis"></a>Anaysis</h2><ul>
+<li>Keystore - One more system means one more point need to care the load, failure and so on. Need to communicate between severs even to set/get a property of resource (such as vm property password). </li>
+<li>Vault - Described in <a href="2019-02-27-encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault.md">this post</a></li>
+<li>Encoding - Too weak. Easy to be decode.</li>
+<li>Abstract algorithm - Irreversible. Not appropriate.</li>
+<li>Symmetric encryption - Good choice. Need to store the key in separate place. Good solution for encryption and decryption in same system. (e.g. AES)</li>
+<li>Asymmetric encryption - Good choice. Need to maintain 2 keys and store in separate places. It’s not necessary because we have the encryption &amp; decryption in same application. Good solution for separate encryption and decryption. (e.g. RSA)  For RSA, plain text can not be longer than the key.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Maturity</th>
+<th>Security</th>
+<th>Speed</th>
+<th>Load</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DES</td>
+<td>High</td>
+<td>Low</td>
+<td>Medium High</td>
+<td>Medium</td>
+<td></td>
+</tr>
+<tr>
+<td>AES</td>
+<td>High</td>
+<td>High</td>
+<td>High</td>
+<td>Low</td>
+<td>Replacement of DES</td>
+</tr>
+<tr>
+<td>RSA</td>
+<td>High</td>
+<td>High</td>
+<td>Low</td>
+<td>High</td>
+<td>plaint text can not longger than key</td>
+</tr>
+<tr>
+<td>DSA</td>
+<td>High</td>
+<td>High</td>
+<td>Low</td>
+<td></td>
+<td>Only for digital signature.</td>
+</tr>
+<tr>
+<td>ECC</td>
+<td>Low</td>
+<td>High</td>
+<td>High</td>
+<td>Low</td>
+</tr>
+</tbody>
+</table>
+<p>Above all, we better choose Symmetric encryption <strong>AES</strong>.  And AES is faster and lower load compares to RSA.</p>
+<h2 id="Resolution"><a href="#Resolution" class="headerlink" title="Resolution"></a>Resolution</h2><p>The database server and application server are behind the firewall. And they are in private network. This ensures the architecture level security.</p>
+<h3 id="Key"><a href="#Key" class="headerlink" title="Key"></a>Key</h3><p> Stores in OSS or shared NFS with authorization. Read when application started (only in memory).</p>
+<h3 id="Customer-Alicloud-key-amp-secret"><a href="#Customer-Alicloud-key-amp-secret" class="headerlink" title="Customer Alicloud key &amp; secret"></a>Customer Alicloud key &amp; secret</h3><p>Encrypt it before saving. Decrypt it after loading.</p>
+<h3 id="Virtual-Instance-password-in-parameter"><a href="#Virtual-Instance-password-in-parameter" class="headerlink" title="Virtual Instance password in parameter"></a>Virtual Instance password in parameter</h3><p>Encrypt it before saving. Decrypt it after loading.</p>
 
         
         
@@ -264,7 +351,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/Django/">Django</a> <a class="tag tag--primary tag--small t-link" href="/tags/Python/">Python</a> <a class="tag tag--primary tag--small t-link" href="/tags/configuration/">configuration</a> <a class="tag tag--primary tag--small t-link" href="/tags/programming/">programming</a> <a class="tag tag--primary tag--small t-link" href="/tags/static/">static</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/AES/">AES</a> <a class="tag tag--primary tag--small t-link" href="/tags/Alibaba-Cloud/">Alibaba Cloud</a> <a class="tag tag--primary tag--small t-link" href="/tags/MD5/">MD5</a> <a class="tag tag--primary tag--small t-link" href="/tags/RSA/">RSA</a> <a class="tag tag--primary tag--small t-link" href="/tags/SHA/">SHA</a> <a class="tag tag--primary tag--small t-link" href="/tags/cloud/">cloud</a> <a class="tag tag--primary tag--small t-link" href="/tags/decryption/">decryption</a> <a class="tag tag--primary tag--small t-link" href="/tags/encryption/">encryption</a> <a class="tag tag--primary tag--small t-link" href="/tags/keystore/">keystore</a> <a class="tag tag--primary tag--small t-link" href="/tags/microservice/">microservice</a> <a class="tag tag--primary tag--small t-link" href="/tags/vault/">vault</a>
 
             </div>
         
@@ -273,7 +360,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/using-predefined-var-in-django-template/"  data-tooltip="Django 如何在模板(Template)中使用settings中预定义的变量">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/"  data-tooltip="Encrypt/Decrypt and Store Sensitive Content With HashiCorp Vault">
                 
                     <i class="fa fa-angle-left"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -281,7 +368,7 @@
             </li>
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--disabled">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/" data-tooltip="为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right"></i>
@@ -296,26 +383,20 @@
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 静态文件配置&amp;url=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Solution Selection for Sensitive Content Storing&amp;url=http://blog.samuelchen.net/solution-selection-for-sensitive-content-storing/">
                 <i class="fa fa-weibo"></i>
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/solution-selection-for-sensitive-content-storing/">
                 <i class="fa fa-facebook-official"></i>
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/solution-selection-for-sensitive-content-storing/">
                 <i class="fa fa-twitter"></i>
             </a>
         </li>
-        
-            <li class="post-action">
-                <a class="post-action-btn btn btn--default" href="#comments">
-                    <i class="fa fa-comment-o"></i>
-                </a>
-            </li>
         
         <li class="post-action">
             
@@ -326,29 +407,6 @@
         </li>
     </ul>
 </div>
-        
-            
-                
-                    <div id="comments">
-</div>
-<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-<script>
-	const gitalk = new Gitalk({
-		id: 'Django 静态文件配置', // optional
-		owner: 'samuelchen',
-		repo: 'samuelchen.github.io',
-		clientID: '82fc507622c63bb0b5c9',
-		clientSecret: 'd88a2e4d50c00b59670fcf56bfb3906ab6c996a6',
-		admin: ['samuelchen', ],
-		labels: ['comment', ],
-		distractionFreeMode: false  // Facebook-like distraction free mode
-	})
-	gitalk.render('comments');
-</script>
-
-                
-            
         
     </div>
 </article>
@@ -369,7 +427,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/using-predefined-var-in-django-template/"  data-tooltip="Django 如何在模板(Template)中使用settings中预定义的变量">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/"  data-tooltip="Encrypt/Decrypt and Store Sensitive Content With HashiCorp Vault">
                 
                     <i class="fa fa-angle-left"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -377,7 +435,7 @@
             </li>
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--disabled">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Change-SSD-and-add-memory-for-2012-mid-macbook-pro/" data-tooltip="为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right"></i>
@@ -392,26 +450,20 @@
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 静态文件配置&amp;url=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Solution Selection for Sensitive Content Storing&amp;url=http://blog.samuelchen.net/solution-selection-for-sensitive-content-storing/">
                 <i class="fa fa-weibo"></i>
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/solution-selection-for-sensitive-content-storing/">
                 <i class="fa fa-facebook-official"></i>
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/solution-selection-for-sensitive-content-storing/">
                 <i class="fa fa-twitter"></i>
             </a>
         </li>
-        
-            <li class="post-action">
-                <a class="post-action-btn btn btn--default" href="#comments">
-                    <i class="fa fa-comment-o"></i>
-                </a>
-            </li>
         
         <li class="post-action">
             
@@ -426,17 +478,17 @@
                 <div id="share-options-bar" class="share-options-bar" data-behavior="1">
     <ul class="share-options">
         <li class="share-option">
-            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 静态文件配置&amp;url=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Solution Selection for Sensitive Content Storing&amp;url=http://blog.samuelchen.net/solution-selection-for-sensitive-content-storing/">
                 <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
             </a>
         </li>
         <li class="share-option">
-            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/solution-selection-for-sensitive-content-storing/">
                 <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
             </a>
         </li>
         <li class="share-option">
-            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/solution-selection-for-sensitive-content-storing/">
                 <i class="fa fa-twitter"></i><span>Share on Twitter</span>
             </a>
         </li>

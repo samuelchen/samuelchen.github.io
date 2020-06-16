@@ -5,25 +5,25 @@
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Explorer. Dream. Discover.">
-    <title>Django 静态文件配置 - Explorer. Dream. Discover.</title>
+    <title>Encrypt/Decrypt and Store Sensitive Content With HashiCorp Vault - Explorer. Dream. Discover.</title>
     <meta name="author" content="Samuel Chen">
     <meta name="description" content="Explorer. Dream. Discover.">
     
     
         <link rel="alternative" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <meta name="description" content="Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。 这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的">
-<meta name="keywords" content="configuration,Python,Django,programming,static">
+    <meta name="description" content="We are encrypting sensitive content with AES algorithm and storing them in DB. Now we plan to leverage HashiCorp to do this. So far we have 2 kinds of data need to be encrypted: one is the Alicloud ke">
+<meta name="keywords" content="cloud,HashiCorp,microservice,Alibaba Cloud,vault,encryption,decryption">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Django 静态文件配置">
-<meta property="og:url" content="http://blog.samuelchen.net/config-django-static-files/index.html">
+<meta property="og:title" content="Encrypt&#x2F;Decrypt and Store Sensitive Content With HashiCorp Vault">
+<meta property="og:url" content="http://blog.samuelchen.net/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/index.html">
 <meta property="og:site_name" content="Explorer. Dream. Discover.">
-<meta property="og:description" content="Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。 这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的">
+<meta property="og:description" content="We are encrypting sensitive content with AES algorithm and storing them in DB. Now we plan to leverage HashiCorp to do this. So far we have 2 kinds of data need to be encrypted: one is the Alicloud ke">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-16T16:17:01.000Z">
+<meta property="og:updated_time" content="2020-06-15T16:00:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Django 静态文件配置">
-<meta name="twitter:description" content="Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。 这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的">
+<meta name="twitter:title" content="Encrypt&#x2F;Decrypt and Store Sensitive Content With HashiCorp Vault">
+<meta name="twitter:description" content="We are encrypting sensitive content with AES algorithm and storing them in DB. Now we plan to leverage HashiCorp to do this. So far we have 2 kinds of data need to be encrypted: one is the Alicloud ke">
 <meta name="twitter:creator" content="@samuelchen">
     
     
@@ -218,16 +218,16 @@
     
         <div class="post-header main-content-wrap">
     
-        <h1 class="post-title" itemprop="headline">Django 静态文件配置</h1>
+        <h1 class="post-title" itemprop="headline">Encrypt/Decrypt and Store Sensitive Content With HashiCorp Vault</h1>
     
     <div class="post-meta">
-    <time  itemprop="datePublished" content="Fri Mar 04 2011 15:59:00 GMT+0800">
-        Mar 04, 2011
+    <time  itemprop="datePublished" content="Wed Feb 27 2019 12:12:39 GMT+0800">
+        Feb 27, 2019
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/Programming/">Programming</a>
+    <a class="category-link" href="/categories/Cloud2End/">Cloud2End</a>
 
 
     
@@ -236,23 +236,32 @@
     
     <div class="post-content markdown main-content-wrap" itemprop="articleBody">
         
-            <p>Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。</p>
-<p>这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的方式运行调试，更是麻烦。在网上找了很久，始终也没有一个很全面的解决方案。</p>
-<p>自动动手，丰衣足食，参考 Django 官网的介绍，终于解决了。废话不多说，解决方案如下：</p>
-<p>开发环境（manage.py)</p>
-<p>参考 <a href="http://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-development" target="_blank" rel="noopener">http://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-development</a>.<br>网上有很多介绍改这个 MEDIA_ROOT, MEDIA_URL 改那个 STATIC_ROOT, STATIC_URL 的，注意，完全没有必要，开发时，这些都不需要改就可以运行。<br>MEDIA 是指你上传的文件存放，比如图像，视频，压缩包之类的，而STATIC是你网站运行需要依赖的一些静态文件，比如css, js, template 等等。开发时先不管它们。</p>
+            <p>We are encrypting sensitive content with AES algorithm and storing them in DB. Now we plan to leverage HashiCorp to do this.</p>
+<p>So far we have 2 kinds of data need to be encrypted: one is the Alicloud key and secret of customers, the other is the marked sensitive variable or parameters such as VM password. Vault provides several secrets engines to achieve these.</p>
+<p>Vault has a secret engine named  AliCloud. But it can only manage one account with configuring a pair of its key and secret in a single path. It can only manage the policies of this account. Which means if we want store multiple customer AliCloud accounts, we need to define multiple paths in Vault for each account and configure key/secret pairs for each account manually. It’s no sense. So it’s not useful for us.</p>
+<p>Above all, we could only use the <code>Key/Value</code> secrets engine. </p>
+<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><p>We define some configurations for using Vault.</p>
 <ul>
-<li>首先，复制 C:/Python27/Lib/site-packages/django/contrib/admin/media/ 下的文件，到你网站的 c:/mysite/static/ 下，那么就有了 c:/mysite/static/media/ 目录。</li>
-<li>其次，将 /static/media/ 改为 /static/admin/ 。 这个修改是为了符合 ADMIN_MEDIA_PREFIX=’/static/admin/‘，你网站上的admin的静态文件都会渲染成 <a href="http://server/" target="_blank" rel="noopener">http://server/</a>/xxx/xxx.css 之类，也就成了 <a href="http://server/static/admin/xxx/xxx.css" target="_blank" rel="noopener">http://server/static/admin/xxx/xxx.css</a> ，这样就能找到正确的服务器静态文件了。同时，也是为了避免 media 和 static 造成混淆了，前面说了，MEDIA 实际上是用来存放上传下载文件的。</li>
-<li><p>然后，打开你网站的 c:/mysite/settings.py ，修改 STATICFILES_DIRS 段</p>
-<pre>STATICFILES_DIRS = (    'c:/mysite/static/',)</pre>
+<li><p><code>ENCRYPTION_METHOD</code>  -  to identify which method will be used. <code>VAULT</code>for HashiCorp vault. <code>AES</code>for encryption with AES algorithm and store in DB.  <code>ENCRYPTION_METHOD  = “VAULT” | “AES”</code></p>
 </li>
-<li><p>最好，修改 c:/mysite/urls.py，在 urlpatterns 下面增加一行<br><pre>urlpatterns += staticfiles_urlpatterns()</pre><br>别忘了头上加上一句<br><pre>from django.contrib.staticfiles.urls import staticfiles_urlpatterns</pre><br>运行python manage.py runserver，用浏览器访问 <a href="http://localhost:8000/admin/" target="_blank" rel="noopener">http://localhost:8000/admin/</a> ， 看看是不是好了。</p>
+<li><p><code>VAULT_KV_PATH</code> - Vault path is related to secrets engine. This need to defined from architecture level so that all components which uses Vault will follow it. And avoid namespace conflict. By default, the base path for <code>Key/Value</code> engine is <code>“kv”</code>. e.g. <code>VAULT_KV_PATH = “kv/cpsapi”</code></p>
 </li>
 </ul>
-<p>部署环境</p>
-<p>以后试过了再写。</p>
-<p>&nbsp;</p>
+<h3 id="NOTABLE-IMPLEMENTATION-details"><a href="#NOTABLE-IMPLEMENTATION-details" class="headerlink" title="NOTABLE IMPLEMENTATION details"></a>NOTABLE IMPLEMENTATION details</h3><ul>
+<li>To distinguish encryption methods for the encrypted data, we add prefix for it. e.g.  for AES, it will be <code>“**$:AES:$**qowzobv1GoC8tB7dOrHJpA==PXyKO2kLX6C4oD8a+e5BlMQwD2q8vvu3poI5rishmVM=”</code> . If data encrypted by Vault, the encrypted data will not be stored in DB. So that it will only remains <code>“$:VAULT:$”</code> </li>
+<li>Two utility methods wrapper <code>encrypt/decrypt</code> were created. In them, we automatically check which methods will be used and apply it. If the <code>ENCRYPTION_METHODS</code> was changed after the system runs for some while, we may be facing some data was encrypted by AES but now the decryption method is VAULT. For this scenario, we have 2 choices:<ul>
+<li>Decrypt the data as it was. Encrypt it as configured.</li>
+<li>Raise an exception to notify. This means if a encryption methods is used when the system initializing, it can not be changed.</li>
+</ul>
+</li>
+<li>Data length changed. Encrypted data will has a different length compares to origin data. So the DB field length need to be changed. If the ENCRYPTION_METHODS changed, we have 2 choices:<ul>
+<li>Change the field max length to max of all encrypted data length. e.g. Origin field length is 10. AES encrypted data length is 64. VAULT encrypted data length is 9. The we choose max(64, 9) = 64.</li>
+<li>Use the encrypted data length as configured methods and Raise an exception to notify. “ENCRYPTION_METHODS can not be changed.”</li>
+</ul>
+</li>
+<li>Another problem for data length changing is, in admin panel, the data length validation is not valid anymore. So far no good way to resolve (No place to store the origin length in DB) If we only allow VAULT, this and above 2 issue may not existed. (we keep the filed with fixed length. we do not add prefix.)</li>
+<li>Each access to sensitive data will cause an REST API call to Vault server. This could be potential performance issue.</li>
+</ul>
 
         
         
@@ -264,7 +273,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/Django/">Django</a> <a class="tag tag--primary tag--small t-link" href="/tags/Python/">Python</a> <a class="tag tag--primary tag--small t-link" href="/tags/configuration/">configuration</a> <a class="tag tag--primary tag--small t-link" href="/tags/programming/">programming</a> <a class="tag tag--primary tag--small t-link" href="/tags/static/">static</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/Alibaba-Cloud/">Alibaba Cloud</a> <a class="tag tag--primary tag--small t-link" href="/tags/HashiCorp/">HashiCorp</a> <a class="tag tag--primary tag--small t-link" href="/tags/cloud/">cloud</a> <a class="tag tag--primary tag--small t-link" href="/tags/decryption/">decryption</a> <a class="tag tag--primary tag--small t-link" href="/tags/encryption/">encryption</a> <a class="tag tag--primary tag--small t-link" href="/tags/microservice/">microservice</a> <a class="tag tag--primary tag--small t-link" href="/tags/vault/">vault</a>
 
             </div>
         
@@ -273,7 +282,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/using-predefined-var-in-django-template/"  data-tooltip="Django 如何在模板(Template)中使用settings中预定义的变量">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Deploy-Hexo-static-website-on-Azure-Blob-storage/"  data-tooltip="在 Azure Blob 存储上部署 Hexo 静态网站">
                 
                     <i class="fa fa-angle-left"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -281,7 +290,7 @@
             </li>
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--disabled">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/solution-selection-for-sensitive-content-storing/" data-tooltip="Solution Selection for Sensitive Content Storing">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right"></i>
@@ -296,17 +305,17 @@
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 静态文件配置&amp;url=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Encrypt/Decrypt and Store Sensitive Content With HashiCorp Vault&amp;url=http://blog.samuelchen.net/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/">
                 <i class="fa fa-weibo"></i>
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/">
                 <i class="fa fa-facebook-official"></i>
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/">
                 <i class="fa fa-twitter"></i>
             </a>
         </li>
@@ -335,7 +344,7 @@
 <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 <script>
 	const gitalk = new Gitalk({
-		id: 'Django 静态文件配置', // optional
+		id: 'Encrypt/Decrypt and Store Sensitive Content Wit...', // optional
 		owner: 'samuelchen',
 		repo: 'samuelchen.github.io',
 		clientID: '82fc507622c63bb0b5c9',
@@ -369,7 +378,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/using-predefined-var-in-django-template/"  data-tooltip="Django 如何在模板(Template)中使用settings中预定义的变量">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/Deploy-Hexo-static-website-on-Azure-Blob-storage/"  data-tooltip="在 Azure Blob 存储上部署 Hexo 静态网站">
                 
                     <i class="fa fa-angle-left"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -377,7 +386,7 @@
             </li>
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--disabled">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/solution-selection-for-sensitive-content-storing/" data-tooltip="Solution Selection for Sensitive Content Storing">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right"></i>
@@ -392,17 +401,17 @@
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 静态文件配置&amp;url=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Encrypt/Decrypt and Store Sensitive Content With HashiCorp Vault&amp;url=http://blog.samuelchen.net/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/">
                 <i class="fa fa-weibo"></i>
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/">
                 <i class="fa fa-facebook-official"></i>
             </a>
         </li>
         <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/">
                 <i class="fa fa-twitter"></i>
             </a>
         </li>
@@ -426,17 +435,17 @@
                 <div id="share-options-bar" class="share-options-bar" data-behavior="1">
     <ul class="share-options">
         <li class="share-option">
-            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Django 静态文件配置&amp;url=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?appkey=&amp;title=Encrypt/Decrypt and Store Sensitive Content With HashiCorp Vault&amp;url=http://blog.samuelchen.net/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/">
                 <i class="fa fa-weibo"></i><span class="">Share on Weibo</span>
             </a>
         </li>
         <li class="share-option">
-            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.samuelchen.net/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/">
                 <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
             </a>
         </li>
         <li class="share-option">
-            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/config-django-static-files/">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://blog.samuelchen.net/encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault/">
                 <i class="fa fa-twitter"></i><span>Share on Twitter</span>
             </a>
         </li>
