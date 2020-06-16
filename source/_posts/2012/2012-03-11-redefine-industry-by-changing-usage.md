@@ -1,11 +1,14 @@
+---
 title: 改变使用方式，重定义一个行业
+slug: redefine-industry-by-changing-usage
 tags:
-  - article
   - IT
-id: 125
 categories:
   - Industry
+comments: true
 date: 2012-03-11 01:10:00
+updated:
+id: redefine-industry-by-changing-usage
 ---
 
 一直比较喜欢和敬佩能改变或重新定义一个行业一个产业的人和公司，Bill Gates 改变了人们使用电脑的方法，Jobs 重新定义了手机，任天堂将游戏从桌面带到了屏幕，又从沙发带到了客厅，从家里带到了身上，facebook 把社交带到了电脑（准确来说，虚拟人生很早就在做这个事情），Google改变了互联网的入口，亚马逊、Google 等改变了计算方式，......
@@ -56,3 +59,5 @@ date: 2012-03-11 01:10:00
 
 -- 随想。
 
+
+--- END ---

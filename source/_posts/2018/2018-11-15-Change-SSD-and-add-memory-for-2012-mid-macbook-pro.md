@@ -1,16 +1,17 @@
 title: 为2012年中的13寸macbook pro更换固态硬盘SSD并添加内存
 tags:
   - MacBook
+  - upgrade
 categories:
   - Life
 date: 2018-11-15 00:55:37
 ---
 
-
 刚刚给2012年中的13寸MacBook Pro更换了SSD固态硬盘，并且添加了内存，记录一下。
 
-**注意请先断电**
+<!--more-->
 
+    **注意请先断电**
 
 ### 工具和配件
 
@@ -191,3 +192,6 @@ APFS是Apple专门为SSD打造的系统，比较新，只经历了2个版本，�
     使用后
 
         /dev/disk2s1 on / (apfs, local, journaled, noatime)
+
+
+--- END ---

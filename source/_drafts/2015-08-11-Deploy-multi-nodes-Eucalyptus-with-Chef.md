@@ -8,7 +8,7 @@ tags:
     - deployment
     - configuration
 categories:
-    - Cloud2End
+    - Architecture & System
 ---
 
 to be written ...

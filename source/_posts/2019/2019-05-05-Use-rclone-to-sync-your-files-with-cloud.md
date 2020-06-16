@@ -1,9 +1,9 @@
 ---
-title: 使用 rclone 同步云端和本地文件
+title: 使用 rclone 同步云端和本地文件以部署静态网站
 slug: use-rclone-to-sync-your-files-with-cloud
 date: 2019-05-05 15:11:18
 updated:
-categories: Cloud2End
+categories: Architecture & System
 tags:
   - Azure
   - rsync
@@ -16,16 +16,11 @@ comments: true
 id: use-rclone-to-sync-your-files-with-cloud
 ---
 
-之前在[这篇blog](/Deploy-Hexo-static-website-on-Azure-Blob-storage/)中介绍过使用Azure Client `az` 来部署生成到网站. 
-使用`az`很方便，但是也有些缺点，例如会把整个网站全部重新上传一遍，速度慢不说，还浪费多次`blob`的操作。
+之前在[这篇blog](/Deploy-Hexo-static-website-on-Azure-Blob-storage/)中介绍过使用Azure Client `az` 来部署生成到网站. 使用`az`很方便，但是也有些缺点，例如会把整个网站全部重新上传一遍，速度慢不说，还浪费多次`blob`的操作。后来找到了另外一个工具`rclone`（[下载、安装、文档](https://rclone.org)，或使用各平台包管理器安装），它可以像`rsync`一样同步本地和远端文件，只更新变化过的文件。
 
-后来找到了另外一个工具`rclone`（[下载、安装、文档](https://rclone.org)，或使用各平台包管理器安装），
-它可以像`rsync`一样同步本地和远端文件，只更新变化过的文件。
+<!--more-->
 
-使用起来也很简单， 首先新建一个远端配置`rclone config`，根据提示，输入名字，类型，account 或者 
-connection string。例如，我配置 `azure-chen` 这个名字（本地名称）对应 azure 上 `chen` 这个 blob 账号。
-
-然后就可以使用了：
+使用起来也很简单， 首先新建一个远端配置`rclone config`，根据提示，输入名字，类型，account 或者 connection string。例如，我配置 `azure-chen` 这个名字（本地名称）对应 azure 上 `chen` 这个 blob 账号。然后就可以使用了：
 
 ```sh
 # 列出远端容器

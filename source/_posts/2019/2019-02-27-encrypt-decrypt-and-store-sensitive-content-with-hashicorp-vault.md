@@ -2,7 +2,7 @@
 title: Encrypt/Decrypt and store sensitive content with HashiCorp Vault
 slug: encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault
 categories:
-  - Cloud2End
+  - Architecture & System
 tags:
   - vault
   - HashiCorp
@@ -18,8 +18,9 @@ id: encrypt-decrypt-and-store-sensitive-content-with-hashicorp-vault
 ---
 
 
+We are encrypting sensitive content with AES algorithm and storing them in DB. Now we plan to leverage HashiCorp Vault to do this.
 
-We are encrypting sensitive content with AES algorithm and storing them in DB. Now we plan to leverage HashiCorp to do this.
+<!--more-->
 
 So far we have 2 kinds of data need to be encrypted: one is the Alicloud key and secret of customers, the other is the marked sensitive variable or parameters such as VM password. Vault provides several secrets engines to achieve these.
 
@@ -48,3 +49,4 @@ We define some configurations for using Vault.
 * Each access to sensitive data will cause an REST API call to Vault server. This could be potential performance issue.
 
 
+--- END ---

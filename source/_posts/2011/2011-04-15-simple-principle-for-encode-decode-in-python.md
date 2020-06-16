@@ -1,11 +1,15 @@
-title: 'python 的编码，关于 encode, decode 的简单原则'
+---
+title: python 的编码，关于 encode, decode 的简单原则
+slug: simple-principle-for-encode-decode-in-python
 tags:
   - encoding
   - Python
-id: 123
 categories:
   - Programming
 date: 2011-04-15 15:14:00
+updated:
+comments: true
+id: simple-principle-for-encode-decode-in-python
 ---
 
 Python 中 encoding 的处理其实已经很简单了，根据我这近一个月来用python的经验，有一个简单的原则可以作为参考。
@@ -25,7 +29,7 @@ Python 中 encoding 的处理其实已经很简单了，根据我这近一个月
 
 举个例子，有个GBK编码的文件 name.txt，每行一个人名，现在要处理
 
-<pre>
+```python
     for line in open('name.txt').readlines():
       print line # 这时候 line 都是 gbk 的 
       str x = line.decode('gbk') # 转成 unicode 
@@ -35,7 +39,7 @@ Python 中 encoding 的处理其实已经很简单了，根据我这近一个月
       store_to_db(x) # 这时候存的都是unicode 
       my_str = x.encode('big5') # 转成 big5了 
       print m_str # 输出的是 big5 的 str
-</pre>
+```
 
 此外，encode 的时候不一定会成功，这时候会raise一个exception，这是因为 encode 还有一个参数用来控制encode失败后的处理，default是strict，也就是抛异常。
 
@@ -45,4 +49,5 @@ Python 中 encoding 的处理其实已经很简单了，根据我这近一个月
 
 同样，输出的时候，输出流也需要有编码。比如stdout默认是ascii的，而你要输出unicode，就需要得到一个基于unicode的输出流，`output = codecs.getwriter('utf-8')(sys.stdout)`
 
--- END
+
+--- END ---

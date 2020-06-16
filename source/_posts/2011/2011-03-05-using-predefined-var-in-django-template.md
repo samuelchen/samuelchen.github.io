@@ -1,21 +1,26 @@
+---
 title: Django 如何在模板(template)中使用settings中预定义的变量
+slug: using-predefined-var-in-django-template
 tags:
   - Django
   - Python
   - static
   - template
-  - programming
-id: 121
 categories:
   - Programming
+comments: true
 date: 2011-03-05 00:26:00
+updated:
+id: using-predefined-var-in-django-template
 ---
+
+    _"未格式化的导入日志 unformatted imported post"_
 
 在Django中编写模板(template)的时候， 有时候可能会用到settings中设定的变量， 比如说STATIC_URL。 此时， 如果你直接使用 `{{ STATIC_URL }}` 是取不到值的。 那么怎么才能在模板中使用呢？ 难道非得在每个view中添加到context中吗？
 
-答案是否定的。 根据Django文档中所描述， 我们至少有两种方法可以直接使用。 http://docs.djangoproject.com/en/dev/howto/static-files/#referring-to-static-files-in-templates
-
 <!--more-->
+
+答案是否定的。 根据Django文档中所描述， 我们至少有两种方法可以直接使用。 http://docs.djangoproject.com/en/dev/howto/static-files/#referring-to-static-files-in-templates
 
 方法1：
 
@@ -42,4 +47,7 @@ def some_view(request):
 这个实际作用就是将request中的context全部都加到response的context中去。
 
 这样，你就可以直接在模板中使用`{{ STATIC_URL }}` 来使用了，当然其他的变量也是可以的，不需要每个都单独去load了。
-<div></div>
+
+
+
+--- END ---

@@ -2,17 +2,13 @@
 title: Solution selection for sensitive content storing
 slug: solution-selection-for-sensitive-content-storing
 categories:
-  - Cloud2End
+  - Architecture & System
 tags:
   - Alibaba Cloud
   - keystore
   - vault
   - encryption
   - decryption
-  - AES
-  - RSA
-  - MD5
-  - SHA
   - cloud
   - microservice
 comments: false
@@ -21,10 +17,9 @@ updated: 2020-06-16
 id: solution-selection-for-sensitive-content-storing
 ---
 
+In "Managed Service for Alibaba Cloud" service project, we have some sensitive data such as secret key, vm password and so on stored in database. To avoid store plain text, we need a solution to encrypt and decrypt sensitive data. 
 
-## Background & Purpose
-
-In Alicloud API project, we have some sensitive data such as secret key, vm password and so on stored in database. To avoid store plain text, we need a solution to encrypt and decrypt sensitive data. 
+<!--more-->
 
 ## Solutions
 
@@ -113,5 +108,6 @@ Encrypt it before saving. Decrypt it after loading.
 Encrypt it before saving. Decrypt it after loading.
 
 
+--- END ---
 
 

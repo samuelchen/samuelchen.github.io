@@ -1,7 +1,7 @@
 ---
 title: 在 Azure Blob 存储上部署 Hexo 静态网站
 slug: deploy-hexo-static-website-on-azure-blob-storage
-categories: Cloud2End
+categories: Architecture & System
 tags:
   - Azure
   - Hexo
@@ -66,4 +66,4 @@ Azure Blob 部署的静态网站，如果用 `windows.net` 访问，是自带 `h
 自定义域名也用上https，需要配置 `CDN`。而且，`CDN` 会自动选择不同的地区访问，blob 是固定
 地区的（比如 blob 账号、容器是在 美国东部 US-EAST，那么亚洲访问就稍慢）。
 
--- END --
+--- END ---

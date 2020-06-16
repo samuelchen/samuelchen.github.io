@@ -6,7 +6,7 @@ tags:
     - automation
     - configuration
 categories:
-    - Cloud2End
+    - Architecture & System
 ---
 
 To be written ...

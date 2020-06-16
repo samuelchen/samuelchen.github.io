@@ -6,15 +6,22 @@ tags:
   - MQ
   - monitor
   - Kafka
+  - open source
+  - deployment
 categories:
-  - Cloud2End
+  - Utility
 date: 2014-04-24 15:15:11
+updated: 
+comments: true
 id: how-to-setup-kafka-web-console
 ---
 
-This project is hosted at [https://github.com/claudemamo/kafka-web-console](https://github.com/claudemamo/kafka-web-console)
+"Kafka Web Console" is a open source monitor tool for `Kafka`. 
 
-It's a very simple console that only suit for learning Kafka purpose.
+<!--more-->
+
+This project is hosted at [https://github.com/claudemamo/kafka-web-console](https://github.com/claudemamo/kafka-web-console). It's a very simple console that only suit for learning Kafka purpose. (Until when the post written.)
+
 
 *   Install Play Framework.
 
@@ -47,4 +54,5 @@ It's a very simple console that only suit for learning Kafka purpose.
     *  use “play -DapplyEvolutions.default=true” to start. 
     *  Or add “applyEvolutions.default=true” in conf/application.conf 
 
--- DONE
+--- END ---
+

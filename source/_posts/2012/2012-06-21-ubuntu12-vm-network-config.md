@@ -1,25 +1,25 @@
+---
 title: Ubuntu12 虚拟机网络配置
+slug: ubuntu12-vm-network-config
 tags:
-  - article
   - configuration
   - Linux
   - Ubuntu
   - VM
   - network
-id: 188
 categories:
-  - System
+  - Architecture & System
 date: 2012-06-21 19:09:05
+updated:
+comments: true
+id: ubuntu12-vm-network-config
 ---
+
+    后来，了解了更多的方法，这种方法并不是一个比较好的方法，但仍不失为一个简单有效的方法。
 
 用VM Player 4.0装了Ubuntu 12 server，然后复制了几个组成局域网来使用，发现了一些问题，网上基本上找不到完整的解决方法，这里记录下来。
 
 <!-- more -->
-
-```
-在后来的实际应用中，了解了更多的方法，这种方法并不是一个比较好的方法，但仍不失为一个简单有效的方法。
-```
-
 
 ## Mac 地址
 
@@ -93,4 +93,7 @@ nameserver 8.8.8.8</pre>
 <pre class="lang:default decode:true">nameserver 192.168.48.2
 nameserver 8.8.8.8
 nameserver 8.8.4.4</pre>
-- END
+
+
+--- END ---
+

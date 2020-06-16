@@ -2,24 +2,26 @@
 title: API Gateway by Fabio & Consul
 slug: api-gateway-by-fabio-n-consul
 categories:
-  - Cloud2End
+  - Architecture & System
 tags:
-  - API Gateway
+  - API gateway
   - Fabio
   - Consul
   - HashiCorp
   - microservice
   - service discovery
   - cloud
+  - cluster
+  - deployment
 draft: draft
 comments: true
 date: 2018-02-28 16:21:23
 updated: 2020-06-15 21:42:12
 ---
 
-
-
 Fabio is a HTTP router app written by Go language. It is Zero-configuration and simple to deploy. As official document mentioned, “It delivers 23.000 req/sec every day since Sep 2015 without problems”. It's written and maintained by Frank Schroeder at eBay in Amsterdam.
+
+<!--more-->
 
 ## Installation
 
@@ -118,4 +120,4 @@ To run with prefix, `$ fabio -registry.consul.tagprefix propel-`
 * Check the log, you will see which service is captured.
 
 
--- END --
+--- END ---

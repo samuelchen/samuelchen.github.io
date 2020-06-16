@@ -7,28 +7,29 @@ tags:
   - cloud
   - Alibaba Cloud
   - Python
-  - object-c
+  - Object-C
   - iOS
   - truepy
-  - scrapy
-  - tornado
-  - flask
-  - jinja
-  - kafka
+  - Scrapy
+  - Tornado
+  - Flask
+  - Jinja
+  - Kafka
   - fmdb
-  - zookeeper
+  - Zookeeper
   - touchxml
   - formalchemy
-  - article
+  - open source
+  - bug
 comments: true
-date: 2020-06-21 21:40:03
+date: 2020-06-11 21:40:03
 updated:
 id: my-contributions-to-open-source-projects
 ---
 
-
 _整理了自己对开源软件做的一些修改、提交或者错误报告_
 
+<!--more-->
 
 - Alibaba Cloud SDK for Python
   * support proxy environment var
@@ -71,3 +72,5 @@ _整理了自己对开源软件做的一些修改、提交或者错误报告_
   * typo fix
     https://github.com/FormAlchemy/fa.jquery/pull/7
    
+   
+--- END ---

@@ -1,17 +1,24 @@
+---
 title: Django 静态文件配置
+slug: config-django-static-files
 tags:
   - configuration
   - Django
   - programming
   - Python
   - static
-id: 120
 categories:
   - Programming
+comments: true
 date: 2011-03-04 15:59:00
+updated:
+id: config-django-static-files
 ---
 
+    _"未格式化的导入日志 unformatted imported post"_
+
 Django 自带的admin 用户及权限管理是一个很不错的功能，但在开发的时候，如果仅仅只是按照教程中介绍的去掉 urls.py 中相应的注释，那么你很有可能看到的是一个光秃秃的裸体页面，换句话说，就是页面的样式都失效了。
+<!--more-->
 
 这是怎么回事？其原因就是 Django 不处理静态文件，其静态文件管理需要通过配置，让服务器直接访问。同时，在开发环境中，如果你是用manage.py runserver 的方式运行调试，更是麻烦。在网上找了很久，始终也没有一个很全面的解决方案。
 
@@ -38,4 +45,5 @@ MEDIA 是指你上传的文件存放，比如图像，视频，压缩包之类�
 
 以后试过了再写。
 
-&nbsp;
+
+--- END ---

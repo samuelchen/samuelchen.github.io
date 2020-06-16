@@ -6,7 +6,7 @@ tags:
     - yum
     - configuration
 categories:
-    - System
+    - Architecture & System
 ---
 
 To be written...

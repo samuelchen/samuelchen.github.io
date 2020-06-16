@@ -3,7 +3,7 @@ title: Service Discover by Consul
 slug: service-discover-by-consul
 comments: True
 categories:
-	- Cloud2End
+	- Architecture & System
 tags:
 	- Consul
 	- HashiCorp
@@ -12,6 +12,7 @@ tags:
 	- cloud
 date: 2018-02-07 15:23:16
 updated:
+id: service-discover-by-consul
 ---
 
 > Check [Service Discovery for Propel](https://quip.com/lZy2AXVRzd30) for Implementation for Propel
@@ -288,8 +289,4 @@ Restart consul.
 
 
 
-
-
-
-
-
+--- END ---

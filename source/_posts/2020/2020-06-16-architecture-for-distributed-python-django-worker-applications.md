@@ -1,0 +1,93 @@
+---
+title: Architecture for distributed Python/Django/Worker applications.
+categories: Architecture & System
+tags:
+  - cloud
+  - Python
+  - Django
+  - worker
+  - MQ
+  - database
+  - PostgreSQL
+  - Redis
+  - Alibaba Cloud
+  - cluster
+  - deployment
+  - CGI
+id: architecture-for-distributed-python-django-worker-applications.
+comments: true
+date: 2020-06-16 23:30:52
+updated:
+---
+
+
+This is the architecture I designed for service "Managed Service for Alibaba Cloud" of company production. It's also my common architecture that can be used to deploy distributed Python applications or service based on workers or MQ. This is a easy to upgrade architecture. You can simply add other service or make it becoming microservices.
+
+<!--more-->
+
+I removed some sensitive information such as source code, configuration and so on.
+
+## Requirements
+
+* OS - Linux (CentOS 7 or 6, Ubuntu ..)
+* Python 3.6 (< 3.7) with pip, virtualenv ...
+* gunicorn
+* nginx
+* supervisor (if need)
+* DB - Postgresql (or MySQL)
+* Task Queue - Redis (or RabbitMQ)
+* source code - Removed
+
+## Install
+
+	Removed
+
+## Setup API
+
+	Removed
+
+## Architect
+
+Note: 
+
+* *Nginx can be extracted on top of all boxes.* 
+* Stack Files can be stored in individual box or OSS.
+* For now, Celery Worker must be in API Box (for HA, should no related to API. such as create/access)
+
+```
+
+                                  Client APP
+                                       |
+   ----------------------------- LB / Firewall --------------------------------
+                                       |
+                                      /|\
+              _________cross_________/ | \_________zone___________
+             |                         |                          |
+         API Box 1/M              API Worker Box 1/N           APP Box 2/M        
+   ----------------------     ----------------------    ---------------------- 
+  |        Nginx         |   |        Celery        |  |        Nginx         |
+  |          |           |   |          |           |  |          |           |
+  |         / \          |   |       N Workers      |  |         / \          |
+  |  Static   Gunicorn   |   |  _________|________  |  |  Static   Gunicorn   |
+  |  Files       |       |   |  |     |     |    |  |  |  Files       |       |
+  |          N Workers   |   | ...   ...    |   ... |  |          N Workers   |
+  |              |       |   |             Task     |  |              |       |
+  |  ____________|_____  |   |                      |  |  ____________|_____  |
+  |  |     |     |    |  |   |                      |  |  |     |     |    |  |
+  | ...   ...    |   ... |   |                      |  | ...   ...    |   ... |
+  |           Django     |   |                      |  |           Django     |
+  |            WSGI      |   |                      |  |            WSGI      |
+   ----------------------     ----------------------    ---------------------- 
+             |                           |                         |
+             -------------------------------------------------------
+                        |                                |
+                 DB Box/Cluster                  Queue Box/cluster   
+               ----------------------          ---------------------- 
+              |     Postgresql       |        |        Redis         |
+              |                      |        |                      |
+               ----------------------          ---------------------- 
+
+```
+
+
+--- END ---

@@ -3,7 +3,7 @@ title: Window 批处理(BAT)中生成格式化日期时间字符串
 categories: Programming
 tags:
   - bat
-  - window
+  - Windows
   - datetime
   - string
 date: 2020-02-29 00:36:31
@@ -11,14 +11,9 @@ updated:
 id: generate-date-time-string-in-window-bat
 ---
 
-今天打算写一些脚本同时支持 Windows 和 Linux，因此需要同一个脚本需要写一个 shell 版本和一个
-`bat` 版本。
+今天打算写一些脚本同时支持 Windows 和 Linux，因此需要同一个脚本需要写一个 shell 版本和一个 `bat` 版本。其中一项需求是要生成一个日志文件，文件后缀是当前系统时间的字符串'yyymmddMMHHSS'这种格式的，所以需要取到当前时间并格式化。在 Linux 中，这是一个很简单的需求，直接使用 `date +'%y%m%d%H%M%S'` 就可以拿到，但是在 Windows 中就非常麻烦了。
 
-其中一项需求是要生成一个日志文件，文件后缀是当前系统时间的字符串'yyymmddMMHHSS'这种格式的，
-所以需要取到当前时间并格式化。
-
-在 Linux 中，这是一个很简单的需求，直接使用 `date +'%y%m%d%H%M%S'` 就可以拿到，但是在 Windows
-中就非常麻烦了。
+<!--more-->
 
 在 Windows 中，最直接的想法是和 Linux 类似，使用 `date /t` 和 `time /t` 命令来获取，然后利用
 `%date:~0,4%` 来取到年份（`%:~0,4%` 是 bat 取子字符串语法，表示取 0 到 4 个字符，前开后闭），
@@ -57,4 +52,4 @@ rem echo "%DT%"
 总之，根据自身需求和环境，选择合适的方法。
 
 
--- END --
+--- END ---

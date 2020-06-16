@@ -14,7 +14,9 @@ updated:
 id: flask-werkzeug-templating-caused-trackback-loop-issue
 ---
 
+    Found a Flask template bug caused by PyObject_HEAD size in Python for 32bit Windows. 
 
+<!--more-->
 
 Today, I was facing an issue when using `Flask` template.
 
@@ -96,4 +98,4 @@ Possible related Python issue:
 * [Issue9427 - logging.error('...', exc_info=True) should display upper frames, too](https://bugs.python.org/issue9427)
 * [Issue1553375 - Add traceback.print_full_exception()](https://bugs.python.org/issue1553375)
 
--- END --
+--- END ---

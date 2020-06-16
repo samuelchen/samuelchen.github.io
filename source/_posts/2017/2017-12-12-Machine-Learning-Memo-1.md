@@ -1,7 +1,9 @@
+---
 title: Machine Learning Memo 1
+slug: machine-learning-memo-1
 date: 2017-12-12 15:19:20
+updated:
 tags: 
-  - ML
   - supervised
   - unsupervised
   - classfication
@@ -9,12 +11,17 @@ tags:
   - feature
   - course
   - memo
-id: 212
+  - machine learning
+id: machine-learning-memo-1
 categories:
-  - Machine Learning
+  - Programming
+comments: true
+
 ---
 
 最近开始看Andrew Ng 的 [Machine Learning 系列课程](https://www.coursera.org/learn/machine-learning)，记录一下体会。
+
+<!--more-->
 
 ### Machine Learning 学习笔记 - 第一周
 
@@ -37,5 +44,6 @@ categories:
 Feature 是指特征，表现为坐标轴，例如 判断肿瘤一例中的年龄和肿瘤大小就是两个特征。特征数量足够以及合适（并不是多）才能更准确的学习。
 
 
--- END
+--- END ---
+
 

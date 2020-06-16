@@ -9,17 +9,19 @@ tags:
 	- blog
 	- diagram
 	- flowchart
-	- mermaid
+	- Mermaid
 	- markdown
-	- hexo
-	- hugo
-	- vscode
+	- Hexo
+	- Hugo
+	- VSCode
 id: add-markdown-chart-to-vscode-hexo-and-hugo
 ---
 
 最近在写blog时想画流程图，但又因为可能会频繁修改而不想用图片。因此经过一番搜寻，发现了 [`mermaid`](https://mermaid-js.github.io/mermaid/) 
 这个工具，支持用 `markdown` 撰写 **流程图**，**时序图**，**甘特图**，**类图** 等各种（简直神器）。
 最让人高兴的是，Hexo（博客）, Hugo（网站） 以及 VSCode 都有插件或者方法可以支持。
+
+<!--more-->
 
 以下就分别介绍如何在VSCode, Hexo 以及 Hugo 中安装设置来支持 `mermaid`.
 
