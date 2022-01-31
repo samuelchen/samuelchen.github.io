@@ -28,6 +28,6 @@ spec:
             - preference:
                 matchExpressions:
                 - key: region
-                  operator: In
+                  operator: NotIn
                   values: [cn, ]
               weight: 100
