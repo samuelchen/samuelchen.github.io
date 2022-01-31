@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: blog
-  namespace: blog
+  namespace: site
 spec:
   selector:
     app: blog

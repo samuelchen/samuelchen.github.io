@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: blog
-  namespace: blog
+  namespace: site
 spec:
   rules:
   - host: blog.samuelchen.net
