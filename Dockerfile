@@ -1,6 +1,6 @@
-FROM node:14-alpine as builder
+FROM node:10-alpine as builder
 
-RUN npm install -g hexo-cli@1.1.0 
+RUN npm install -g hexo-cli@4.3.0
 ADD . /src
 WORKDIR /src
 RUN npm install
